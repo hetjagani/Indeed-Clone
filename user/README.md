@@ -1,5 +1,5 @@
 ## API
-DB Objects: users, salaries
+DB Objects: users, salaries (Mongo)
 * /users
   - GET /
   - GET /:id

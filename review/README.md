@@ -1,5 +1,5 @@
 ## API
-DB Objects: reviews
+DB Objects: reviews (Mongo)
 * /reviews
   - GET /
   - GET /:id

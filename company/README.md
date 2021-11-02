@@ -1,5 +1,5 @@
 ## API 
-DB Objects: employers, companies, jobs
+DB Objects: employers, companies, jobs (Mongo)
 * /employers
   - GET /
   - GET /:id

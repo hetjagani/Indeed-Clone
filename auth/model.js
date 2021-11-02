@@ -1,14 +1,32 @@
-const { Schema, model } = require('mongoose');
+const { DataTypes } = require('sequelize');
 
-const UserSchema = new Schema({
-  email: String,
-  password: String,
+const User = global.DB.define('users', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+    unique: true,
+  },
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   role: {
-    type: String,
-    enum: ['customer', 'restaurant'],
+    type: DataTypes.ENUM('customer', 'restaurant'),
   },
 });
 
-const User = model('users', UserSchema);
+const runMigration = async (force) => {
+  if (!global.DB) {
+    return Promise.reject(new Error('please initialize DB'));
+  }
+  await User.sync({ force });
+  return Promise.resolve(global.DB);
+};
 
-module.exports = { User };
+module.exports = { User, runMigration };

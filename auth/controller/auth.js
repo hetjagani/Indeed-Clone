@@ -13,7 +13,7 @@ const getToken = async (req, res) => {
     return;
   }
 
-  const user = await User.findOne({ email }).exec();
+  const user = await User.findOne({ where: { email } });
 
   if (!user) {
     res.status(401).send('Unauthorized');
@@ -58,19 +58,18 @@ const signUp = async (req, res) => {
     return;
   }
 
-  const findUser = await User.findOne({ email });
+  const findUser = await User.findOne({ where: { email } });
   if (findUser) {
     res.status(304).json({ message: 'User already exist. Please try login.' });
     return;
   }
 
   const passHash = await getPasswordHash(password);
-  const user = new User({
+  const user = await User.create({
     email,
     password: passHash,
     role,
   });
-  await user.save();
 
   if (!user) {
     res.status(500).send('Internal Server Error');
@@ -103,7 +102,7 @@ const validateToken = async (req, res) => {
       return;
     }
 
-    const user = await User.findOne({ _id: data.id });
+    const user = await User.findOne({ where: { id: data.id } });
 
     if (!user) {
       res.status(401).send('Unauthorized');

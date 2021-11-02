@@ -1,5 +1,5 @@
 ## API
-DB Objects: photos
+DB Objects: photos (MySql)
 * /photos
   - GET /
   - GET /:id

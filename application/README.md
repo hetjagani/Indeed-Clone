@@ -1,5 +1,5 @@
 ## API
-DB Objects: applications
+DB Objects: applications (Mongo)
 * /applications
   - GET /
   - GET /:id
