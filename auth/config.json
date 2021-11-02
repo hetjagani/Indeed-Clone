@@ -1,14 +1,14 @@
 {
     "development": {
         "database_host": "mysqldb",
-        "database_user": "uberadmin",
-        "database_password": "uberadminpass",
+        "database_user": "indeedadmin",
+        "database_password": "indeedadminpass",
         "database_name": "auth"
     },
     "test": {
         "database_host": "localhost",
-        "database_user": "uberadmin",
-        "database_password": "uberadminpass",
+        "database_user": "indeedadmin",
+        "database_password": "indeedadminpass",
         "database_name": "auth_test"
     }
 }
