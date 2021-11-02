@@ -62,23 +62,23 @@ services:
     networks: 
       - indeed-net
 
-  # kafka-backend:
-  #   depends_on: 
-  #     - kafka
-  #     - zookeeper
-  #   build:
-  #     context: ./kafka-backend
-  #     dockerfile: Dockerfile
-  #   volumes: 
-  #     - type: bind
-  #       source: ./kafka-backend
-  #       target: /app
-  #     - type: volume 
-  #       source: ./kafka-backend/node_modules
-  #       target: /app/node_modules
-  #   restart: unless-stopped
-  #   networks: 
-  #     - indeed-net
+  kafka-backend:
+    depends_on: 
+      - kafka
+      - zookeeper
+    build:
+      context: ./kafka-backend
+      dockerfile: Dockerfile
+    volumes: 
+      - type: bind
+        source: ./kafka-backend
+        target: /app
+      - type: volume 
+        source: ./kafka-backend/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
 
   #########################################################################
   #                               SERVICES                                #
