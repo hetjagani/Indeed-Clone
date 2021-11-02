@@ -249,5 +249,19 @@ services:
   #   networks: 
   #     - indeed-net
 
+  nginx:
+    depends_on: 
+      - mongodb
+    image: nginx:alpine
+    ports:
+      - 8000:8000
+    volumes: 
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
 networks: 
   indeed-net:
