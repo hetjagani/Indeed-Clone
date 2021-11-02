@@ -8,8 +8,8 @@ services:
     image: mongo:4.4.0-rc7
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: uberadmin
-      MONGO_INITDB_ROOT_PASSWORD: uberadminpass
+      MONGO_INITDB_ROOT_USERNAME: indeedadmin
+      MONGO_INITDB_ROOT_PASSWORD: indeedadminpass
     volumes: 
       - ./nosql-data:/data/db
       - ./db-init-scripts:/docker-entrypoint-initdb.d
@@ -24,8 +24,8 @@ services:
     ports:
       - 3306:3306
     environment:
-      - MYSQL_USER=uberadmin
-      - MYSQL_PASSWORD=uberadminpass
+      - MYSQL_USER=indeedadmin
+      - MYSQL_PASSWORD=indeedadminpass
       - MYSQL_ROOT_PASSWORD=mysqlrootpassword
     volumes: 
       - ./sql-data:/var/lib/mysql
