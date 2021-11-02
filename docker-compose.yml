@@ -73,7 +73,7 @@ services:
       - type: bind
         source: ./kafka-backend
         target: /app
-      - type: volume 
+      - type: bind 
         source: ./kafka-backend/node_modules
         target: /app/node_modules
     restart: unless-stopped
