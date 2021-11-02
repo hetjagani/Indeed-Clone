@@ -28,7 +28,7 @@ describe('POST /auth/signup', () => {
     const data = {
       email: 'testuser@gmail.com',
       password: 'Password123',
-      role: 'customer',
+      role: 'user',
     };
     chai
       .request(app)
@@ -78,7 +78,7 @@ describe('POST /auth/signup', () => {
         } else {
           res.should.have.status(200);
           res.body.should.have.property('valid').eql(true);
-          res.body.should.have.property('role').eql('customer');
+          res.body.should.have.property('role').eql('user');
         }
         done();
       });
