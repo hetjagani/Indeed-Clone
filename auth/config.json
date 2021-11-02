@@ -1,0 +1,8 @@
+{
+  "development": {
+    "database_conn": "mongodb://uberadmin:uberadminpass@mongodb:27017/auth"
+  },
+  "test": {
+    "database_conn": "mongodb://uberadmin:uberadminpass@mongodb:27017/auth_test"
+  }
+}

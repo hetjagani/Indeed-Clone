@@ -1,0 +1,253 @@
+version: "3.7"
+
+services:
+  #########################################################################
+  #                               DB                                      #
+  #########################################################################
+  mongodb:
+    image: mongo:4.4.0-rc7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: uberadmin
+      MONGO_INITDB_ROOT_PASSWORD: uberadminpass
+    volumes: 
+      - ./nosql-data:/data/db
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - 27017:27017
+    networks: 
+      - indeed-net
+
+  mysqldb:
+    image: mysql
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_USER=uberadmin
+      - MYSQL_PASSWORD=uberadminpass
+      - MYSQL_ROOT_PASSWORD=mysqlrootpassword
+    volumes: 
+      - ./sql-data:/var/lib/mysql
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
+    networks: 
+      - indeed-net
+
+  #########################################################################
+  #                               KAFKA                                   #
+  #########################################################################
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOOKEEPER_CLIENT_PORT=2181
+    networks: 
+      - indeed-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_LISTNERS=PLAINTEXT://:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    networks: 
+      - indeed-net
+
+  # kafka-backend:
+  #   depends_on: 
+  #     - kafka
+  #     - zookeeper
+  #   build:
+  #     context: ./kafka-backend
+  #     dockerfile: Dockerfile
+  #   volumes: 
+  #     - type: bind
+  #       source: ./kafka-backend
+  #       target: /app
+  #     - type: volume 
+  #       source: ./kafka-backend/node_modules
+  #       target: /app/node_modules
+  #   restart: unless-stopped
+  #   networks: 
+  #     - indeed-net
+
+  #########################################################################
+  #                               SERVICES                                #
+  #########################################################################
+
+  auth:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - 7000:3000
+    volumes: 
+      - type: bind
+        source: ./auth
+        target: /app
+      - type: bind
+        source: ./auth/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  company:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./company
+      dockerfile: Dockerfile
+    ports:
+      - 7001:3000
+    volumes: 
+      - type: bind
+        source: ./company
+        target: /app
+      - type: bind
+        source: ./company/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  user:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    ports:
+      - 7002:3000
+    volumes: 
+      - type: bind
+        source: ./user
+        target: /app
+      - type: bind
+        source: ./user/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  application:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./application
+      dockerfile: Dockerfile
+    ports:
+      - 7003:3000
+    volumes: 
+      - type: bind
+        source: ./application
+        target: /app
+      - type: bind
+        source: ./application/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  review:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./review
+      dockerfile: Dockerfile
+    ports:
+      - 7004:3000
+    volumes: 
+      - type: bind
+        source: ./review
+        target: /app
+      - type: bind
+        source: ./review/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  photos:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./photos
+      dockerfile: Dockerfile
+    ports:
+      - 7005:3000
+    volumes: 
+      - type: bind
+        source: ./photos
+        target: /app
+      - type: bind
+        source: ./photos/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  chat:
+    depends_on: 
+      - mongodb
+      - kafka-backend
+    build:
+      context: ./chat
+      dockerfile: Dockerfile
+    ports:
+      - 7006:3000
+    volumes: 
+      - type: bind
+        source: ./chat
+        target: /app
+      - type: bind
+        source: ./chat/node_modules
+        target: /app/node_modules
+    restart: unless-stopped
+    networks: 
+      - indeed-net
+
+  # web:
+  #   depends_on: 
+  #     - application
+  #     - auth
+  #     - chat
+  #     - company
+  #     - photos
+  #     - review
+  #     - user
+  #   build:
+  #     context: ./web
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   volumes: 
+  #     - type: bind
+  #       source: ./web
+  #       target: /app
+  #     - type: volume
+  #       source: ./web/node_modules
+  #       target: /app/node_modules
+  #   restart: unless-stopped
+  #   networks: 
+  #     - indeed-net
+
+networks: 
+  indeed-net:
