@@ -1,5 +1,5 @@
 ## API
-DB Objects: chats, messages
+DB Objects: chats, messages (MySql)
 * /chats {employerId, userId, subject}
   - GET /
   - GET /:id

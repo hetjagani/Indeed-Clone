@@ -1,8 +1,14 @@
 {
-  "development": {
-    "database_conn": "mongodb://uberadmin:uberadminpass@mongodb:27017/auth"
-  },
-  "test": {
-    "database_conn": "mongodb://uberadmin:uberadminpass@mongodb:27017/auth_test"
-  }
+    "development": {
+        "database_host": "mysqldb",
+        "database_user": "uberadmin",
+        "database_password": "uberadminpass",
+        "database_name": "auth"
+    },
+    "test": {
+        "database_host": "localhost",
+        "database_user": "uberadmin",
+        "database_password": "uberadminpass",
+        "database_name": "auth_test"
+    }
 }

@@ -2,7 +2,7 @@
   "name": "auth",
   "version": "1.0.0",
   "description": "Authentication Service",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon index.js",
     "test": "mocha tests/*.js"
@@ -22,10 +22,10 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mocha": "^9.1.2",
-    "mongoose": "^6.0.11",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.0",
-    "password-validator": "^5.1.1"
+    "password-validator": "^5.1.1",
+    "sequelize": "^6.6.5"
   },
   "devDependencies": {
     "eslint": "^7.2.0",

@@ -1,35 +1,35 @@
 print('Start #################################################################');
 
-db = db.getSiblingDB('auth');
+db = db.getSiblingDB('company');
 db.createUser({
   user: 'uberadmin',
   pwd: 'uberadminpass',
   roles: [{ role: 'readWrite', db: 'auth' }],
 });
-db.createCollection('users');
+db.createCollection('companies');
 
-db = db.getSiblingDB('restaurant');
+db = db.getSiblingDB('user');
 db.createUser({
   user: 'uberadmin',
   pwd: 'uberadminpass',
   roles: [{ role: 'readWrite', db: 'restaurant' }],
 });
-db.createCollection('restaurants');
+db.createCollection('users');
 
-db = db.getSiblingDB('customer');
+db = db.getSiblingDB('application');
 db.createUser({
   user: 'uberadmin',
   pwd: 'uberadminpass',
   roles: [{ role: 'readWrite', db: 'customer' }],
 });
-db.createCollection('customers');
+db.createCollection('applications');
 
-db = db.getSiblingDB('order');
+db = db.getSiblingDB('review');
 db.createUser({
   user: 'uberadmin',
   pwd: 'uberadminpass',
   roles: [{ role: 'readWrite', db: 'order' }],
 });
-db.createCollection('orders');
+db.createCollection('reviews');
 
 print('END #################################################################');
