@@ -1,0 +1,18 @@
+{
+  "name": "kafka-backend",
+  "version": "1.0.0",
+  "description": "Kafka Backend for Indeed Clone",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Het Jagani",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "kafka-node": "^5.0.0",
+    "mongoose": "^6.0.12",
+    "nodemon": "^2.0.14"
+  }
+}
