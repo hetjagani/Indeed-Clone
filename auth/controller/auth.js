@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const emailValidator = require('email-validator');
+const { ObjectId } = require('mongodb');
 const { User } = require('../model');
 const { getPasswordHash, validatePassword, validatePassHash } = require('../util/passwords');
 
@@ -48,12 +49,12 @@ const signUp = async (req, res) => {
   if (
     !emailValidator.validate(email)
     || !validatePassword(password)
-    || !(role === 'customer' || role === 'restaurant')
+    || !(role === 'user' || role === 'employer')
   ) {
     res.status(400).json({
       error: 'invalid email or password',
       requirement:
-        'Email should be valid email. Password should have 8-100 length and should contain atleast one uppercase, lowercase and a digit. Role should be either customer/restaurant.',
+        'Email should be valid email. Password should have 8-100 length and should contain atleast one uppercase, lowercase and a digit. Role should be either user/employer.',
     });
     return;
   }
@@ -66,6 +67,7 @@ const signUp = async (req, res) => {
 
   const passHash = await getPasswordHash(password);
   const user = await User.create({
+    id: new ObjectId().toString(),
     email,
     password: passHash,
     role,
