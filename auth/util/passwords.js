@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const PasswordValidator = require('password-validator');
 
 const getPasswordHash = async (pass) => {
