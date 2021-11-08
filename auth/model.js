@@ -2,8 +2,7 @@ const { DataTypes } = require('sequelize');
 
 const User = global.DB.define('users', {
   id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+    type: DataTypes.STRING,
     primaryKey: true,
     unique: true,
   },
@@ -17,7 +16,7 @@ const User = global.DB.define('users', {
     allowNull: false,
   },
   role: {
-    type: DataTypes.ENUM('customer', 'restaurant'),
+    type: DataTypes.ENUM('user', 'employer'),
   },
 });
 

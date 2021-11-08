@@ -6,4 +6,4 @@ CREATE DATABASE IF NOT EXISTS `auth_test`;
 CREATE DATABASE IF NOT EXISTS `chat_test`;
 CREATE DATABASE IF NOT EXISTS `photos_test`;
 
-GRANT ALL PRIVILEGES ON *.* TO 'uberadmin'@'%';
+GRANT ALL PRIVILEGES ON *.* TO 'indeedadmin'@'%';
