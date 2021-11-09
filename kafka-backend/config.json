@@ -1,0 +1,6 @@
+{
+  "development": {
+    "user_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/user",
+    "kafka_host": "kafka:9092"
+  }
+}
