@@ -68,7 +68,28 @@ const getCompanyConnection = () => {
   return { companyConn, Company, Employer, Job };
 };
 
-const getUserConnection = () => {};
+const getUserConnection = () => {
+  const userConn = mongoose.createConnection(global.gConfig.user_conn);
+  mongoose.set('debug', true);
+
+  const UserSchema = new mongoose.Schema({
+    name: String,
+    about: String,
+    contactNo: String,
+    emails: [String],
+    resumes: [String],
+    coverLetters: [String],
+    city: String,
+    state: String,
+    country: String,
+    zip: String,
+    jobPreferences: [String],
+  });
+
+  const User = userConn.model('users', UserSchema);
+
+  return { userConn, User };
+};
 
 module.exports = {
   getCompanyConnection,

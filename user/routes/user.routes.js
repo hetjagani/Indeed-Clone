@@ -1,23 +1,38 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
+const { createUser } = require('../controllers/user');
 
+/**
+ * @typedef User
+ * @property {string} id.required
+ * @property {string} name.required
+ * @property {string} about.required
+ * @property {string} contactNo
+ * @property {[string]} emails
+ * @property {[string]} resumes
+ * @property {[string]} coverLetters
+ * @property {string} city
+ * @property {string} state
+ * @property {string} country
+ * @property {string} zip
+ * @property {[string]} jobPreferences
+ */
 
 const bodyValidators = () => [
-    body('name').exists().isString(),
-    body('description').isString(),
-    body('address').exists().isString(),
-    body('city').exists().isString(),
-    body('state').exists().isString(),
-    body('country').exists().isString(),
-    body('contact_no').exists().isString(),
-    body('time_open').exists().matches('..:..'),
-    body('time_close').exists().matches('..:..'),
-    body('food_type').exists().matches('veg|non-veg|vegan').isString(),
-    body('restaurant_type').exists().matches('delivery|pickup').isString(),
-    body('media').optional({ nullable: true }).isArray(),
-  ];
-  
+  body('id').exists().isString(),
+  body('name').exists().isString(),
+  body('about').exists().isString(),
+  body('contactNo').optional().isString(),
+  body('emails').optional().isArray(),
+  body('resumes').optional().isArray(),
+  body('coverLetters').optional().isArray(),
+  body('city').optional().isString(),
+  body('state').optional().isString(),
+  body('country').optional().isString(),
+  body('zip').optional().isString(),
+  body('jobPreferences').optional().isArray(),
+];
 
 /**
  * Create a User
@@ -27,4 +42,6 @@ const bodyValidators = () => [
  * @param {User.model} User.body.require
  * @returns {User.model} 201 - Created User
  */
- router.post('/', ...bodyValidators(), resController.createRestaurant);
+router.post('/', ...bodyValidators(), createUser);
+
+module.exports = router

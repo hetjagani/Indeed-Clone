@@ -5,6 +5,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 // const acl = require("./acl");
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
+const userRouter = require('./routes/user.routes')
 
 const app = express();
 
@@ -33,7 +34,7 @@ const options = {
       title: 'User Information Server',
       version: '1.0.0',
     },
-    host: 'localhost:7001',
+    host: 'localhost:7002',
     produces: ['application/json'],
     schemes: ['http'],
     securityDefinitions: {
@@ -52,7 +53,7 @@ const options = {
 
 expressSwagger(options);
 
-// app.use(getAuthMiddleware(validate));
+app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
-app.get('/', (req, res) => res.send('Hello'));
+app.use('/users', userRouter);
 module.exports = app;
