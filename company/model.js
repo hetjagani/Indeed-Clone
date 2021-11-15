@@ -4,6 +4,11 @@ const IndustrySchema = new mongoose.Schema({
   name: String,
 });
 
+const MediumSchema = new mongoose.Schema({
+  url: String,
+  altText: String,
+});
+
 const CompanySchema = new mongoose.Schema({
   name: String,
   description: mongoose.Schema.Types.Mixed,
@@ -23,6 +28,7 @@ const CompanySchema = new mongoose.Schema({
   learningScore: Number,
   appreciationScore: Number,
   employerIds: [mongoose.Types.ObjectId],
+  media: [MediumSchema],
 });
 
 const EmployerSchema = new mongoose.Schema({
@@ -30,6 +36,7 @@ const EmployerSchema = new mongoose.Schema({
   role: String,
   address: String,
   dateOfBirth: String,
+  medium: MediumSchema,
 });
 
 const JobSchema = new mongoose.Schema({
