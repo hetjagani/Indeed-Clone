@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-// const acl = require("./acl");
+// const acl = require('./acl');
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
 
 const app = express();
@@ -11,6 +11,8 @@ const app = express();
 const expressSwagger = require('express-swagger-generator')(app);
 const cors = require('cors');
 const validate = require('./util/authValidator');
+
+const employerRouter = require('./routes/employer.route');
 
 // all middlewares
 app.use(logger('dev'));
@@ -29,8 +31,8 @@ app.use((req, res, next) => {
 const options = {
   swaggerDefinition: {
     info: {
-      description: 'User Information Server for Indeed',
-      title: 'User Information Server',
+      description: 'Company Information Server for Indeed',
+      title: 'Company Information Server',
       version: '1.0.0',
     },
     host: 'localhost:7001',
@@ -52,7 +54,9 @@ const options = {
 
 expressSwagger(options);
 
-// app.use(getAuthMiddleware(validate));
+app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
-app.get('/', (req, res) => res.send('Hello'));
+
+app.use('/employers', employerRouter);
+
 module.exports = app;
