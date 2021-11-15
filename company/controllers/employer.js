@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
 const { getPagination, errors } = require('u-server-utils');
@@ -61,9 +62,63 @@ const createEmployer = async (req, res) => {
   });
 };
 
-const updateEmployer = async (req, res) => {};
+const updateEmployer = async (req, res) => {
+  const { id } = req.params;
 
-const deleteEmployer = async (req, res) => {};
+  const { user } = req.headers;
+  if (user != id) {
+    res.status(400).json({
+      ...errors.badRequest,
+      message: 'id should be same as logged in user',
+    });
+    return;
+  }
+
+  const valErr = validationResult(req);
+  if (!valErr.isEmpty()) {
+    console.error(valErr);
+    res.status(400).json({ status: 400, message: valErr.array() });
+    return;
+  }
+
+  const employer = req.body;
+
+  const dbEmployer = await Employer.findById(id);
+  if (!dbEmployer) {
+    res.status(404).json(errors.notFound);
+    return;
+  }
+
+  makeRequest('employer.update', { id: dbEmployer._id, data: employer }, async (err, resp) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send(errors.serverError);
+      return;
+    }
+
+    const result = await Employer.findById(resp._id);
+
+    res.status(200).json(result);
+  });
+};
+
+const deleteEmployer = async (req, res) => {
+  const { id } = req.params;
+
+  makeRequest('employer.delete', { id }, (err, resp) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send(errors.serverError);
+      return;
+    }
+
+    if (resp.success) {
+      res.status(200).json(null);
+    } else {
+      res.status(500).json(errors.serverError);
+    }
+  });
+};
 
 module.exports = {
   getAllEmployers,

@@ -3,6 +3,8 @@ var connection = new require('./kafka/connection');
 var createUser = require('./services/user/create');
 
 const createEmployer = require('./services/employer/create');
+const updateEmployer = require('./services/employer/update');
+const deleteEmployer = require('./services/employer/delete');
 
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
@@ -33,7 +35,8 @@ function handleTopicRequest(topic_name, fname) {
         }
 
         producer.send(payloads, function (err, data) {
-          console.log('SENT DATA FROM KAFKA BACKEND: ', JSON.stringify(res));
+          console.log('SENT DATA FROM KAFKA BACKEND: ');
+          console.log(res);
         });
         return;
       });
@@ -48,3 +51,5 @@ function handleTopicRequest(topic_name, fname) {
 //second argument is a function that will handle this topic request
 handleTopicRequest('user.create', createUser);
 handleTopicRequest('employer.create', createEmployer);
+handleTopicRequest('employer.update', updateEmployer);
+handleTopicRequest('employer.delete', deleteEmployer);
