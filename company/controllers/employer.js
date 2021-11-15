@@ -1,8 +1,9 @@
 /* eslint-disable eqeqeq */
 /* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
+const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
-const { Employer } = require('../model');
+const { Employer, Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
 const getAllEmployers = async (req, res) => {
@@ -10,9 +11,18 @@ const getAllEmployers = async (req, res) => {
 
   const employersCount = await Employer.count().skip(offset).limit(limit);
 
-  const employerList = await Employer.find({}).skip(offset).limit(limit);
-
-  // TODO: get company object in response
+  const employerList = await Employer.aggregate([
+    {
+      $lookup: {
+        from: 'companies',
+        foreignField: '_id',
+        localField: 'companyId',
+        as: 'company',
+      },
+    },
+  ])
+    .skip(offset)
+    .limit(limit);
 
   res.status(200).json({ total: employersCount, nodes: employerList });
 };
@@ -20,15 +30,22 @@ const getAllEmployers = async (req, res) => {
 const getEmployerById = async (req, res) => {
   const { id } = req.params;
 
-  const employer = await Employer.findById(id);
-  if (!employer) {
+  const employerList = await Employer.aggregate([
+    { $match: { _id: Types.ObjectId(id) } },
+    {
+      $lookup: {
+        from: 'companies',
+        foreignField: '_id',
+        localField: 'companyId',
+        as: 'company',
+      },
+    },
+  ]);
+  if (employerList.length === 0) {
     res.status(404).json(errors.notFound);
     return;
   }
-
-  // TODO: get company object in response
-
-  res.status(200).json(employer);
+  res.status(200).json(employerList[0]);
 };
 
 const createEmployer = async (req, res) => {
@@ -51,14 +68,35 @@ const createEmployer = async (req, res) => {
   const employer = req.body;
   employer._id = employer.id;
 
-  makeRequest('employer.create', employer, (err, resp) => {
+  // if companyId provided check if the company exists
+  if (employer.companyId && employer.companyId != '') {
+    const company = await Company.findById(Types.ObjectId(employer.companyId));
+    if (!company) {
+      res.status(404).json({ status: 404, message: 'company does not exist' });
+      return;
+    }
+  }
+
+  makeRequest('employer.create', employer, async (err, resp) => {
     if (err || !resp) {
       console.log(err);
       res.status(500).json(errors.serverError);
       return;
     }
 
-    res.status(201).json(resp);
+    const result = await Employer.aggregate([
+      { $match: { _id: Types.ObjectId(resp._id) } },
+      {
+        $lookup: {
+          from: 'companies',
+          foreignField: '_id',
+          localField: 'companyId',
+          as: 'company',
+        },
+      },
+    ]);
+
+    res.status(201).json(result[0]);
   });
 };
 
@@ -82,6 +120,7 @@ const updateEmployer = async (req, res) => {
   }
 
   const employer = req.body;
+  delete employer.companyId;
 
   const dbEmployer = await Employer.findById(id);
   if (!dbEmployer) {
@@ -96,9 +135,19 @@ const updateEmployer = async (req, res) => {
       return;
     }
 
-    const result = await Employer.findById(resp._id);
+    const result = await Employer.aggregate([
+      { $match: { _id: Types.ObjectId(resp._id) } },
+      {
+        $lookup: {
+          from: 'companies',
+          foreignField: '_id',
+          localField: 'companyId',
+          as: 'company',
+        },
+      },
+    ]);
 
-    res.status(200).json(result);
+    res.status(200).json(result[0]);
   });
 };
 

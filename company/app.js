@@ -13,6 +13,7 @@ const cors = require('cors');
 const validate = require('./util/authValidator');
 
 const employerRouter = require('./routes/employer.route');
+const companyRouter = require('./routes/company.route');
 
 // all middlewares
 app.use(logger('dev'));
@@ -58,5 +59,6 @@ app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
 
 app.use('/employers', employerRouter);
+app.use('/companies', companyRouter);
 
 module.exports = app;

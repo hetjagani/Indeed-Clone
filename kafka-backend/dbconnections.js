@@ -32,7 +32,7 @@ const getCompanyConnection = () => {
     avgHappinessScore: Number,
     learningScore: Number,
     appreciationScore: Number,
-    employerIds: [mongoose.Types.ObjectId],
+    employers: [mongoose.Types.ObjectId],
     media: [MediumSchema],
   });
 
@@ -42,6 +42,7 @@ const getCompanyConnection = () => {
     address: String,
     dateOfBirth: String,
     medium: MediumSchema,
+    companyId: Types.ObjectId,
   });
 
   const JobSchema = new mongoose.Schema({
