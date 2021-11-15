@@ -1,0 +1,7 @@
+{
+  "development": {
+    "user_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/user",
+    "company_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/company",
+    "kafka_host": "kafka:9092"
+  }
+}

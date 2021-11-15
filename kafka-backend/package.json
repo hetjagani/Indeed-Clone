@@ -1,18 +1,28 @@
 {
-  "name": "kafka-backend",
+  "name": "back-end",
   "version": "1.0.0",
-  "description": "Kafka Backend for Indeed Clone",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
-  "author": "Het Jagani",
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "kafka-node": "^5.0.0",
-    "mongoose": "^6.0.12",
-    "nodemon": "^2.0.14"
+    "bcrypt": "^5.0.1",
+    "bcrypt-nodejs": "0.0.3",
+    "formidable": "^1.1.1",
+    "glob": "^7.1.2",
+    "images-upload-middleware": "^1.1.1",
+    "kafka-node": "^2.5.0",
+    "mongodb": "^2.2.31",
+    "mongodb-autoincrement": "^1.0.1",
+    "mongoose": "^6.0.11",
+    "multer": "^1.3.0",
+    "nodemailer": "^4.6.4",
+    "nodemon": "^2.0.14",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "uuidv4": "^1.0.0"
   }
 }
