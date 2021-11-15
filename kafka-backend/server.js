@@ -2,6 +2,8 @@ require('./config');
 var connection = new require('./kafka/connection');
 var createUser = require('./services/user/create');
 
+const createEmployer = require('./services/employer/create');
+
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
   var producer = connection.getProducer();
@@ -23,6 +25,13 @@ function handleTopicRequest(topic_name, fname) {
             partition: 0,
           },
         ];
+        if (!res && err) {
+          payloads[0].messages = JSON.stringify({
+            correlationId: data.correlationId,
+            data: err,
+          });
+        }
+
         producer.send(payloads, function (err, data) {
           console.log('SENT DATA FROM KAFKA BACKEND: ', JSON.stringify(res));
         });
@@ -38,3 +47,4 @@ function handleTopicRequest(topic_name, fname) {
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest('user.create', createUser);
+handleTopicRequest('employer.create', createEmployer);

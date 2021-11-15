@@ -7,7 +7,7 @@ function makeRequest(queue_name, msg_payload, callback) {
   console.log('SENT TO KAFKA');
   console.log(msg_payload);
   rpc.makeRequest(queue_name, msg_payload, (err, response) => {
-    if (err) console.error(err);
+    if (err) callback(err, null);
     else {
       callback(null, response);
     }
