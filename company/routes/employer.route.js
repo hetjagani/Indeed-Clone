@@ -8,7 +8,6 @@ const {
   updateEmployer,
   deleteEmployer,
 } = require('../controllers/employer');
-// const resController = require('../controllers/restaurant');
 
 const router = express.Router();
 
@@ -20,7 +19,7 @@ const router = express.Router();
  * @property {string} address.required
  * @property {string} dateOfBirth.required
  * @property {string} companyId
- * @property {Any} medium
+ * @property {object} medium
  */
 
 const bodyValidators = () => [
