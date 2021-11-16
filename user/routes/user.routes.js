@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
-const { createUser } = require('../controllers/user');
+const {
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} = require('../controller/user');
 
 /**
  * @typedef User
- * @property {string} id.required
- * @property {string} name.required
- * @property {string} about.required
+ * @property {string} id
+ * @property {string} name
+ * @property {string} about
  * @property {string} contactNo
  * @property {[string]} emails
  * @property {[string]} resumes
@@ -34,6 +40,8 @@ const bodyValidators = () => [
   body('jobPreferences').optional().isArray(),
 ];
 
+const [, ...updateValidators] = bodyValidators();
+
 /**
  * Create a User
  * @route POST /users
@@ -44,4 +52,45 @@ const bodyValidators = () => [
  */
 router.post('/', ...bodyValidators(), createUser);
 
-module.exports = router
+/**
+ * Get list of Users
+ * @route GET /users
+ * @param {integer} page.query
+ * @param {integer} limit.query
+ * @group Users
+ * @security JWT
+ * @returns {Array.<User>} 200 - List of user info
+ */
+router.get('/', getAllUsers);
+
+/**
+ * Get User by ID
+ * @route GET /users/{id}
+ * @group Users
+ * @security JWT
+ * @param {string} id.path.require
+ * @returns {user.model} 200 - User for given ID
+ */
+router.get('/:id', getUserById);
+
+/**
+ * Update User by ID
+ * @route PUT /users/{id}
+ * @group Users
+ * @security JWT
+ * @param {string} id.path.require
+ * @param {User.model} User.body.require
+ * @returns {User.model} 200 - Updated User
+ */
+router.put('/:id', ...updateValidators, updateUser);
+
+/**
+ * Delete User by ID
+ * @route DELETE /users/{id}
+ * @group Users
+ * @security JWT
+ * @param {string} id.path.require
+ * @returns {null} 200 - Delete Restaurant
+ */
+router.delete('/:id', deleteUser);
+module.exports = router;
