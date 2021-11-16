@@ -7,6 +7,7 @@ const updateEmployer = require('./services/employer/update');
 const deleteEmployer = require('./services/employer/delete');
 const createCompany = require('./services/company/create');
 const updateCompany = require('./services/company/update');
+const deleteCompany = require('./services/company/delete');
 
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
@@ -57,3 +58,4 @@ handleTopicRequest('employer.update', updateEmployer);
 handleTopicRequest('employer.delete', deleteEmployer);
 handleTopicRequest('company.create', createCompany);
 handleTopicRequest('company.update', updateCompany);
+handleTopicRequest('company.delete', deleteCompany);
