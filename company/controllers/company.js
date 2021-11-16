@@ -101,12 +101,13 @@ const updateCompany = async (req, res) => {
   const company = req.body;
   delete company.employers;
 
-  const dbCompany = await Company.findById(id);
+  const dbCompany = await Company.findById(Types.ObjectId(id));
   if (!dbCompany) {
     res.status(404).json(errors.notFound);
     return;
   }
 
+  // check if employer is in the company
   if (
     !dbCompany.employers.find((e) => {
       console.log(user);
@@ -140,9 +141,42 @@ const updateCompany = async (req, res) => {
 
     res.status(201).json(companyList[0]);
   });
-  // check if employer is in the company
 };
-const deleteCompany = async (req, res) => {};
+const deleteCompany = async (req, res) => {
+  const { id } = req.params;
+
+  const { user } = req.headers;
+  const dbCompany = await Company.findById(Types.ObjectId(id));
+  if (!dbCompany) {
+    res.status(404).json(errors.notFound);
+    return;
+  }
+
+  // check if employer is in the company
+  if (
+    !dbCompany.employers.find((e) => {
+      console.log(user);
+      console.log(e);
+      return e.toString() === user;
+    })
+  ) {
+    res.status(401).json(errors.unauthorized);
+    return;
+  }
+
+  makeRequest('company.delete', { id: dbCompany._id }, async (err, resp) => {
+    if (err) {
+      res.status(500).json(errors.serverError);
+      return;
+    }
+
+    if (resp.success) {
+      res.status(200).json(null);
+    } else {
+      res.status(500).json(errors.serverError);
+    }
+  });
+};
 
 module.exports = {
   getAllCompanies,
