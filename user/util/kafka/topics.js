@@ -32,7 +32,7 @@ const createKafkaTopics = () => {
       if (err) {
         console.error(err);
       }
-    },
+    }
   );
 };
 
