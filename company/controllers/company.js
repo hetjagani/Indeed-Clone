@@ -8,7 +8,7 @@ const { makeRequest } = require('../util/kafka/client');
 const getAllCompanies = async (req, res) => {
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
-  const companyCount = await Company.count().skip(offset).limit(limit);
+  const companyCount = await Company.count();
 
   const companyList = await Company.aggregate([
     {
@@ -108,13 +108,7 @@ const updateCompany = async (req, res) => {
   }
 
   // check if employer is in the company
-  if (
-    !dbCompany.employers.find((e) => {
-      console.log(user);
-      console.log(e);
-      return e.toString() === user;
-    })
-  ) {
+  if (!dbCompany.employers.find((e) => e.toString() === user)) {
     res.status(401).json(errors.unauthorized);
     return;
   }
