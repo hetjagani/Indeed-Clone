@@ -8,7 +8,6 @@ const {
   updateEmployer,
   deleteEmployer,
 } = require('../controllers/employer');
-// const resController = require('../controllers/restaurant');
 
 const router = express.Router();
 
@@ -20,6 +19,7 @@ const router = express.Router();
  * @property {string} address.required
  * @property {string} dateOfBirth.required
  * @property {string} companyId
+ * @property {object} medium
  */
 
 const bodyValidators = () => [
@@ -27,7 +27,7 @@ const bodyValidators = () => [
   body('name').exists().isString(),
   body('role').isString(),
   body('address').exists().isString(),
-  body('dateOfBirth').exists().isString(),
+  body('dateOfBirth').exists().isString().isDate({ format: 'mm/dd/yyyy' }),
   body('companyId').optional({ nullable: true }).isString(),
 ];
 

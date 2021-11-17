@@ -1,11 +1,19 @@
+const { Types } = require('mongoose');
 const { getCompanyConnection } = require('../../dbconnections');
 
 const handle_request = async (msg, callback) => {
-  const { Employer } = getCompanyConnection();
+  const { Employer, Company } = getCompanyConnection();
 
-  // TODO: add employer to the company if companyId provided
   try {
     const employer = await Employer.create(msg);
+
+  // add employer to the company if companyId provided
+    if (msg.companyId && msg.companyId != '') {
+      await Company.updateOne(
+        { _id: Types.ObjectId(msg.companyId) },
+        { $push: { employers: employer._id } },
+      );
+    }
     callback(null, employer);
   } catch (err) {
     callback({ isError: true, error: err.toString() });
