@@ -31,8 +31,8 @@ app.use('/photos', photoRoutes);
 const options = {
   swaggerDefinition: {
     info: {
-      description: 'Authentication Server for Uber Eats',
-      title: 'Authentication Server',
+      description: 'Photos Service for Indeed',
+      title: 'Photos Service',
       version: '1.0.0',
     },
     host: 'localhost:7005',
