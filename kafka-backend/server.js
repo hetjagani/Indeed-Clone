@@ -2,6 +2,16 @@ require('./config');
 var connection = new require('./kafka/connection');
 var createUser = require('./services/user/create');
 
+const createEmployer = require('./services/employer/create');
+const updateEmployer = require('./services/employer/update');
+const deleteEmployer = require('./services/employer/delete');
+const createCompany = require('./services/company/create');
+const updateCompany = require('./services/company/update');
+const deleteCompany = require('./services/company/delete');
+const createJob = require('./services/job/create');
+const updateJob = require('./services/job/update');
+const deleteJob = require('./services/job/delete');
+
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
   var producer = connection.getProducer();
@@ -23,8 +33,16 @@ function handleTopicRequest(topic_name, fname) {
             partition: 0,
           },
         ];
+        if (!res && err) {
+          payloads[0].messages = JSON.stringify({
+            correlationId: data.correlationId,
+            data: err,
+          });
+        }
+
         producer.send(payloads, function (err, data) {
-          console.log('SENT DATA FROM KAFKA BACKEND: ', JSON.stringify(res));
+          console.log('SENT DATA FROM KAFKA BACKEND: ');
+          console.log(res);
         });
         return;
       });
@@ -38,3 +56,12 @@ function handleTopicRequest(topic_name, fname) {
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest('user.create', createUser);
+handleTopicRequest('employer.create', createEmployer);
+handleTopicRequest('employer.update', updateEmployer);
+handleTopicRequest('employer.delete', deleteEmployer);
+handleTopicRequest('company.create', createCompany);
+handleTopicRequest('company.update', updateCompany);
+handleTopicRequest('company.delete', deleteCompany);
+handleTopicRequest('job.create', createJob);
+handleTopicRequest('job.update', updateJob);
+handleTopicRequest('job.delete', deleteJob);
