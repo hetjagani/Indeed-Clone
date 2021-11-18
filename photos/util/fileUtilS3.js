@@ -9,31 +9,31 @@ const s3 = new aws.S3({
 });
 
 const uploadFileToS3 = (fileName) => {
-  try{
+  try {
     const fileContent = fs.readFileSync(fileName.path);
-  
+
     const params = {
       ACL: 'public-read',
       Bucket: global.gConfig.s3_bucket_name,
       Body: fileContent,
       Key: new ObjectId().toString(),
     };
-  
+
     const data = s3.upload(params).promise();
     fs.unlinkSync(fileName.path);
     return data;
-  }catch(err){
-      throw err;
+  } catch (err) {
+    throw err;
   }
 };
 
 const deleteFileFromS3 = (key) => {
-  try{
+  try {
     s3.deleteObject({
       Bucket: global.gConfig.s3_bucket_name,
       Key: key,
     });
-  }catch(err){
+  } catch (err) {
     throw err;
   }
 };

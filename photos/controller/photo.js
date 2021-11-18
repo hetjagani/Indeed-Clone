@@ -1,7 +1,6 @@
-const { ObjectId } = require('mongodb');
+const { errors, getPagination } = require('u-server-utils');
 const { Photo } = require('../model');
 const { uploadFileToS3, deleteFileFromS3 } = require('../util/fileUtilS3');
-const {errors, getPagination} = require('u-server-utils')
 
 const addPhoto = async (req, res) => {
   try {
@@ -16,10 +15,10 @@ const addPhoto = async (req, res) => {
 
     const photoObj = await Photo.create({
       id: uploadedPhoto.Key,
-      isFeatured: isFeatured === 'true' ? true : false,
+      isFeatured: isFeatured === 'true',
       altText: originalname,
-      userId:  userId,
-      companyId: companyId,
+      userId,
+      companyId,
       url: uploadedPhoto.Location,
     });
 
@@ -50,7 +49,7 @@ const getAllPhotos = async (req, res) => {
   const { userId, companyId } = req.query;
 
   try {
-    const {limit, offset} = getPagination(req.query.page,req.query.limit);
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
     const queryObj = {};
     if (userId) {
@@ -62,11 +61,11 @@ const getAllPhotos = async (req, res) => {
 
     const photos = await Photo.findAndCountAll({
       where: queryObj,
-      limit: limit,
-      offset: offset,
+      limit,
+      offset,
     });
 
-    return res.status(200).json({total: photos.count, photos: photos.rows})
+    return res.status(200).json({ total: photos.count, photos: photos.rows });
   } catch (err) {
     return res.status(500).json(errors.serverError);
   }

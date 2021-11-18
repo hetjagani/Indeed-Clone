@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
-const upload = multer({dest: '/temp'});
+
+const upload = multer({ dest: '/temp' });
 
 const {
   addPhoto,
@@ -8,7 +9,7 @@ const {
   getAllPhotos,
   deletePhoto,
   updatePhoto,
-    } = require('../controller/photo');
+} = require('../controller/photo');
 
 const router = express.Router();
 
