@@ -1,30 +1,44 @@
-const jwt = require('jsonwebtoken');
-// const emailValidator = require('email-validator');
 const { ObjectId } = require('mongodb');
 const { Photo } = require('../model');
-const { getPasswordHash, validatePassword, validatePassHash } = require('../util/passwords');
-
-const JWT_SECRET = 'myubereatessuperdupersecret';
+const { uploadFileToS3 } = require('../util/imageUploadS3');
 
 const addPhoto = async (req, res) => {
+  try {
+    const { isFeatured, userId, companyId } = req.body;
+    const { originalname } = req.file;
 
+    if (!(isFeatured && userId && companyId)) {
+      return res.status(400).send('Bad Request');
+    }
+
+    const uploadedPhoto = await uploadFileToS3(req.file);
+
+    const photoObj = await Photo.create({
+      id: uploadedPhoto.Key,
+      isFeatured: isFeatured === 'true' ? true : false,
+      altText: originalname,
+      userId: userId,
+      companyId: companyId,
+      url: uploadedPhoto.Location,
+    });
+
+    return res.status(201).send(photoObj);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send('Internal Server Error');
+  }
 };
 
-const getPhotoById = async (req, res) => {
-
-};
+const getPhotoById = async (req, res) => {};
 
 const getAllPhotos = async (req, res) => {
-
+  console.log('sdlfjasd;lfjasdf');
+  return;
 };
 
-const updatePhoto = async (req, res) => {
+const updatePhoto = async (req, res) => {};
 
-};
-
-const deletePhoto = async (req, res) => {
-
-};
+const deletePhoto = async (req, res) => {};
 
 // const getToken = async (req, res) => {
 //   const { email, password } = req.body;
@@ -136,9 +150,9 @@ const deletePhoto = async (req, res) => {
 // };
 
 module.exports = {
-    addPhoto,
-    getPhotoById,
-    getAllPhotos,
-    deletePhoto,
-    updatePhoto,
-  };
+  addPhoto,
+  getPhotoById,
+  getAllPhotos,
+  deletePhoto,
+  updatePhoto,
+};
