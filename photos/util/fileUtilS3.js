@@ -10,7 +10,6 @@ const s3 = new aws.S3({
 
 const uploadFileToS3 = (fileName) => {
   try{
-    console.log('entered');
     const fileContent = fs.readFileSync(fileName.path);
   
     const params = {
