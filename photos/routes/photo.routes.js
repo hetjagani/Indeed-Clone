@@ -1,4 +1,7 @@
 const express = require('express');
+const multer = require('multer');
+const upload = multer({dest: '/temp'});
+
 const {
   addPhoto,
   getPhotoById,
@@ -26,7 +29,7 @@ const router = express.Router();
  * @returns {object} 201 - {url: newUrl of the Photo uploaded}
  * @returns {Error} 500 - {error: Internal Server Error}
  */
-router.post('/', addPhoto);
+router.post('/', upload.single('imageData'), addPhoto);
 
 /**
  * Get a Photo by Id

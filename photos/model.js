@@ -22,6 +22,10 @@ const Photo = global.DB.define('photos', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  url: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 });
 
 const runMigration = async (force) => {
