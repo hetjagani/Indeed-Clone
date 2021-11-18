@@ -5,7 +5,7 @@ const {
   getAllJobs, createJob, getJobById, updateJob, deleteJob,
 } = require('../controllers/job');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 /**
  * @typedef Job
@@ -26,14 +26,14 @@ const router = express.Router();
  */
 
 const bodyValidators = () => [
-  body('name').exists().isString(),
+  body('title').exists().isString(),
   body('industry').exists().isObject(),
   body('city').exists().isString(),
   body('state').exists().isString(),
   body('country').exists().isString(),
   body('address').exists().isString(),
-  body('jobLocation').exists().isString(),
-  body('type').exists().isString(),
+  body('jobLocation').exists().isString().isIn(['remote', 'in_person']),
+  body('type').exists().isString().isIn(['internship', 'full_time', 'contract']),
   body('zipcode').exists().isNumeric(),
   body('postedOn').exists().isDate({ format: 'mm-dd-yyyy' }),
   body('salary').exists().isNumeric(),
@@ -82,7 +82,7 @@ router.get('/:id', getJobById);
  * @param {string} compId.path
  * @param {string} id.path
  * @group Job
- * @security JWT
+ * @security JWemployerCheckMiddleware, T
  * @param {Job.model} Job.body.require
  * @returns {Job.model} 200 - Updated Job
  */
