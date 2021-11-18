@@ -26,7 +26,17 @@ const uploadFileToS3 = (fileName) => {
   }catch(err){
       throw err;
   }
-  
 };
 
-module.exports = { uploadFileToS3 };
+const deleteFileFromS3 = (key) => {
+  try{
+    s3.deleteObject({
+      Bucket: global.gConfig.s3_bucket_name,
+      Key: key,
+    });
+  }catch(err){
+    throw err;
+  }
+};
+
+module.exports = { uploadFileToS3, deleteFileFromS3 };

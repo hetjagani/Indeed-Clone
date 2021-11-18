@@ -16,7 +16,6 @@ const router = express.Router();
  * @typedef AddPhoto
  * @property {string} imageData.required
  * @property {boolean} isFeatured.required
- * @property {string} altText.required
  * @property {string} userId.required
  * @property {string} companyId.required
  */
