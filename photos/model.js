@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 const Photo = global.DB.define('photos', {
-  id: {
+  _id: {
     type: DataTypes.STRING,
     primaryKey: true,
     unique: true,
