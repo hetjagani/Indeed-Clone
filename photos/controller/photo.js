@@ -14,8 +14,8 @@ const addPhoto = async (req, res) => {
     const uploadedPhoto = await uploadFileToS3(req.file);
 
     const photoObj = await Photo.create({
-      id: uploadedPhoto.Key,
-      isFeatured: isFeatured === 'true',
+      _id: uploadedPhoto.Key,
+      isFeatured: isFeatured === 'true' ? true : false,
       altText: originalname,
       userId,
       companyId,
@@ -24,6 +24,7 @@ const addPhoto = async (req, res) => {
 
     return res.status(201).json(photoObj);
   } catch (error) {
+    console.log(error);
     return res.status(500).json(errors.serverError);
   }
 };
@@ -36,10 +37,10 @@ const getPhotoById = async (req, res) => {
     }
 
     const photo = await Photo.findOne({
-      where: { id },
+      where: { _id: id },
     });
 
-    return res.status(200).json({ url: photo.url });
+    return res.status(200).json(photo);
   } catch (err) {
     return res.status(500).json(errors.serverError);
   }
@@ -80,7 +81,7 @@ const updatePhoto = async (req, res) => {
 
     const { altText, isFeatured } = req.body;
     const photo = await Photo.findOne({
-      where: { id },
+      where: { _id: id },
     });
 
     if (altText) {
@@ -106,7 +107,7 @@ const deletePhoto = async (req, res) => {
     }
 
     const photo = await Photo.findOne({
-      where: { id },
+      where: { _id: id },
     });
 
     await photo.destroy();
