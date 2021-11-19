@@ -5,6 +5,8 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
+const validate = require('./util/authValidator');
 
 const photoRoutes = require('./routes/photo.routes');
 
@@ -26,8 +28,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/photos', photoRoutes);
-
 const options = {
   swaggerDefinition: {
     info: {
@@ -45,5 +45,9 @@ const options = {
 };
 
 expressSwagger(options);
+
+app.use(getAuthMiddleware(validate));
+
+app.use('/photos', photoRoutes);
 
 module.exports = app;
