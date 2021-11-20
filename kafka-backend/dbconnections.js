@@ -94,9 +94,25 @@ const getUserConnection = () => {
     jobPreferences: [String],
   });
 
-  const User = userConn.model('users', UserSchema);
+  const UserSalarySchema = new mongoose.Schema({
+    companyId: mongoose.Schema.Types.ObjectId,
+    currentlyWorking: Boolean,
+    endDate: Date,
+    salary: Number,
+    title: String,
+    city: String,
+    state: String,
+    country: String,
+    zip: String,
+    experience: String,
+    benifits: [String],
+    industry: { name: { type: String } },
+  });
 
-  return { userConn, User };
+  const User = userConn.model('users', UserSchema);
+  const UserSalary = userConn.model('salaries', UserSalarySchema);
+
+  return { userConn, User, UserSalary };
 };
 
 module.exports = {

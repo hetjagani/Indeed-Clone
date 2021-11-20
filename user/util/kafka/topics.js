@@ -27,6 +27,11 @@ const createKafkaTopics = () => {
         partitions: 1,
         replicationFactor: 1,
       },
+      {
+        topic: 'userSalary.create',
+        partitions: 1,
+        replicationFactor: 1,
+      },
     ],
     (err) => {
       if (err) {
