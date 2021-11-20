@@ -38,7 +38,9 @@ UserSchema.plugin(autoIncrement.plugin,{
 })
 
 const User = model('users', UserSchema);
+const UserSalary = model('salaries', UserSalarySchema);
 
 module.exports = {
   User,
+  UserSalary,
 };

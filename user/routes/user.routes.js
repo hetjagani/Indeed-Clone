@@ -10,6 +10,9 @@ const {
   getUserSalary,
   deleteUserSalary,
 } = require('../controller/user');
+const { createUserSalary } = require('../controller/userSalary');
+
+
 
 /**
  * @typedef User
@@ -26,6 +29,23 @@ const {
  * @property {string} zip
  * @property {[string]} jobPreferences
  */
+
+/**
+ * @typedef UserSalary
+ * @property {string} companyId
+ * @property {string} currentlyWorking
+ * @property {string} endDate
+ * @property {string} salary
+ * @property {string} title
+ * @property {string} city
+ * @property {string} state
+ * @property {string} country
+ * @property {string} zip
+ * @property {string} experience
+ * @property {[string]} benifits
+ * @property {string} industry
+ */
+
 
 const bodyValidators = () => [
   body('id').exists().isString(),
@@ -45,6 +65,17 @@ const bodyValidators = () => [
 const [, ...updateValidators] = bodyValidators();
 
 /**
+ * Create a User Salary
+ * @route POST /users/{id}/salaries
+ * @group User Salaries
+ * @security JWT
+ * @param {String} id.path.require
+ * @param {UserSalary.model} UserSalary.body.require
+ * @returns {UserSalary.model} 201 - Created User Salary
+ */
+ router.post('/:id/salaries', createUserSalary);
+
+/**
  * Create a User
  * @route POST /users
  * @group Users
@@ -53,6 +84,7 @@ const [, ...updateValidators] = bodyValidators();
  * @returns {User.model} 201 - Created User
  */
 router.post('/', ...bodyValidators(), createUser);
+
 
 /**
  * Get list of Users
