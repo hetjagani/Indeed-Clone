@@ -2,7 +2,10 @@ const { validationResult } = require('express-validator');
 const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
 const { User } = require('../model');
+const {Company}= require("../../company/model")
+const {Industry}= require("../../company/model")
 const mongoose = require('mongoose');
+const { response } = require('express');
 
 const createUser = async (req, res) => {
   const { user } = req.headers;
@@ -104,6 +107,52 @@ const deleteUser = async (req, res) => {
     res.status(201).json(resp);
   });
 };
+//==========================================================
+
+const getUserSalary = async (req, res) => {
+  const { id } = req.params;
+  let response=[]
+  const user = await User.findById(id);
+  if (!user) {
+    res.status(404).json(errors.notFound);
+    return;
+  }
+  else {
+    user.salaries.map(salaryy=>{
+      response.push(
+        {
+          companyId: salaryy.companyId,
+          userId:id,
+  currentlyWorking:salaryy.currentlyWorking,
+  endDate: salaryy.endDate,
+  salary : salaryy.salary,
+  title:salaryy.title,
+  city:user.city,
+  state:user.state,
+  country:user.country,
+  zip:user.zip,
+  experience: salaryy.experience,
+  benefits:salaryy.benefits,
+  industry:await User.findById(salaryy.companyId).industry,
+  company:await User.findById(salaryy.companyId),
+        }
+      )
+    })
+  }
+  res.status(200).json(reponse);
+
+};
+
+const deleteUserSalary = async (req, res) => {
+  makeRequest('user.deleteSalary', req.params, (err, resp) => {
+    if (err || !resp) {
+      res.status(500).json(errors.serverError);
+      return;
+    }
+
+    res.status(201).json(resp);
+  });
+};
 
 module.exports = {
   createUser,
@@ -111,4 +160,6 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  getUserSalary,
+  deleteUserSalary
 };
