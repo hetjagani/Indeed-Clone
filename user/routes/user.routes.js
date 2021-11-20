@@ -7,6 +7,8 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  getUserSalary,
+  deleteUserSalary,
 } = require('../controller/user');
 
 /**
@@ -93,4 +95,27 @@ router.put('/:id', ...updateValidators, updateUser);
  * @returns {null} 200 - Delete Restaurant
  */
 router.delete('/:id', deleteUser);
+
+/**
+ * GET User salaries by ID
+ * @route GET /users/{id}/salaries
+ * @group Users
+ * @security JWT
+ * @param {string} id.path.require
+ * @returns {user.model} 200 - User salary for given ID
+ */
+ router.get('/:id/salaries', getUserSalary);
+
+ /**
+ * Delete User salary by ID
+ * @route DELETE /users/{id}/salaries/{salaryId}
+ * @group Users
+ * @security JWT
+ * @param {string} id.path.require
+ * @param {number} salaryId.path.require
+ * @returns {null} 200 - Delete Restaurant
+ */
+router.delete('/:id/salaries/:salaryId', deleteUserSalary);
+
+
 module.exports = router;
