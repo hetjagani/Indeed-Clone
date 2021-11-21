@@ -26,7 +26,7 @@ const UserSalarySchema = new Schema({
   country: String,
   zip: String,
   experience: String,
-  benifits: [String],
+  benefits: [String],
   industry: { name: { type: String } },
 });
 
