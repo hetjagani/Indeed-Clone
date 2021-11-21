@@ -9,99 +9,99 @@ const {
   deleteReview,
 } = require('../controllers/review');
 
-const employerCheckMiddleware = require('../util/employerCheck');
-
-const jobsRouter = require('./job.route');
-
 const router = express.Router();
 
-router.use('/:compId/jobs', employerCheckMiddleware, jobsRouter);
-
 /**
- * @typedef Company
- * @property {string} name.required
- * @property {object} description.required
- * @property {string} about.required
- * @property {string} workCulture.required
- * @property {string} values.required
- * @property {string} mission.required
- * @property {string} foundedOn.required
- * @property {string} ceo.required
- * @property {object} industry.required
- * @property {string} headquarters.required
- * @property {string} revenue.required
- * @property {integer} size.required
- * @property {string} website.required
- * @property {object} media
+ * @typedef Review
+ * @property {integer} overallRating.required
+ * @property {integer} workLifeBalance.required
+ * @property {integer} compensation.required
+ * @property {integer} jobSecurity.required
+ * @property {integer} management.required
+ * @property {integer} jobCulture.required
+ * @property {string} summary.required
+ * @property {string} review.required
+ * @property {string} pros.required
+ * @property {string} cons.required
+ * @property {boolean} ceoApproval.required
+ * @property {string} tips.required
+ * @property {string} companyId.required
+ * @property {string} userId.required
+ * @property {boolean} isFeatured.required
+ * @property {string} status.required
+ * @property {string} reviewDate.required
  */
 
-const bodyValidators = () => [
-  body('name').exists().isString(),
-  body('description').isObject(),
-  body('about').isString(),
-  body('workCulture').isString(),
-  body('values').isString(),
-  body('mission').isString(),
-  body('foundedOn').exists().isString().isDate({ format: 'mm/dd/yyyy' }),
-  body('ceo').isString(),
-  body('industry').isObject(),
-  body('headquarters').isString(),
-  body('revenue').isString(),
-  body('size').isNumeric(),
-  body('website').isString(),
-  body('media').optional({ nullable: true }).isArray(),
+ const bodyValidators = () => [
+  body('overallRating').exists().isNumeric(),
+  body('workLifeBalance').exists().isNumeric(),
+  body('compensation').exists().isNumeric(),
+  body('jobSecurity').exists().isNumeric(),
+  body('management').exists().isNumeric(),
+  body('jobCulture').exists().isNumeric(),
+  body('summary').isString(),
+  body('review').isString(),
+  body('pros').isString(),
+  body('cons').isString(),
+  body('ceoApproval').isBoolean(),
+  body('reviewDate').exists().isString().isDate({ format: 'mm/dd/yyyy' }),
+  body('tips').isString(),
+  body('companyId').isString(),
+  body('userId').isString(),
+  body('isFeatured').isBoolean(),
+  body('status').isString().isIn(['APPROVED', 'REJECTED', 'PENDING']),
 ];
 
 /**
- * Get list of Companies
- * @route GET /companies
+ * Get list of reviews
+ * @route GET /reviews
  * @param {integer} page.query
  * @param {integer} limit.query
- * @group Company
+ * @group Review
  * @security JWT
- * @returns {Array.<Company>} 200 - List of company info
+ * @returns {Array.<Review>} 200 - List of review info
  */
-router.get('/', getAllCompanies);
+router.get('/', getAllReviews);
 
 /**
- * Create a Company
- * @route POST /companies
- * @group Company
+ * Create a Review
+ * @route POST /reviews
+ * @group Review
  * @security JWT
- * @param {Company.model} Company.body.require
- * @returns {Company.model} 201 - Created Company
+ * @param {Review.model} Review.body.require
+ * @returns {Review.model} 201 - Created Review
  */
-router.post('/', ...bodyValidators(), createCompany);
+router.post('/', ...bodyValidators(), createReview);
 
 /**
- * Get Company by ID
- * @route GET /companies/{id}
- * @group Company
+ * Get Review by ID
+ * @route GET /reviews/{id}
+ * @group Review
  * @security JWT
  * @param {string} id.path.require
- * @returns {Company.model} 200 - Company for given ID
+ * @returns {Review.model} 200 - Review for given ID
  */
-router.get('/:id', getCompanyById);
+router.get('/:id', getReviewById);
 
 /**
- * Update Company by ID
- * @route PUT /companies/{id}
- * @group Company
+ * Update Review by ID
+ * @route PUT /reviews/{id}
+ * @group Review
  * @security JWT
  * @param {string} id.path.require
- * @param {Company.model} Company.body.require
- * @returns {Company.model} 200 - Updated Company
+ * @param {Review.model} Review.body.require
+ * @returns {Review.model} 200 - Updated Review
  */
-router.put('/:id', ...bodyValidators(), updateCompany);
+router.put('/:id', ...bodyValidators(), updateReview);
 
 /**
- * Delete Company by ID
- * @route DELETE /companies/{id}
- * @group Company
+ * Delete Review by ID
+ * @route DELETE /reviews/{id}
+ * @group Review
  * @security JWT
  * @param {string} id.path.require
- * @returns {null} 200 - Delete Company
+ * @returns {null} 200 - Delete Review
  */
-router.delete('/:id', deleteCompany);
+router.delete('/:id', deleteReview);
 
 module.exports = router;

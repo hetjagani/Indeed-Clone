@@ -2,7 +2,7 @@
   "development": {
     "user_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/user",
     "company_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/company",
-    "review_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/company",
+    "review_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/review",
     "kafka_host": "kafka:9092"
   }
 }
