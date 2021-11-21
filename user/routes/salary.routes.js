@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { body } = require('express-validator');
-const { createSalary, updateSalary, getSalaries, deleteSalary, getSalaryById } = require('../controller/salary');
+const { createSalary, updateSalary, getSalaries, deleteSalary, getSalaryById, generalGetSalaryById, generalGetSalaries } = require('../controller/salary');
 
 /**
  * @typedef Salary
@@ -35,6 +35,29 @@ const salaryBodyValidators = () => [
 ];
 
 const [, ...updateSalaryValidators] = salaryBodyValidators();
+
+ /**
+ * Get a User Salary by Id
+ * @route GET /salaries/{id}
+ * @security JWT
+ * @group Salaries
+ * @param {String} id.path.require
+ * @returns {Salary.model} 200 - Get User Salary (General)
+ */
+  router.get('/:id', generalGetSalaryById);
+
+  /**
+ * Get a User Salaries (General)
+ * @route GET /salaries/
+ * @group Salaries
+ * @security JWT
+ * @param {integer} page.query
+ * @param {integer} limit.query
+ * @param {String} companyId.query
+ * @param {String} userId.query
+ * @returns {Salary.model} 200 - Get User Salary
+ */
+router.get('/', generalGetSalaries);
 
 /**
  * Get a User Salaries

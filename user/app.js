@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 // const acl = require("./acl");
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
 const userRouter = require('./routes/user.routes')
+const salaryRouter = require('./routes/salary.routes')
 
 const app = express();
 
@@ -56,4 +57,5 @@ expressSwagger(options);
 app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
 app.use('/users', userRouter);
+app.use('/salaries', salaryRouter);
 module.exports = app;
