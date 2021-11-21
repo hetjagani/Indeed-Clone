@@ -5,11 +5,9 @@ const handle_request = async (msg, callback) => {
   const { Review } = getReviewConnection();
 
   try {
-    const company = await Company.create(msg.company);
+    const review = await Review.create(msg);
 
-    await Employer.updateOne({ _id: Types.ObjectId(msg.user) }, { companyId: company._id });
-
-    callback(null, company);
+    callback(null, review);
   } catch (err) {
     callback({ isError: true, error: err.toString() });
   }

@@ -50,8 +50,6 @@ const getReviewById = async (req, res) => {
 };
 
 const createReview = async (req, res) => {
-  const { user } = req.headers;
-
   const valErr = validationResult(req);
   if (!valErr.isEmpty()) {
     console.error(valErr);
@@ -59,30 +57,18 @@ const createReview = async (req, res) => {
     return;
   }
 
-  const company = req.body;
-  company.employers = [user];
+  req.body.companyId = Types.ObjectId(req.body.companyId);
+  req.body.userId = Types.ObjectId(req.body.userId);
+  const review = req.body;
+  
 
-  makeRequest('company.create', { company, user }, async (err, resp) => {
+  makeRequest('review.create', review, async (err, resp) => {
     if (err) {
       res.status(500).json(errors.serverError);
       return;
     }
 
-    const { _id } = resp;
-
-    const companyList = await Company.aggregate([
-      { $match: { _id: Types.ObjectId(_id) } },
-      {
-        $lookup: {
-          from: 'employers',
-          localField: 'employers',
-          foreignField: '_id',
-          as: 'employers',
-        },
-      },
-    ]);
-
-    res.status(201).json(companyList[0]);
+    res.status(201).json(resp);
   });
 };
 
@@ -113,28 +99,32 @@ const updateReview = async (req, res) => {
     return;
   }
 
-  makeRequest('company.update', { id: dbCompany._id, data: company }, async (err, resp) => {
-    if (err) {
-      res.status(500).json(errors.serverError);
-      return;
-    }
+  makeRequest(
+    'company.update',
+    { id: dbCompany._id, data: company },
+    async (err, resp) => {
+      if (err) {
+        res.status(500).json(errors.serverError);
+        return;
+      }
 
-    const { _id } = resp;
+      const { _id } = resp;
 
-    const companyList = await Company.aggregate([
-      { $match: { _id: Types.ObjectId(_id) } },
-      {
-        $lookup: {
-          from: 'employers',
-          localField: 'employers',
-          foreignField: '_id',
-          as: 'employers',
+      const companyList = await Company.aggregate([
+        { $match: { _id: Types.ObjectId(_id) } },
+        {
+          $lookup: {
+            from: 'employers',
+            localField: 'employers',
+            foreignField: '_id',
+            as: 'employers',
+          },
         },
-      },
-    ]);
+      ]);
 
-    res.status(201).json(companyList[0]);
-  });
+      res.status(201).json(companyList[0]);
+    },
+  );
 };
 const deleteReview = async (req, res) => {
   const { id } = req.params;
