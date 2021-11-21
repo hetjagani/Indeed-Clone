@@ -92,6 +92,19 @@ const getUserConnection = () => {
     country: String,
     zip: String,
     jobPreferences: [String],
+    salaries:[{
+    salaryId:Number,  
+    companyId: String,
+    currentlyWorking:Boolean,
+    endDate: Date,
+    salary : Number,
+    title:String,
+    experience: String,
+    benefits:[String],
+    industry:String,
+    company:String
+    }],
+    
   });
 
   const UserSalarySchema = new mongoose.Schema({

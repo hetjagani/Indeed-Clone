@@ -3,6 +3,7 @@ const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
 const { User } = require('../model');
 const mongoose = require('mongoose');
+const { response } = require('express');
 
 const createUser = async (req, res) => {
   const { user } = req.headers;
