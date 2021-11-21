@@ -78,7 +78,12 @@ const getCompanyConnection = () => {
 
 const getUserConnection = () => {};
 
+const getReviewConnection = () => {
+
+};
+
 module.exports = {
   getCompanyConnection,
   getUserConnection,
+  getReviewConnection,
 };
