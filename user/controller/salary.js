@@ -125,7 +125,7 @@ const getSalaries = async (req, res) => {
 
     return res.status(200).json({ total: salariesCount, nodes: salaryList });
   } catch (err) {
-    res.status(500).send({ message: 'Internal Server Error' });
+    res.status(500).send(errors.serverError);
   }
 };
 
@@ -169,10 +169,54 @@ const deleteSalary = async (req, res) => {
   }
 };
 
+const generalGetSalaryById = async (req, res) => {
+  try {
+    const salary = await Salary.findOne({
+      _id: mongoose.Types.ObjectId(String(req.params.id)),
+    });
+    return res.status(200).send(salary);
+  } catch (err) {
+    res.status(500).send(errors.serverError);
+  }
+};
+
+const generalGetSalaries = async (req, res) => {
+  try {
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+    const { companyId, userId } = req.query;
+
+    let searchObj = {
+      companyId,
+      userId,
+    };
+
+    const checkProperties = (obj) => {
+      Object.keys(obj).forEach((key) => {
+        if (obj[key] === null || obj[key] === '' || obj[key] === undefined) {
+          // eslint-disable-next-line no-param-reassign
+          delete obj[key];
+        }
+      });
+    };
+
+    checkProperties(searchObj);
+
+    const salariesCount = await Salary.count(searchObj).skip(offset).limit(limit);
+
+    const salaryList = await Salary.find(searchObj).skip(offset).limit(limit);
+
+    return res.status(200).json({ total: salariesCount, nodes: salaryList });
+  } catch (err) {
+    res.status(500).send(errors.serverError);
+  }
+};
+
 module.exports = {
   createSalary,
   updateSalary,
   getSalaries,
   deleteSalary,
   getSalaryById,
+  generalGetSalaryById,
+  generalGetSalaries,
 };
