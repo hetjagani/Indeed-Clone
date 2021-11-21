@@ -1,8 +1,8 @@
 const { Types } = require('mongoose');
-const { getCompanyConnection } = require('../../dbconnections');
+const { getReviewConnection } = require('../../dbconnections');
 
 const handle_request = async (msg, callback) => {
-  const { Company, Employer } = getCompanyConnection();
+  const { Review } = getReviewConnection();
 
   try {
     const company = await Company.create(msg.company);
