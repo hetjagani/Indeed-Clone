@@ -1,13 +1,15 @@
 const { Types } = require('mongoose');
-const { getCompanyConnection } = require('../../dbconnections');
+const { getReviewConnection } = require('../../dbconnections');
 
 const handle_request = async (msg, callback) => {
-  const { Company } = getCompanyConnection();
+  const { Review } = getReviewConnection();
 
   try {
-    await Company.updateOne({ _id: Types.ObjectId(msg.id) }, msg.data);
+    await Review.updateOne({ _id: Types.ObjectId(msg.id) }, msg.data);
 
-    callback(null, { _id: msg.id });
+    const newReview = await Review.findOne({ _id: Types.ObjectId(msg.id) });
+    
+    callback(null, newReview);
   } catch (err) {
     callback({ isError: true, error: err.toString() });
   }
