@@ -95,7 +95,7 @@ const getUserConnection = () => {
  
   });
 
-  const UserSalarySchema = new mongoose.Schema({
+  const SalarySchema = new mongoose.Schema({
     companyId: mongoose.Schema.Types.ObjectId,
     userId: mongoose.Schema.Types.ObjectId,
     currentlyWorking: Boolean,
@@ -112,9 +112,9 @@ const getUserConnection = () => {
   });
 
   const User = userConn.model('users', UserSchema);
-  const UserSalary = userConn.model('salaries', UserSalarySchema);
+  const Salary = userConn.model('salaries', SalarySchema);
 
-  return { userConn, User, UserSalary };
+  return { userConn, User, Salary };
 };
 
 module.exports = {

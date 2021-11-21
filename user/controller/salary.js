@@ -3,8 +3,9 @@ const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
 const mongoose = require('mongoose');
 const { default: axios } = require('axios');
+const { Salary } = require('../model');
 
-const createUserSalary = async (req, res) => {
+const createSalary = async (req, res) => {
   const { user } = req.headers;
   if (user !== req.params.id) {
     res.status(400).json({
@@ -38,9 +39,9 @@ const createUserSalary = async (req, res) => {
   }
 
   req.body.userId = user;
-  const userSalaryObj = req.body;
+  const salaryObj = req.body;
 
-  makeRequest('userSalary.create', userSalaryObj, (err, resp) => {
+  makeRequest('salary.create', salaryObj, (err, resp) => {
     if (err || !resp) {
       res.status(500).json(errors.serverError);
       return;
@@ -53,7 +54,7 @@ const createUserSalary = async (req, res) => {
   });
 };
 
-const updateUserSalary = async (req, res) => {
+const updateSalary = async (req, res) => {
   const { user } = req.headers;
   if (user !== req.params.id) {
     res.status(400).json({
@@ -83,12 +84,12 @@ const updateUserSalary = async (req, res) => {
     }
   }
 
-  const userSalaryObj = req.body;
+  const salaryObj = req.body;
 
   makeRequest(
-    'userSalary.update',
+    'salary.update',
     {
-      ...userSalaryObj,
+      ...salaryObj,
       salaryId: req.params.salaryId,
       id: req.params.id,
       authorization: req.headers.authorization,
@@ -107,7 +108,71 @@ const updateUserSalary = async (req, res) => {
   );
 };
 
+const getSalaries = async (req, res) => {
+  try {
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+    const salariesCount = await Salary.count({
+      userId: mongoose.Types.ObjectId(String(req.params.id)),
+    })
+      .skip(offset)
+      .limit(limit);
+
+    const salaryList = await Salary.find({
+      userId: mongoose.Types.ObjectId(String(req.params.id)),
+    })
+      .skip(offset)
+      .limit(limit);
+
+    return res.status(200).json({ total: salariesCount, nodes: salaryList });
+  } catch (err) {
+    res.status(500).send({ message: 'Internal Server Error' });
+  }
+};
+
+const getSalaryById = async (req, res) => {
+  const { user } = req.headers;
+  if (user !== req.params.id) {
+    res.status(400).json({
+      ...errors.badRequest,
+      message: 'user.id in body should be same as logged in user',
+    });
+    return;
+  }
+
+  const valErr = validationResult(req);
+  if (!valErr.isEmpty()) {
+    res.status(400).json({ status: 400, message: valErr.array() });
+    return;
+  }
+
+  try {
+    const salary = await Salary.findOne({
+      _id: mongoose.Types.ObjectId(String(req.params.salaryId)),
+    });
+    return res.status(200).send(salary);
+  } catch (err) {
+    res.status(500).send(errors.serverError);
+  }
+};
+
+const deleteSalary = async (req, res) => {
+  try {
+    makeRequest('salary.delete', req.params.salaryId, (err, resp) => {
+      if (err || !resp) {
+        res.status(500).json(errors.serverError);
+        return;
+      }
+      res.status(201).json(null);
+    });
+  } catch (err) {
+    res.status(500).send(errors.serverError);
+  }
+};
+
 module.exports = {
-  createUserSalary,
-  updateUserSalary,
+  createSalary,
+  updateSalary,
+  getSalaries,
+  deleteSalary,
+  getSalaryById,
 };

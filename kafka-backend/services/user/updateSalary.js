@@ -2,14 +2,12 @@ const { getUserConnection } = require('../../dbconnections');
 const mongoose = require('mongoose');
 
 const handle_request = async (msg, callback) => {
-  const { UserSalary } = getUserConnection();
-  console.log('custom message', msg);
+  const { Salary } = getUserConnection();
   const salaryId = msg.salaryId;
   delete msg.salaryId;
   delete msg.id;
-
   try {
-    const userSalary = await UserSalary.findOneAndUpdate(
+    const salary = await Salary.findOneAndUpdate(
       {
         _id: mongoose.Types.ObjectId(String(salaryId)),
       },
@@ -22,8 +20,8 @@ const handle_request = async (msg, callback) => {
     );
 
     let company;
-    if (userSalary.companyId && userSalary.companyId !== null) {
-      const companyId = String(userSalary.companyId);
+    if (salary.companyId && salary.companyId !== null) {
+      const companyId = String(salary.companyId);
       try {
         company = await axios.get(`${global.gConfig.company_url}/companies/${companyId}`, {
           headers: { authorization: msg.authorization },
@@ -34,8 +32,8 @@ const handle_request = async (msg, callback) => {
         }
       }
     }
-    userSalary.company = company;
-    callback(null, userSalary);
+    salary.company = company;
+    callback(null, salary);
   } catch (err) {
     callback({ isError: true, error: err.toString() });
   }
