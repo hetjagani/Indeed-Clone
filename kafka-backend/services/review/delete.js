@@ -1,11 +1,11 @@
 const { Types } = require('mongoose');
-const { getCompanyConnection } = require('../../dbconnections');
+const { getReviewConnection } = require('../../dbconnections');
 
 const handle_request = async (msg, callback) => {
-  const { Company } = getCompanyConnection();
+  const { Review } = getReviewConnection();
 
   try {
-    await Company.deleteOne({ _id: Types.ObjectId(msg.id) });
+    await Review.deleteOne({ _id: Types.ObjectId(msg.id) });
     callback(null, { success: true });
   } catch (err) {
     callback({ isError: true, error: err.toString() });
