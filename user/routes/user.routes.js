@@ -8,9 +8,7 @@ const {
   updateUser,
   deleteUser,
 } = require('../controller/user');
-const { createUserSalary } = require('../controller/userSalary');
-
-
+const { createUserSalary, updateUserSalary } = require('../controller/userSalary');
 
 /**
  * @typedef User
@@ -44,11 +42,10 @@ const { createUserSalary } = require('../controller/userSalary');
  * @property {string} industry
  */
 
-
 const bodyValidators = () => [
   body('id').exists().isString(),
   body('name').exists().isString(),
-  body('about').exists().isString(),
+  body('about').optional().isString(),
   body('contactNo').optional().isString(),
   body('emails').optional().isArray(),
   body('resumes').optional().isArray(),
@@ -60,7 +57,23 @@ const bodyValidators = () => [
   body('jobPreferences').optional().isArray(),
 ];
 
+const salaryBodyValidators = () => [
+  body('companyId').exists().isString(),
+  body('currentlyWorking').exists().isString(),
+  body('endDate').optional().isString(),
+  body('salary').optional().isString(),
+  body('title').optional().isArray(),
+  body('city').optional().isString(),
+  body('state').optional().isString(),
+  body('country').optional().isString(),
+  body('zip').optional().isString(),
+  body('experience').optional().isString(),
+  body('benifits').optional().isArray(),
+  body('industry').optional().isString(),
+];
+
 const [, ...updateValidators] = bodyValidators();
+const [, ...updateSalaryValidators] = salaryBodyValidators();
 
 /**
  * Create a User Salary
@@ -71,7 +84,7 @@ const [, ...updateValidators] = bodyValidators();
  * @param {UserSalary.model} UserSalary.body.require
  * @returns {UserSalary.model} 201 - Created User Salary
  */
- router.post('/:id/salaries', createUserSalary);
+router.post('/:id/salaries', ...salaryBodyValidators(), createUserSalary);
 
 /**
  * Create a User
@@ -82,7 +95,6 @@ const [, ...updateValidators] = bodyValidators();
  * @returns {User.model} 201 - Created User
  */
 router.post('/', ...bodyValidators(), createUser);
-
 
 /**
  * Get list of Users
@@ -106,6 +118,18 @@ router.get('/', getAllUsers);
 router.get('/:id', getUserById);
 
 /**
+ * Update a User Salary
+ * @route PUT /users/{id}/salaries/{salaryId}
+ * @group User Salaries
+ * @security JWT
+ * @param {String} id.path.require
+ * @param {String} salaryId.path.require
+ * @param {UserSalary.model} UserSalary.body.require
+ * @returns {UserSalary.model} 201 - Updated User Salary
+ */
+router.put('/:id/salaries/:salaryId', ...updateSalaryValidators, updateUserSalary);
+
+/**
  * Update User by ID
  * @route PUT /users/{id}
  * @group Users
@@ -125,8 +149,5 @@ router.put('/:id', ...updateValidators, updateUser);
  * @returns {null} 200 - Delete Restaurant
  */
 router.delete('/:id', deleteUser);
-
-
-
 
 module.exports = router;

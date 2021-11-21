@@ -96,6 +96,7 @@ const getUserConnection = () => {
 
   const UserSalarySchema = new mongoose.Schema({
     companyId: mongoose.Schema.Types.ObjectId,
+    userId: mongoose.Schema.Types.ObjectId,
     currentlyWorking: Boolean,
     endDate: Date,
     salary: Number,
@@ -105,7 +106,7 @@ const getUserConnection = () => {
     country: String,
     zip: String,
     experience: String,
-    benifits: [String],
+    benefits: [String],
     industry: { name: { type: String } },
   });
 
