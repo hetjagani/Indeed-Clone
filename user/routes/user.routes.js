@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const { body } = require('express-validator');
 const {
   createUser,
@@ -8,7 +8,9 @@ const {
   updateUser,
   deleteUser,
 } = require('../controller/user');
-const { createUserSalary, updateUserSalary } = require('../controller/userSalary');
+
+const salaryRoutes = require('./salary.routes');
+router.use('/:id/salaries', salaryRoutes);
 
 /**
  * @typedef User
@@ -16,30 +18,14 @@ const { createUserSalary, updateUserSalary } = require('../controller/userSalary
  * @property {string} name
  * @property {string} about
  * @property {string} contactNo
- * @property {[string]} emails
- * @property {[string]} resumes
- * @property {[string]} coverLetters
+ * @property {Array.<string>} emails
+ * @property {Array.<string>} resumes
+ * @property {Array.<string>} coverLetters
  * @property {string} city
  * @property {string} state
  * @property {string} country
  * @property {string} zip
- * @property {[string]} jobPreferences
- */
-
-/**
- * @typedef UserSalary
- * @property {string} companyId
- * @property {string} currentlyWorking
- * @property {string} endDate
- * @property {string} salary
- * @property {string} title
- * @property {string} city
- * @property {string} state
- * @property {string} country
- * @property {string} zip
- * @property {string} experience
- * @property {[string]} benifits
- * @property {string} industry
+ * @property {Array.<string>} jobPreferences
  */
 
 const bodyValidators = () => [
@@ -57,34 +43,9 @@ const bodyValidators = () => [
   body('jobPreferences').optional().isArray(),
 ];
 
-const salaryBodyValidators = () => [
-  body('companyId').exists().isString(),
-  body('currentlyWorking').exists().isString(),
-  body('endDate').optional().isString(),
-  body('salary').optional().isString(),
-  body('title').optional().isArray(),
-  body('city').optional().isString(),
-  body('state').optional().isString(),
-  body('country').optional().isString(),
-  body('zip').optional().isString(),
-  body('experience').optional().isString(),
-  body('benifits').optional().isArray(),
-  body('industry').optional().isString(),
-];
 
 const [, ...updateValidators] = bodyValidators();
-const [, ...updateSalaryValidators] = salaryBodyValidators();
 
-/**
- * Create a User Salary
- * @route POST /users/{id}/salaries
- * @group User Salaries
- * @security JWT
- * @param {String} id.path.require
- * @param {UserSalary.model} UserSalary.body.require
- * @returns {UserSalary.model} 201 - Created User Salary
- */
-router.post('/:id/salaries', ...salaryBodyValidators(), createUserSalary);
 
 /**
  * Create a User
@@ -118,18 +79,6 @@ router.get('/', getAllUsers);
 router.get('/:id', getUserById);
 
 /**
- * Update a User Salary
- * @route PUT /users/{id}/salaries/{salaryId}
- * @group User Salaries
- * @security JWT
- * @param {String} id.path.require
- * @param {String} salaryId.path.require
- * @param {UserSalary.model} UserSalary.body.require
- * @returns {UserSalary.model} 201 - Updated User Salary
- */
-router.put('/:id/salaries/:salaryId', ...updateSalaryValidators, updateUserSalary);
-
-/**
  * Update User by ID
  * @route PUT /users/{id}
  * @group Users
@@ -149,5 +98,6 @@ router.put('/:id', ...updateValidators, updateUser);
  * @returns {null} 200 - Delete Restaurant
  */
 router.delete('/:id', deleteUser);
+
 
 module.exports = router;

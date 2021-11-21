@@ -28,15 +28,19 @@ const createKafkaTopics = () => {
         replicationFactor: 1,
       },
       {
-        topic: 'userSalary.create',
+        topic: 'salary.create',
         partitions: 1,
         replicationFactor: 1,
       },
       {
-        topic: 'userSalary.update',
+        topic: 'salary.update',
         partitions: 1,
         replicationFactor: 1,
-      },
+      },{
+        topic: 'salary.delete',
+        partitions: 1,
+        replicationFactor: 1,
+      }
     ],
     (err) => {
       if (err) {

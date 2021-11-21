@@ -77,7 +77,6 @@ const updateUser = async (req, res) => {
 
   const valErr = validationResult(req);
   if (!valErr.isEmpty()) {
-    console.error(valErr);
     res.status(400).json({ status: 400, message: valErr.array() });
     return;
   }

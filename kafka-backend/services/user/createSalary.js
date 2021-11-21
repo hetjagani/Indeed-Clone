@@ -2,11 +2,10 @@ const { getUserConnection } = require('../../dbconnections');
 const mongoose = require('mongoose');
 
 const handle_request = async (msg, callback) => {
-  console.log('customer message', msg);
-  const { UserSalary } = getUserConnection();
+  const { Salary } = getUserConnection();
   try {
-    const userSalary = await UserSalary.create(msg);
-    callback(null, userSalary);
+    const salary = await Salary.create(msg);
+    callback(null, salary);
   } catch (err) {
     callback({ isError: true, error: err.toString() });
   }

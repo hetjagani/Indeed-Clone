@@ -14,7 +14,7 @@ const UserSchema = new Schema({
   jobPreferences: [String],
 });
 
-const UserSalarySchema = new Schema({
+const SalarySchema = new Schema({
   companyId: Schema.Types.ObjectId,
   userId: Schema.Types.ObjectId,
   currentlyWorking: Boolean,
@@ -31,9 +31,9 @@ const UserSalarySchema = new Schema({
 });
 
 const User = model('users', UserSchema);
-const UserSalary = model('salaries', UserSalarySchema);
+const Salary = model('salaries', SalarySchema);
 
 module.exports = {
   User,
-  UserSalary,
+  Salary,
 };
