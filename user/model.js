@@ -1,5 +1,4 @@
 const { Schema, Types, model } = require('mongoose');
-var autoIncrement = require('mongoose-auto-increment');
 
 const UserSchema = new Schema({
   name: String,
@@ -13,29 +12,23 @@ const UserSchema = new Schema({
   country: String,
   zip: String,
   jobPreferences: [String],
-  salaries:[{
-  salaryId:Number,  
-  companyId: String,
-  currentlyWorking:Boolean,
+});
+
+const UserSalarySchema = new Schema({
+  companyId: Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
+  currentlyWorking: Boolean,
   endDate: Date,
-  salary : Number,
-  title:String,
+  salary: Number,
+  title: String,
+  city: String,
+  state: String,
+  country: String,
+  zip: String,
   experience: String,
-  benefits:[String],
-  industry:String,
-  company:String
-  }],
-  
-},{timestamps:true});
-
-autoIncrement.initialize(mongoose.connection);
-
-UserSchema.plugin(autoIncrement.plugin,{
-  model:"users",
-  field:'salaries.salaryId',
-  startAt:1,
-  incrementBy:1,
-})
+  benefits: [String],
+  industry: { name: { type: String } },
+});
 
 const User = model('users', UserSchema);
 const UserSalary = model('salaries', UserSalarySchema);
