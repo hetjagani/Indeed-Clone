@@ -25,7 +25,11 @@ const Photo = global.DB.define('photos', {
   url: {
     type: DataTypes.STRING,
     allowNull: false,
-  }
+  },
+  status: {
+    type: DataTypes.ENUM,
+    values: ['APPROVED', 'NOTAPPROVED'],
+  },
 });
 
 const runMigration = async (force) => {
