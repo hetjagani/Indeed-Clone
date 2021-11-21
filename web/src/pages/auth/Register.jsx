@@ -1,5 +1,6 @@
 // Import packages
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import {
   Radio,
@@ -8,26 +9,80 @@ import {
   FormLabel,
   Checkbox,
 } from '@mui/material';
+import { validate as validateEmail } from 'email-validator';
+import toast from 'react-hot-toast';
+import Cookies from 'universal-cookie';
 
 // Import files
 import './css/Login.css';
+import Input from '../../components/Input';
+import register from '../../api/auth/register';
 
 const Register = () => {
+  const history = useHistory();
+
   const [email, setEmail] = useState('');
+  const [emailIsVisited, setEmailIsVisited] = useState(false);
+  const [emailHasError, setEmailHasError] = useState(false);
+  const [emailErrorText, setEmailErrorText] = useState('');
+  const emailShouldShowError = !emailHasError && emailIsVisited;
+
   const [password, setPassword] = useState('');
+  const [passwordIsVisited, setPasswordIsVisited] = useState(false);
+  const [passwordHasError, setPasswordHasError] = useState(false);
+  const [passwordErrorText, setPasswordErrorText] = useState('');
+  const passwordShouldShowError = !passwordHasError && passwordIsVisited;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/;
+
   const [role, setRole] = useState({
-    jobseeker: false,
+    user: false,
     employer: false,
   });
 
-  const register = (event) => {
+  const onEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailHasError(validateEmail(e.target.value));
+  };
+
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+    setPasswordHasError(passwordRegex.test(e.target.value));
+  };
+
+  useEffect(() => {
+    if (passwordShouldShowError) {
+      setPasswordErrorText('Please enter a valid password!');
+    } else {
+      setPasswordErrorText('');
+    }
+  }, [passwordShouldShowError]);
+
+  useEffect(() => {
+    if (emailShouldShowError) {
+      setEmailErrorText('Please enter valid email address!');
+    } else {
+      setEmailErrorText('');
+    }
+  }, [emailShouldShowError]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const reg = {
+    if (emailShouldShowError && passwordShouldShowError) {
+      return;
+    }
+    const payload = {
       email,
       password,
-      role: role.employer === true ? 'employeer' : 'job seeker',
+      role: role.employer === true ? 'employeer' : 'user',
     };
-    console.log(reg);
+    const response = await register(payload);
+    if (!response) {
+      toast.error('Incorrect email or password!');
+      return;
+    }
+    const cookies = new Cookies();
+    cookies.set('token', response.data.token, { path: '/' });
+    history.push('/nav');
   };
   return (
     <div
@@ -118,46 +173,29 @@ const Register = () => {
             </div>
             <form
               style={{ display: 'flex', flexDirection: 'column' }}
-              onSubmit={register}
+              onSubmit={handleSubmit}
             >
-              <label
-                htmlFor="register-email"
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: '700',
-                  lineHeight: '1.5',
-                  color: '#2d2d2d',
-                  letterSpacing: '0',
-                }}
-              >
-                Email Address
-                <input
-                  className="LRinput"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </label>
-              <label
-                htmlFor="register-password"
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: '700',
-                  lineHeight: '1.5',
-                  color: '#2d2d2d',
-                  letterSpacing: '0',
-                }}
-              >
-                Password
-                <input
-                  className="LRinput"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </label>
+              <Input
+                label="Email address *"
+                type="email"
+                value={email}
+                onChange={onEmailChange}
+                required
+                setIsVisited={setEmailIsVisited}
+                isError={emailShouldShowError}
+                errorText={emailErrorText}
+              />
+              <Input
+                label="Password *"
+                type="password"
+                value={password}
+                onChange={onPasswordChange}
+                required
+                setIsVisited={setPasswordIsVisited}
+                isError={passwordShouldShowError}
+                errorText={passwordErrorText}
+              />
+
               <FormLabel
                 style={{
                   fontSize: '1rem',
