@@ -8,45 +8,40 @@ const { makeRequest } = require('../util/kafka/client');
 const getAllReviews = async (req, res) => {
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
-  const companyCount = await Company.count();
+  const queryObj = {};
+  if (req.query.userId) {
+    queryObj.userId = Types.ObjectId(req.query.userId);
+  }
+  if (req.query.companyId) {
+    queryObj.companyId = Types.ObjectId(req.query.companyId);
+  }
 
-  const companyList = await Company.aggregate([
+  const reviewCount = await Review.count(queryObj);
+
+  const reviewList = await Review.aggregate([
     {
-      $lookup: {
-        from: 'employers',
-        localField: 'employers',
-        foreignField: '_id',
-        as: 'employers',
-      },
+      $match: queryObj,
     },
   ])
     .skip(offset)
     .limit(limit);
 
-  res.status(200).json({ total: companyCount, nodes: companyList });
+  res.status(200).json({ total: reviewCount, nodes: reviewList });
 };
 
 const getReviewById = async (req, res) => {
   const { id } = req.params;
 
-  const companyList = await Company.aggregate([
-    { $match: { _id: Types.ObjectId(id) } },
-    {
-      $lookup: {
-        from: 'employers',
-        localField: 'employers',
-        foreignField: '_id',
-        as: 'employers',
-      },
-    },
-  ]);
+  const review = await Review.findOne({
+    _id: Types.ObjectId(id),
+  });
 
-  if (companyList.length === 0) {
+  if (!review) {
     res.status(404).json(errors.notFound);
     return;
   }
 
-  res.status(200).json(companyList[0]);
+  res.status(200).json(review);
 };
 
 const createReview = async (req, res) => {
