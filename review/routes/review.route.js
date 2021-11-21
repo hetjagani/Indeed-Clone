@@ -32,7 +32,7 @@ const router = express.Router();
  * @property {string} reviewDate.required
  */
 
- const bodyValidators = () => [
+const bodyValidators = () => [
   body('overallRating').exists().isNumeric(),
   body('workLifeBalance').exists().isNumeric(),
   body('compensation').exists().isNumeric(),
@@ -57,6 +57,8 @@ const router = express.Router();
  * @route GET /reviews
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {string} companyId.query
+ * @param {string} userId.query
  * @group Review
  * @security JWT
  * @returns {Array.<Review>} 200 - List of review info
