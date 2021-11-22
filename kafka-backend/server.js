@@ -11,6 +11,9 @@ const deleteCompany = require('./services/company/delete');
 const createJob = require('./services/job/create');
 const updateJob = require('./services/job/update');
 const deleteJob = require('./services/job/delete');
+const createApplication = require('./services/application/create');
+const updateApplication = require('./services/application/update');
+const deleteApplication = require('./services/application/delete');
 
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
@@ -43,6 +46,7 @@ function handleTopicRequest(topic_name, fname) {
         producer.send(payloads, function (err, data) {
           console.log('SENT DATA FROM KAFKA BACKEND: ');
           console.log(res);
+          console.log(data);
         });
         return;
       });
@@ -65,3 +69,6 @@ handleTopicRequest('company.delete', deleteCompany);
 handleTopicRequest('job.create', createJob);
 handleTopicRequest('job.update', updateJob);
 handleTopicRequest('job.delete', deleteJob);
+handleTopicRequest('application.create', createApplication);
+handleTopicRequest('application.update', updateApplication);
+handleTopicRequest('application.delete', deleteApplication);
