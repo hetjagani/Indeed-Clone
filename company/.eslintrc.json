@@ -2,5 +2,8 @@
   "extends": "airbnb",
   "rules": {
     "no-console": "off"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020
   }
 }
