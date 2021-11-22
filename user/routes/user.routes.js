@@ -1,5 +1,6 @@
 const express = require('express');
-const router = express.Router({mergeParams: true});
+
+const router = express.Router({ mergeParams: true });
 const { body } = require('express-validator');
 const {
   createUser,
@@ -10,7 +11,10 @@ const {
 } = require('../controller/user');
 
 const salaryRoutes = require('./salary.routes');
+const photoRoutes = require('./photo.routes');
+
 router.use('/:id/salaries', salaryRoutes);
+router.use('/:id/photos', photoRoutes);
 
 /**
  * @typedef User
@@ -43,9 +47,7 @@ const bodyValidators = () => [
   body('jobPreferences').optional().isArray(),
 ];
 
-
 const [, ...updateValidators] = bodyValidators();
-
 
 /**
  * Create a User
@@ -98,6 +100,5 @@ router.put('/:id', ...updateValidators, updateUser);
  * @returns {null} 200 - Delete Restaurant
  */
 router.delete('/:id', deleteUser);
-
 
 module.exports = router;

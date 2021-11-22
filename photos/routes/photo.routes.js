@@ -19,6 +19,7 @@ const router = express.Router();
  * @property {boolean} isFeatured.required
  * @property {string} userId.required
  * @property {string} companyId.required
+ * @property {string} status.required
  */
 
 /**

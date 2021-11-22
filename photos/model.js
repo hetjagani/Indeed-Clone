@@ -27,8 +27,7 @@ const Photo = global.DB.define('photos', {
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM,
-    enum: ['APPROVED', 'REJECTED', 'PENDING'],
+    type: DataTypes.ENUM(['APPROVED', 'REJECTED', 'PENDING']),
   },
 });
 
