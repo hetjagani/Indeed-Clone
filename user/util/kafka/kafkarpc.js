@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-multi-assign */
 const crypto = require('crypto');
 const conn = require('./connection');
@@ -23,7 +24,6 @@ KafkaRPC.prototype.makeRequest = function (topic_name, content, callback) {
     (corr_id) => {
       // if this ever gets called we didn't get a response in a
       // timely fashion
-      console.log('timeout');
       callback(new Error(`timeout ${corr_id}`));
       // delete the entry from hash
       delete self.requests[corr_id];
@@ -82,6 +82,10 @@ KafkaRPC.prototype.setupResponseQueue = function (producer, topic_name, next) {
       clearTimeout(entry.timeout);
       // delete the entry from hash
       delete self.requests[correlationId];
+      if (data.data.isError) {
+        entry.callback(data.data.error, null);
+        return;
+      }
       // callback, no err
       entry.callback(null, data.data);
     }

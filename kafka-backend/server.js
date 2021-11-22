@@ -1,7 +1,11 @@
 require('./config');
 var connection = new require('./kafka/connection');
-var createUser = require('./services/user/create');
-
+const createUser = require('./services/user/create');
+const updateUser = require('./services/user/update');
+const updateSalary = require('./services/salary/update');
+const deleteUser = require('./services/user/delete');
+const createSalary = require('./services/salary/create');
+const deleteSalary = require('./services/salary/delete');
 const createEmployer = require('./services/employer/create');
 const updateEmployer = require('./services/employer/update');
 const deleteEmployer = require('./services/employer/delete');
@@ -55,10 +59,15 @@ function handleTopicRequest(topic_name, fname) {
   });
 }
 
-// Add your TOPICs here
+//Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest('user.create', createUser);
+handleTopicRequest('salary.create', createSalary);
+handleTopicRequest('salary.update', updateSalary);
+handleTopicRequest('salary.delete', deleteSalary);
+handleTopicRequest('user.update', updateUser);
+handleTopicRequest('user.delete', deleteUser);
 handleTopicRequest('employer.create', createEmployer);
 handleTopicRequest('employer.update', updateEmployer);
 handleTopicRequest('employer.delete', deleteEmployer);
