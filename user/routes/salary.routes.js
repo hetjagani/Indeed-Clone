@@ -1,7 +1,16 @@
 const express = require('express');
+
 const router = express.Router({ mergeParams: true });
 const { body } = require('express-validator');
-const { createSalary, updateSalary, getSalaries, deleteSalary, getSalaryById, generalGetSalaryById, generalGetSalaries } = require('../controller/salary');
+const {
+  createSalary,
+  updateSalary,
+  getSalaries,
+  deleteSalary,
+  getSalaryById,
+  generalGetSalaryById,
+  generalGetSalaries,
+} = require('../controller/salary');
 
 /**
  * @typedef Salary
@@ -23,7 +32,7 @@ const salaryBodyValidators = () => [
   body('companyId').exists().isString(),
   body('currentlyWorking').optional().isString(),
   body('endDate').optional().isString(),
-  body('salary').optional().isString(), 
+  body('salary').optional().isString(),
   body('title').optional().isString(),
   body('city').optional().isString(),
   body('state').optional().isString(),
@@ -34,9 +43,7 @@ const salaryBodyValidators = () => [
   body('industry').optional().isObject(),
 ];
 
-const [, ...updateSalaryValidators] = salaryBodyValidators();
-
- /**
+/**
  * Get a User Salary by Id
  * @route GET /salaries/{id}
  * @security JWT
@@ -44,9 +51,9 @@ const [, ...updateSalaryValidators] = salaryBodyValidators();
  * @param {String} id.path.require
  * @returns {Salary.model} 200 - Get User Salary (General)
  */
-  router.get('/:id', generalGetSalaryById);
+router.get('/:id', generalGetSalaryById);
 
-  /**
+/**
  * Get a User Salaries (General)
  * @route GET /salaries/
  * @group Salaries
@@ -80,7 +87,7 @@ router.get('/', getSalaries);
  * @param {String} salaryId.path.require
  * @returns {Salary.model} 200 - Get User Salary
  */
- router.get('/:salaryId', getSalaryById);
+router.get('/:salaryId', getSalaryById);
 
 /**
  * Create a User Salary
@@ -103,7 +110,7 @@ router.post('/', ...salaryBodyValidators(), createSalary);
  * @param {Salary.model} Salary.body.require
  * @returns {Salary.model} 201 - Updated User Salary
  */
-router.put('/:salaryId', ...updateSalaryValidators, updateSalary);
+router.put('/:salaryId', ...salaryBodyValidators(), updateSalary);
 
 /**
  * Delete a User Salaries
