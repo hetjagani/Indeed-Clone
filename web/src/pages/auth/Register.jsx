@@ -10,7 +10,7 @@ import {
   Checkbox,
 } from '@mui/material';
 import { validate as validateEmail } from 'email-validator';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 import Cookies from 'universal-cookie';
 
 // Import files
@@ -77,12 +77,11 @@ const Register = () => {
     };
     const response = await register(payload);
     if (!response) {
-      toast.error('Incorrect email or password!');
       return;
     }
     const cookies = new Cookies();
     cookies.set('token', response.data.token, { path: '/' });
-    history.push('/nav');
+    history.push('/');
   };
   return (
     <div

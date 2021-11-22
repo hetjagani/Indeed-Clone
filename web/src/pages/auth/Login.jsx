@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { validate as validateEmail } from 'email-validator';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
 import Cookies from 'universal-cookie';
 
 // Import files
@@ -62,12 +62,11 @@ const Login = () => {
     const payload = { email, password };
     const response = await login(payload);
     if (!response) {
-      toast.error('Invalid credentials!');
       return;
     }
     const cookies = new Cookies();
     cookies.set('token', response.data.token, { path: '/' });
-    history.push('/nav');
+    history.push('/');
   };
 
   return (

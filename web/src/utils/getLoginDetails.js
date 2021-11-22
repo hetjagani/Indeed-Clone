@@ -10,7 +10,7 @@ const getLoginDetails = () => {
   const cookies = new Cookies();
   const token = cookies.get('token');
   try {
-    const decoded = jwt.verify(token, String(process.env.TOKEN_SECRET));
+    const decoded = jwt.decode(token, String(process.env.TOKEN_SECRET));
     return decoded;
   } catch (err) {
     return {};
