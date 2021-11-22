@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const { errors, getPagination } = require('u-server-utils');
 const { Photo } = require('../model');
 const { uploadFileToS3, deleteFileFromS3 } = require('../util/fileUtilS3');
@@ -15,7 +16,7 @@ const addPhoto = async (req, res) => {
 
     const photoObj = await Photo.create({
       _id: uploadedPhoto.Key,
-      isFeatured: isFeatured === 'true' ? true : false,
+      isFeatured: isFeatured === 'true',
       altText: originalname,
       userId,
       companyId,
@@ -37,9 +38,25 @@ const getPhotoById = async (req, res) => {
       return res.status(400).json(errors.badRequest);
     }
 
+    const whereQ = { _id: id };
+    const { userId, companyId } = req.query;
+
+    if (userId && userId !== '') {
+      whereQ.userId = userId;
+    }
+
+    if (companyId && companyId !== '') {
+      whereQ.companyId = companyId;
+    }
+
     const photo = await Photo.findOne({
-      where: { _id: id },
+      where: whereQ,
     });
+
+    if (!photo) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
 
     return res.status(200).json(photo);
   } catch (err) {
@@ -80,20 +97,29 @@ const updatePhoto = async (req, res) => {
       return res.status(400).json(errors.badRequest);
     }
 
+    const whereQ = { _id: id };
+    const { userId, companyId } = req.query;
+
+    if (userId && userId !== '') {
+      whereQ.userId = userId;
+    }
+
+    if (companyId && companyId !== '') {
+      whereQ.companyId = companyId;
+    }
+
     const { altText, isFeatured, status } = req.body;
     const photo = await Photo.findOne({
-      where: { _id: id },
+      where: whereQ,
     });
 
     if (altText) {
       photo.altText = altText;
     }
-    if (isFeatured) {
-      photo.isFeatured = isFeatured;
-    }
     if (status) {
       photo.status = status;
     }
+    photo.isFeatured = isFeatured;
     await photo.save();
 
     return res.status(200).json(photo);
@@ -109,8 +135,19 @@ const deletePhoto = async (req, res) => {
       return res.status(400).json(errors.badRequest);
     }
 
+    const whereQ = { _id: id };
+    const { userId, companyId } = req.query;
+
+    if (userId && userId !== '') {
+      whereQ.userId = userId;
+    }
+
+    if (companyId && companyId !== '') {
+      whereQ.companyId = companyId;
+    }
+
     const photo = await Photo.findOne({
-      where: { _id: id },
+      where: whereQ,
     });
 
     await photo.destroy();

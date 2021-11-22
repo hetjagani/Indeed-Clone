@@ -10,7 +10,7 @@ const createSalary = async (req, res) => {
   if (user !== req.params.id) {
     res.status(400).json({
       ...errors.badRequest,
-      message: 'user.id in body should be same as logged in user',
+      message: 'id in path should be same as logged in user',
     });
     return;
   }
