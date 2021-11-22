@@ -1,30 +1,98 @@
 /* eslint-disable no-underscore-dangle */
+const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Application } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
-// TODO: add job object in response
+const getAllJobs = async (auth) => {
+  const response = await axios.get(`${global.gConfig.company_url}/jobs`, {
+    params: { all: true },
+    headers: { Authorization: auth },
+  });
+  if (!response) {
+    throw Error('something went wrong');
+  }
+
+  const jobsList = response.data;
+
+  const jobMap = [];
+  jobsList.forEach((job) => {
+    jobMap[job._id] = job;
+  });
+
+  return jobMap;
+};
+
+const getJob = async (id, auth) => {
+  const response = await axios.get(`${global.gConfig.company_url}/jobs/${id}`, {
+    headers: { Authorization: auth },
+  });
+  if (!response) {
+    throw Error('something went wrong');
+  }
+
+  return response.data;
+};
+
 const getApplications = async (req, res) => {
-  const { limit, offset } = getPagination(req.query.page, req.query.limit);
+  try {
+    const { userId, jobIds } = req.query;
+    const whereOpts = {};
+    if (userId && userId !== '') {
+      whereOpts.userId = Types.ObjectId(userId);
+    }
 
-  const applicationCount = await Application.count();
-  const applicationList = await Application.find({}).skip(offset).limit(limit);
+    if (jobIds && jobIds !== '') {
+      const jobIdList = String(jobIds)
+        .split(',')
+        .map((i) => Types.ObjectId(i.trim()));
+      whereOpts.jobId = { $in: jobIdList };
+    }
 
-  res.status(200).json({ total: applicationCount, nodes: applicationList });
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+
+    const jobMap = await getAllJobs(req.headers.authorization);
+
+    const applicationCount = await Application.count(whereOpts);
+    const applicationList = await Application.find(whereOpts).skip(offset).limit(limit);
+
+    const result = applicationList.map((app) => ({
+      ...app._doc,
+      job: jobMap[app.jobId],
+    }));
+
+    res.status(200).json({ total: applicationCount, nodes: result });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const getApplicationById = async (req, res) => {
   const { id } = req.params;
 
-  const application = await Application.findById(Types.ObjectId(id));
-  if (!application) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
+  try {
+    const application = await Application.findById(Types.ObjectId(id));
+    if (!application) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+    const job = await getJob(application.jobId, req.headers.authorization);
 
-  res.status(200).json(application);
+    res.status(200).json({ ...application._doc, job });
+  } catch (err) {
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const createApplication = async (req, res) => {
@@ -45,7 +113,10 @@ const createApplication = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-    res.status(201).json(resp);
+
+    const job = await getJob(resp.jobId, req.headers.authorization);
+
+    res.status(201).json({ ...resp, job });
   });
 };
 
@@ -79,8 +150,9 @@ const updateApplication = async (req, res) => {
       }
 
       const result = await Application.findById(Types.ObjectId(resp._id));
+      const job = await getJob(application.jobId, req.headers.authorization);
 
-      res.status(200).json(result);
+      res.status(200).json({ ...result._doc, job });
     },
   );
 };
