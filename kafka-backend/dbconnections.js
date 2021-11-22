@@ -76,9 +76,104 @@ const getCompanyConnection = () => {
   return { companyConn, Company, Employer, Job };
 };
 
-const getUserConnection = () => {};
+const getApplicationConnection = () => {
+  const applicationConn = mongoose.createConnection(global.gConfig.application_conn);
+  mongoose.set('debug', true);
+
+  const ApplicationSchema = new mongoose.Schema({
+    jobId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId,
+    resume: String,
+    coverLetter: String,
+    answers: mongoose.Schema.Types.Mixed,
+    date: Date,
+    status: {
+      type: String,
+      enum: ['RECEIVED', 'UNDER_REVIEW', 'ACCEPTED', 'REJECTED'],
+    },
+  });
+
+  const Application = applicationConn.model('applications', ApplicationSchema);
+
+  return { applicationConn, Application };
+};
+
+const getUserConnection = () => {
+  const userConn = mongoose.createConnection(global.gConfig.user_conn);
+  mongoose.set('debug', true);
+
+  const UserSchema = new mongoose.Schema({
+    name: String,
+    about: String,
+    contactNo: String,
+    emails: [String],
+    resumes: [String],
+    coverLetters: [String],
+    city: String,
+    state: String,
+    country: String,
+    zip: String,
+    jobPreferences: [String],
+ 
+  });
+
+  const SalarySchema = new mongoose.Schema({
+    companyId: mongoose.Schema.Types.ObjectId,
+    userId: mongoose.Schema.Types.ObjectId,
+    currentlyWorking: Boolean,
+    endDate: Date,
+    salary: Number,
+    title: String,
+    city: String,
+    state: String,
+    country: String,
+    zip: String,
+    experience: String,
+    benefits: [String],
+    industry: { name: { type: String } },
+  });
+
+  const User = userConn.model('users', UserSchema);
+  const Salary = userConn.model('salaries', SalarySchema);
+
+  return { userConn, User, Salary };
+};
+
+const getReviewConnection = () => {
+  const reviewConn = mongoose.createConnection(global.gConfig.review_conn);
+  mongoose.set('debug', true);
+
+  const ReviewSchema = new mongoose.Schema({
+    overallRating: Number,
+    workLifeBalance: Number,
+    compensation: Number,
+    jobSecurity: Number,
+    management: Number,
+    jobCulture: Number,
+    summary: String,
+    review: String,
+    pros: String,
+    cons: String,
+    ceoApproval: Boolean,
+    tips: String,
+    companyId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId,
+    isFeatured: Boolean,
+    status: {
+      type: String,
+      enum: ['APPROVED', 'REJECTED', 'PENDING'],
+    },
+    reviewDate: Date,
+  });
+
+  const Review = reviewConn.model('reviews', ReviewSchema);
+
+  return { Review };
+};
 
 module.exports = {
   getCompanyConnection,
   getUserConnection,
+  getApplicationConnection,
+  getReviewConnection,
 };
