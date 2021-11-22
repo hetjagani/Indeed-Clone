@@ -1,0 +1,38 @@
+.customLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #2d2d2d;
+  letter-spacing: 0;
+}
+
+.customInput {
+  width: 420px;
+  height: 40px;
+  border-radius: 0.5rem;
+  border: 2px solid #909090;
+  background-color: #fff;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.customInput:focus {
+  border-color: #2557a7;
+  border-bottom: 5px solid #2557a7;
+}
+
+.isError {
+  border-color: rgb(169, 37, 43) !important;
+  border-bottom: 5px solid rgb(169, 37, 43) !important;
+  border-color: rgb(169, 37, 43);
+}
+
+.isErrorText {
+  color: rgb(169, 37, 43);
+}
+
+.errorMessage {
+  margin-top: -15px;
+  color: rgb(169, 37, 43);
+}

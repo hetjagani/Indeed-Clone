@@ -1,17 +1,72 @@
 // Import packages
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Checkbox, FormControlLabel } from '@mui/material';
+import { validate as validateEmail } from 'email-validator';
+// import toast from 'react-hot-toast';
+import Cookies from 'universal-cookie';
 
 // Import files
 import './css/Login.css';
+import Input from '../../components/Input';
+import login from '../../api/auth/login';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const history = useHistory();
 
-  const login = (event) => {
+  const [email, setEmail] = useState('');
+  const [emailIsVisited, setEmailIsVisited] = useState(false);
+  const [emailHasError, setEmailHasError] = useState(false);
+  const [emailErrorText, setEmailErrorText] = useState('');
+  const emailShouldShowError = !emailHasError && emailIsVisited;
+
+  const [password, setPassword] = useState('');
+  const [passwordIsVisited, setPasswordIsVisited] = useState(false);
+  const [passwordHasError, setPasswordHasError] = useState(false);
+  const [passwordErrorText, setPasswordErrorText] = useState('');
+  const passwordShouldShowError = !passwordHasError && passwordIsVisited;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/;
+
+  const onEmailChange = (e) => {
+    setEmail(e.target.value);
+    setEmailHasError(validateEmail(e.target.value));
+  };
+
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+    setPasswordHasError(passwordRegex.test(e.target.value));
+  };
+
+  useEffect(() => {
+    if (passwordShouldShowError) {
+      setPasswordErrorText('Please enter a valid password!');
+    } else {
+      setPasswordErrorText('');
+    }
+  }, [passwordShouldShowError]);
+
+  useEffect(() => {
+    if (emailShouldShowError) {
+      setEmailErrorText('Please enter valid email address!');
+    } else {
+      setEmailErrorText('');
+    }
+  }, [emailShouldShowError]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    if (emailShouldShowError && passwordShouldShowError) {
+      return;
+    }
+    const payload = { email, password };
+    const response = await login(payload);
+    if (!response) {
+      return;
+    }
+    const cookies = new Cookies();
+    cookies.set('token', response.data.token, { path: '/' });
+    history.push('/');
   };
 
   return (
@@ -84,49 +139,28 @@ const Login = () => {
             </div>
             <form
               style={{ display: 'flex', flexDirection: 'column' }}
-              onSubmit={login}
+              onSubmit={handleSubmit}
             >
-              <label
-                htmlFor="login-email"
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: '700',
-                  lineHeight: '1.5',
-                  color: '#2d2d2d',
-                  letterSpacing: '0',
-                }}
-              >
-                Email Address
-                <input
-                  id="login-email"
-                  className="LRinput"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </label>
-              <label
-                htmlFor="login-password"
-                style={{
-                  fontSize: '1rem',
-                  fontWeight: '700',
-                  lineHeight: '1.5',
-                  color: '#2d2d2d',
-                  letterSpacing: '0',
-                }}
-              >
-                Password
-                <input
-                  id="login-password"
-                  className="LRinput"
-                  type="password"
-                  value={password}
-                  width
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </label>
+              <Input
+                label="Email address *"
+                type="email"
+                value={email}
+                onChange={onEmailChange}
+                required
+                setIsVisited={setEmailIsVisited}
+                isError={emailShouldShowError}
+                errorText={emailErrorText}
+              />
+              <Input
+                label="Password *"
+                type="password"
+                value={password}
+                onChange={onPasswordChange}
+                required
+                setIsVisited={setPasswordIsVisited}
+                isError={passwordShouldShowError}
+                errorText={passwordErrorText}
+              />
               <FormControlLabel
                 control={(
                   <Checkbox
