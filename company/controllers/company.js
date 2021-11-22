@@ -110,8 +110,6 @@ const updateCompany = async (req, res) => {
   // check if employer is in the company
   if (
     !dbCompany.employers.find((e) => {
-      console.log(user);
-      console.log(e);
       return e.toString() === user;
     })
   ) {

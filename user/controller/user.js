@@ -89,8 +89,7 @@ const updateUser = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-
-    res.status(201).json(resp);
+    res.status(200).json(resp);
   });
 };
 
@@ -100,8 +99,7 @@ const deleteUser = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-
-    res.status(201).json(resp);
+    res.status(200).json(null);
   });
 };
 
