@@ -31,14 +31,14 @@ const CompanySchema = new mongoose.Schema({
   media: [MediumSchema],
 });
 
-  const EmployerSchema = new mongoose.Schema({
-    name: String,
-    role: String,
-    address: String,
-    dateOfBirth: String,
-    medium: MediumSchema,
-    companyId: mongoose.Types.ObjectId,
-  });
+const EmployerSchema = new mongoose.Schema({
+  name: String,
+  role: String,
+  address: String,
+  dateOfBirth: String,
+  medium: MediumSchema,
+  companyId: mongoose.Types.ObjectId,
+});
 
 const JobSchema = new mongoose.Schema({
   title: String,

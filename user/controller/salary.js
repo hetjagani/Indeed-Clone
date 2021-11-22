@@ -32,7 +32,6 @@ const createSalary = async (req, res) => {
       headers: { authorization: req.headers.authorization },
     });
   } catch (err) {
-    console.log(err);
     if (err.isAxiosError && err.response.status === 404) {
       return res.status(404).send({ status: 400, message: 'Company Does not exist!' });
     }
@@ -77,7 +76,9 @@ const updateSalary = async (req, res) => {
       company = await axios.get(`${global.gConfig.company_url}/companies/${req.body.companyId}`, {
         headers: { authorization: req.headers.authorization },
       });
+      console.log(company);
     } catch (err) {
+      console.log(err);
       if (err.isAxiosError && err.response.status === 404) {
         return res.status(404).send({ error: 'Company Does not exist!' });
       }
@@ -102,8 +103,7 @@ const updateSalary = async (req, res) => {
       if (company && company.data) {
         resp.company = company.data;
       }
-
-      res.status(201).json(resp);
+      res.status(200).json(resp);
     }
   );
 };
@@ -162,7 +162,7 @@ const deleteSalary = async (req, res) => {
         res.status(500).json(errors.serverError);
         return;
       }
-      res.status(201).json(null);
+      res.status(200).json(null);
     });
   } catch (err) {
     res.status(500).send(errors.serverError);
@@ -185,21 +185,14 @@ const generalGetSalaries = async (req, res) => {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
     const { companyId, userId } = req.query;
 
-    let searchObj = {
-      companyId,
-      userId,
-    };
+    let searchObj = {};
+    if (req.query.companyId && req.query.companyId != '') {
+      searchObj.companyId = companyId;
+    }
 
-    const checkProperties = (obj) => {
-      Object.keys(obj).forEach((key) => {
-        if (obj[key] === null || obj[key] === '' || obj[key] === undefined) {
-          // eslint-disable-next-line no-param-reassign
-          delete obj[key];
-        }
-      });
-    };
-
-    checkProperties(searchObj);
+    if (req.query.userId && req.query.userId != '') {
+      searchObj.userId = userId;
+    }
 
     const salariesCount = await Salary.count(searchObj).skip(offset).limit(limit);
 

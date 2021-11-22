@@ -110,7 +110,6 @@ router.put('/:salaryId', ...updateSalaryValidators, updateSalary);
  * @route DELETE /users/{id}/salaries/{salaryId}
  * @group User Salaries
  * @security JWT
- * @param {String} id.path.require
  * @param {String} salaryId.path.require
  */
 router.delete('/:salaryId', deleteSalary);
