@@ -1,18 +1,18 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/order */
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+// const acl = require('./acl');
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
-const validate = require('./util/authValidator');
-
-const photoRoutes = require('./routes/photo.routes');
 
 const app = express();
 
 const expressSwagger = require('express-swagger-generator')(app);
+const cors = require('cors');
+const validate = require('./util/authValidator');
+
+const reviewRouter = require('./routes/review.route');
 
 // all middlewares
 app.use(logger('dev'));
@@ -31,13 +31,21 @@ app.use((req, res, next) => {
 const options = {
   swaggerDefinition: {
     info: {
-      description: 'Photos Internal Service for Indeed',
-      title: 'Photos Internal Service',
+      description: 'Review Internal Service for Indeed',
+      title: 'Review Internal Service',
       version: '1.0.0',
     },
-    host: 'localhost:7005',
+    host: 'localhost:7004',
     produces: ['application/json'],
     schemes: ['http'],
+    securityDefinitions: {
+      JWT: {
+        type: 'apiKey',
+        in: 'header',
+        name: 'Authorization',
+        description: 'JWT auth token',
+      },
+    },
   },
   // eslint-disable-next-line no-undef
   basedir: __dirname,
@@ -47,7 +55,8 @@ const options = {
 expressSwagger(options);
 
 app.use(getAuthMiddleware(validate));
+// app.use(getAccessMiddleware(acl));
 
-app.use('/photos', photoRoutes);
+app.use('/reviews', reviewRouter);
 
 module.exports = app;
