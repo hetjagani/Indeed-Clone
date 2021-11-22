@@ -40,6 +40,8 @@ const updateValidators = () => [
  * @route GET /applications
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {string} userId.query
+ * @param {strint} jobIds.query
  * @group Application
  * @security JWT
  * @returns {Array.<Application>} 200 - List of application info

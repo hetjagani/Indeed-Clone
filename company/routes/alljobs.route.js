@@ -13,6 +13,7 @@ const router = express.Router({ mergeParams: true });
  * @param {string} location.query
  * @param {string} companyId.query
  * @param {string} q.query
+ * @param {boolean} all.query
  * @group Job
  * @security JWT
  * @returns {Array.<Job>} 200 - List of jobs info
