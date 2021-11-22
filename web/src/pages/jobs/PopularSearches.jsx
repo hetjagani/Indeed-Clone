@@ -3,7 +3,7 @@ import './css/Search.css';
 // eslint-disable-next-line import/no-unresolved
 import SearchIcon from '@mui/icons-material/Search';
 
-const Search = () => (
+const PopularSearches = () => (
   <div className="search">
     <div>
       <h2 className="searchHeader">Popular searches</h2>
@@ -89,4 +89,4 @@ const Search = () => (
   </div>
 );
 
-export default Search;
+export default PopularSearches;
