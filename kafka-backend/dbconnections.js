@@ -117,7 +117,40 @@ const getUserConnection = () => {
   return { userConn, User, Salary };
 };
 
+const getReviewConnection = () => {
+  const reviewConn = mongoose.createConnection(global.gConfig.review_conn);
+  mongoose.set('debug', true);
+
+  const ReviewSchema = new mongoose.Schema({
+    overallRating: Number,
+    workLifeBalance: Number,
+    compensation: Number,
+    jobSecurity: Number,
+    management: Number,
+    jobCulture: Number,
+    summary: String,
+    review: String,
+    pros: String,
+    cons: String,
+    ceoApproval: Boolean,
+    tips: String,
+    companyId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId,
+    isFeatured: Boolean,
+    status: {
+      type: String,
+      enum: ['APPROVED', 'REJECTED', 'PENDING'],
+    },
+    reviewDate: Date,
+  });
+
+  const Review = reviewConn.model('reviews', ReviewSchema);
+
+  return { Review };
+};
+
 module.exports = {
   getCompanyConnection,
   getUserConnection,
+  getReviewConnection,
 };
