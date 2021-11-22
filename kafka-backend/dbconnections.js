@@ -98,7 +98,46 @@ const getApplicationConnection = () => {
   return { applicationConn, Application };
 };
 
-const getUserConnection = () => {};
+const getUserConnection = () => {
+  const userConn = mongoose.createConnection(global.gConfig.user_conn);
+  mongoose.set('debug', true);
+
+  const UserSchema = new mongoose.Schema({
+    name: String,
+    about: String,
+    contactNo: String,
+    emails: [String],
+    resumes: [String],
+    coverLetters: [String],
+    city: String,
+    state: String,
+    country: String,
+    zip: String,
+    jobPreferences: [String],
+ 
+  });
+
+  const SalarySchema = new mongoose.Schema({
+    companyId: mongoose.Schema.Types.ObjectId,
+    userId: mongoose.Schema.Types.ObjectId,
+    currentlyWorking: Boolean,
+    endDate: Date,
+    salary: Number,
+    title: String,
+    city: String,
+    state: String,
+    country: String,
+    zip: String,
+    experience: String,
+    benefits: [String],
+    industry: { name: { type: String } },
+  });
+
+  const User = userConn.model('users', UserSchema);
+  const Salary = userConn.model('salaries', SalarySchema);
+
+  return { userConn, User, Salary };
+};
 
 const getReviewConnection = () => {
   const reviewConn = mongoose.createConnection(global.gConfig.review_conn);
