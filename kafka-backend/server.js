@@ -18,6 +18,9 @@ const deleteJob = require('./services/job/delete');
 const createReview = require('./services/review/create');
 const updateReview = require('./services/review/update');
 const deleteReview = require('./services/review/delete');
+const createApplication = require('./services/application/create');
+const updateApplication = require('./services/application/update');
+const deleteApplication = require('./services/application/delete');
 
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
@@ -50,6 +53,7 @@ function handleTopicRequest(topic_name, fname) {
         producer.send(payloads, function (err, data) {
           console.log('SENT DATA FROM KAFKA BACKEND: ');
           console.log(res);
+          console.log(data);
         });
         return;
       });
@@ -59,7 +63,7 @@ function handleTopicRequest(topic_name, fname) {
   });
 }
 
-//Add your TOPICs here
+// Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
 handleTopicRequest('user.create', createUser);
@@ -80,3 +84,6 @@ handleTopicRequest('job.delete', deleteJob);
 handleTopicRequest('review.create', createReview);
 handleTopicRequest('review.update', updateReview);
 handleTopicRequest('review.delete', deleteReview);
+handleTopicRequest('application.create', createApplication);
+handleTopicRequest('application.update', updateApplication);
+handleTopicRequest('application.delete', deleteApplication);

@@ -6,15 +6,13 @@ const bodyParser = require('body-parser');
 // const acl = require('./acl');
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
 
+const applicationRouter = require('./routes/application.route');
+
 const app = express();
 
 const expressSwagger = require('express-swagger-generator')(app);
 const cors = require('cors');
 const validate = require('./util/authValidator');
-
-const employerRouter = require('./routes/employer.route');
-const companyRouter = require('./routes/company.route');
-const jobRouter = require('./routes/alljobs.route');
 
 // all middlewares
 app.use(logger('dev'));
@@ -33,11 +31,11 @@ app.use((req, res, next) => {
 const options = {
   swaggerDefinition: {
     info: {
-      description: 'Company Information Server for Indeed',
-      title: 'Company Information Server',
+      description: 'Job Application Information Server for Indeed',
+      title: 'Application Information Server',
       version: '1.0.0',
     },
-    host: 'localhost:7001',
+    host: 'localhost:7003',
     produces: ['application/json'],
     schemes: ['http'],
     securityDefinitions: {
@@ -59,8 +57,6 @@ expressSwagger(options);
 app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
 
-app.use('/employers', employerRouter);
-app.use('/companies', companyRouter);
-app.use('/jobs', jobRouter);
+app.use('/applications', applicationRouter);
 
 module.exports = app;
