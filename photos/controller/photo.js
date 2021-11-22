@@ -4,7 +4,7 @@ const { uploadFileToS3, deleteFileFromS3 } = require('../util/fileUtilS3');
 
 const addPhoto = async (req, res) => {
   try {
-    const { isFeatured, userId, companyId } = req.body;
+    const { isFeatured, userId, companyId, status } = req.body;
     const { originalname } = req.file;
 
     if (!(isFeatured && userId && companyId)) {
@@ -20,6 +20,7 @@ const addPhoto = async (req, res) => {
       userId,
       companyId,
       url: uploadedPhoto.Location,
+      status,
     });
 
     return res.status(201).json(photoObj);
@@ -79,7 +80,7 @@ const updatePhoto = async (req, res) => {
       return res.status(400).json(errors.badRequest);
     }
 
-    const { altText, isFeatured } = req.body;
+    const { altText, isFeatured, status } = req.body;
     const photo = await Photo.findOne({
       where: { _id: id },
     });
@@ -90,7 +91,9 @@ const updatePhoto = async (req, res) => {
     if (isFeatured) {
       photo.isFeatured = isFeatured;
     }
-
+    if (status) {
+      photo.status = status;
+    }
     await photo.save();
 
     return res.status(200).json(photo);
