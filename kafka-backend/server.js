@@ -14,6 +14,9 @@ const deleteJob = require('./services/job/delete');
 const createApplication = require('./services/application/create');
 const updateApplication = require('./services/application/update');
 const deleteApplication = require('./services/application/delete');
+const createReview = require('./services/review/create');
+const updateReview = require('./services/review/update');
+const deleteReview = require('./services/review/delete');
 
 function handleTopicRequest(topic_name, fname) {
   var consumer = connection.getConsumer(topic_name);
@@ -72,3 +75,6 @@ handleTopicRequest('job.delete', deleteJob);
 handleTopicRequest('application.create', createApplication);
 handleTopicRequest('application.update', updateApplication);
 handleTopicRequest('application.delete', deleteApplication);
+handleTopicRequest('review.create', createReview);
+handleTopicRequest('review.update', updateReview);
+handleTopicRequest('review.delete', deleteReview);
