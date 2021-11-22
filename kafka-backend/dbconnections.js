@@ -76,6 +76,28 @@ const getCompanyConnection = () => {
   return { companyConn, Company, Employer, Job };
 };
 
+const getApplicationConnection = () => {
+  const applicationConn = mongoose.createConnection(global.gConfig.application_conn);
+  mongoose.set('debug', true);
+
+  const ApplicationSchema = new mongoose.Schema({
+    jobId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId,
+    resume: String,
+    coverLetter: String,
+    answers: mongoose.Schema.Types.Mixed,
+    date: Date,
+    status: {
+      type: String,
+      enum: ['RECEIVED', 'UNDER_REVIEW', 'ACCEPTED', 'REJECTED'],
+    },
+  });
+
+  const Application = applicationConn.model('applications', ApplicationSchema);
+
+  return { applicationConn, Application };
+};
+
 const getUserConnection = () => {
   const userConn = mongoose.createConnection(global.gConfig.user_conn);
   mongoose.set('debug', true);
@@ -152,5 +174,6 @@ const getReviewConnection = () => {
 module.exports = {
   getCompanyConnection,
   getUserConnection,
+  getApplicationConnection,
   getReviewConnection,
 };

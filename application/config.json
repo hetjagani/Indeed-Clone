@@ -1,0 +1,13 @@
+{
+  "development": {
+    "database_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/application",
+    "auth_url": "http://auth:3000",
+    "company_url": "http://company:3000",
+    "kafka_host": "kafka:9092"
+  },
+  "test": {
+    "database_conn": "mongodb://indeedadmin:indeedadminpass@localhost:27017/company_test",
+    "auth_url": "http://localhost:7000",
+    "kafka_host": "localhost:9092"
+  }
+}
