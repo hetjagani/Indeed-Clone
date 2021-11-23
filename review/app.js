@@ -12,7 +12,7 @@ const expressSwagger = require('express-swagger-generator')(app);
 const cors = require('cors');
 const validate = require('./util/authValidator');
 
-const reviewRouter = require('./routes/review.route');
+const reviewRouter = require('./routes/review.routes');
 
 // all middlewares
 app.use(logger('dev'));

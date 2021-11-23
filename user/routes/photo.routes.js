@@ -81,6 +81,7 @@ router.put('/:photoId', ...updateValidators(), updateUserPhoto);
  * @group Photos
  * @security JWT
  * @param {String} photoId.path.require
+ * @param {String} id.path.require
  */
 router.delete('/:photoId', deleteUserPhoto);
 
