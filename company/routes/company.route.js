@@ -11,10 +11,12 @@ const {
 const employerCheckMiddleware = require('../util/employerCheck');
 
 const jobsRouter = require('./job.route');
+const reviewRouter = require('./review.route');
 
 const router = express.Router();
 
 router.use('/:compId/jobs', employerCheckMiddleware, jobsRouter);
+router.use('/:compId/reviews', reviewRouter);
 
 /**
  * @typedef Company
