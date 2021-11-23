@@ -57,17 +57,18 @@
 
 .searchStories {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  margin-top: 100px;
+  align-items: center;
+  margin-top: 60px;
+  font-size: smaller;
 }
 
 .stories {
   font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans,
     Roboto, Noto, sans-serif;
   font-weight: 400;
-  font-size: 0.975rem;
-  line-height: 1.5;
+  line-height: 1;
   padding: 2.5px;
 }
 
@@ -75,12 +76,32 @@
   font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans,
     Roboto, Noto, sans-serif;
   font-weight: 400;
-  font-size: 0.975rem;
-  line-height: 1.5;
+  line-height: 1;
   color: #2557a7;
   padding: 2.5px;
 }
 .stories2:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.MuiAutocomplete-root .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
+  height: 45px;
+}
+
+a {
+  color: #2557a7;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+p {
+  color: #2d2d2d;
+}
+
+.separatingLine {
+  width: 99%;
+  top: 2rem;
+  margin-bottom: 1rem;
+  border-top: 1px solid #faf9f9;
 }
