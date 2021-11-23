@@ -5,8 +5,10 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 // const acl = require("./acl");
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
-const userRouter = require('./routes/user.routes')
-const salaryRouter = require('./routes/salary.routes')
+
+const userRouter = require('./routes/user.routes');
+const salaryRouter = require('./routes/salary.routes');
+const mediaRouter = require('./routes/media.routes');
 
 const app = express();
 
@@ -58,4 +60,6 @@ app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
 app.use('/users', userRouter);
 app.use('/salaries', salaryRouter);
+app.use('/media', mediaRouter);
+
 module.exports = app;
