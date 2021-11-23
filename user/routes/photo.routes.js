@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const multer = require('multer');
 const {
   getUserPhotoById,
   getUserPhotos,
@@ -7,7 +8,6 @@ const {
   deleteUserPhoto,
   updateUserPhoto,
 } = require('../controller/photo');
-const multer = require('multer');
 
 const upload = multer({ dest: '/tmp' });
 
