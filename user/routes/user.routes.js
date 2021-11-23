@@ -12,9 +12,11 @@ const {
 
 const salaryRoutes = require('./salary.routes');
 const photoRoutes = require('./photo.routes');
+const reviewRoutes = require('./review.routes');
 
 router.use('/:id/salaries', salaryRoutes);
 router.use('/:id/photos', photoRoutes);
+router.use('/:id/reviews', reviewRoutes);
 
 /**
  * @typedef User
