@@ -4,12 +4,11 @@ import Navbar from '../components/Navbar';
 import getLoginDetails from './getLoginDetails';
 
 const withAuth = (WrappedComponent, ar, withNav) => (props) => {
-  const { role } = getLoginDetails();
-
-  if (!role) {
+  const decoded = getLoginDetails();
+  if (!decoded) {
     return <Redirect to="/login" />;
   }
-  if (role === 'employer' && ar === 'employer') {
+  if (decoded.role === 'employer' && ar === 'employer') {
     return withNav ? (
       <>
         <Navbar />
@@ -19,7 +18,7 @@ const withAuth = (WrappedComponent, ar, withNav) => (props) => {
       <WrappedComponent {...props} />
     );
   }
-  if (role === 'user' && ar === 'user') {
+  if (decoded.role === 'user' && ar === 'user') {
     return withNav ? (
       <>
         <Navbar />
