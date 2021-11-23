@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie';
 import './css/Login.css';
 import Input from '../../components/Input';
 import login from '../../api/auth/login';
+import Button from '../../components/Button';
 
 const Login = () => {
   const history = useHistory();
@@ -172,9 +173,9 @@ const Login = () => {
                 )}
                 label="Keep me signed in on this device."
               />
-              <button className="LRbutton" type="submit">
-                Sign In
-              </button>
+              <div style={{ marginTop: '20px', marginBottom: '30px' }}>
+                <Button label="Create an account" type="submit" />
+              </div>
             </form>
             <div
               style={{ display: 'flex', flexDirection: 'row', width: '450px' }}
