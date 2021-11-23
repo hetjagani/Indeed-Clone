@@ -1,8 +1,10 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable consistent-return */
 const { validationResult } = require('express-validator');
-const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
 const mongoose = require('mongoose');
 const { default: axios } = require('axios');
+const { makeRequest } = require('../util/kafka/client');
 const { Salary } = require('../model');
 
 const createSalary = async (req, res) => {
@@ -104,7 +106,7 @@ const updateSalary = async (req, res) => {
         resp.company = company.data;
       }
       res.status(200).json(resp);
-    }
+    },
   );
 };
 
@@ -185,12 +187,12 @@ const generalGetSalaries = async (req, res) => {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
     const { companyId, userId } = req.query;
 
-    let searchObj = {};
-    if (req.query.companyId && req.query.companyId != '') {
+    const searchObj = {};
+    if (req.query.companyId && req.query.companyId !== '') {
       searchObj.companyId = companyId;
     }
 
-    if (req.query.userId && req.query.userId != '') {
+    if (req.query.userId && req.query.userId !== '') {
       searchObj.userId = userId;
     }
 
