@@ -81,6 +81,8 @@ router.post('/', ...bodyValidators(), createReview);
  * @group Review
  * @security JWT
  * @param {string} id.path.require
+ * @param {string} companyId.query
+ * @param {string} userId.query
  * @returns {Review.model} 200 - Review for given ID
  */
 router.get('/:id', getReviewById);
@@ -91,6 +93,8 @@ router.get('/:id', getReviewById);
  * @group Review
  * @security JWT
  * @param {string} id.path.require
+ * @param {string} companyId.query
+ * @param {string} userId.query
  * @param {Review.model} Review.body.require
  * @returns {Review.model} 200 - Updated Review
  */
@@ -102,6 +106,8 @@ router.put('/:id', ...bodyValidators(), updateReview);
  * @group Review
  * @security JWT
  * @param {string} id.path.require
+ * @param {string} companyId.query
+ * @param {string} userId.query
  * @returns {null} 200 - Delete Review
  */
 router.delete('/:id', deleteReview);
