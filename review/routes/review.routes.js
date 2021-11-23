@@ -98,7 +98,7 @@ router.get('/:id', getReviewById);
  * @param {Review.model} Review.body.require
  * @returns {Review.model} 200 - Updated Review
  */
-router.put('/:id', ...bodyValidators(), updateReview);
+router.put('/:id', updateReview);
 
 /**
  * Delete Review by ID
