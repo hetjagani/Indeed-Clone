@@ -17,6 +17,7 @@ import Cookies from 'universal-cookie';
 import './css/Login.css';
 import Input from '../../components/Input';
 import register from '../../api/auth/register';
+import Button from '../../components/Button';
 
 const Register = () => {
   const history = useHistory();
@@ -255,10 +256,9 @@ const Register = () => {
                 )}
                 label="Keep me signed in on this device."
               />
-
-              <button className="LRbutton" type="submit">
-                Create an account
-              </button>
+              <div style={{ marginTop: '20px', marginBottom: '30px' }}>
+                <Button label="Create an account" type="submit" />
+              </div>
             </form>
           </div>
         </div>

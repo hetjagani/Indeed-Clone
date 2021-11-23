@@ -20,7 +20,7 @@ services:
 
   mysqldb:
     image: mysql
-    platform: linux/x86_64
+    # platform: linux/x86_64
     restart: unless-stopped
     ports:
       - 3306:3306
