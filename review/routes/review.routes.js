@@ -48,8 +48,8 @@ const bodyValidators = () => [
   body('tips').isString(),
   body('companyId').isString(),
   body('userId').isString(),
-  body('isFeatured').isBoolean(),
-  body('status').isString().isIn(['APPROVED', 'REJECTED', 'PENDING']),
+  body('isFeatured').optional().isBoolean(),
+  body('status').optional().isString().isIn(['APPROVED', 'REJECTED', 'PENDING']),
 ];
 
 /**

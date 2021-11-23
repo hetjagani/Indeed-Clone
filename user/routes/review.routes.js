@@ -25,8 +25,6 @@ const router = express.Router({ mergeParams: true });
  * @property {boolean} ceoApproval.required
  * @property {string} tips.required
  * @property {string} companyId.required
- * @property {boolean} isFeatured.required
- * @property {string} status.required
  * @property {string} reviewDate.required
  */
 
@@ -66,8 +64,6 @@ const bodyValidators = () => [
   body('reviewDate').exists().isString().isDate({ format: 'mm/dd/yyyy' }),
   body('tips').isString(),
   body('companyId').isString(),
-  body('isFeatured').isBoolean(),
-  body('status').isString().isIn(['APPROVED', 'REJECTED', 'PENDING']),
 ];
 
 /**
@@ -121,6 +117,7 @@ router.put('/:reviewId', ...bodyValidators(), updateUserReview);
  * @route DELETE /users/{id}/reviews/{reviewId}
  * @group Reviews
  * @security JWT
+ * @param {String} id.path.require
  * @param {String} reviewId.path.require
  */
 router.delete('/:reviewId', deleteUserReview);
