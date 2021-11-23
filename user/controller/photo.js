@@ -3,6 +3,7 @@ const { errors } = require('u-server-utils');
 const fs = require('fs');
 const FormData = require('form-data');
 const { default: axios } = require('axios');
+const { validationResult } = require('express-validator');
 
 const getUserPhotos = async (req, res) => {
   try {
@@ -58,6 +59,13 @@ const createUserPhoto = async (req, res) => {
       return;
     }
 
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      console.error(valErr);
+      res.status(400).json({ status: 400, message: valErr.array() });
+      return;
+    }
+
     const { isFeatured, companyId } = req.body;
     const status = 'PENDING';
 
@@ -106,6 +114,13 @@ const updateUserPhoto = async (req, res) => {
       ...errors.badRequest,
       message: 'id in path should be same as logged in user',
     });
+    return;
+  }
+
+  const valErr = validationResult(req);
+  if (!valErr.isEmpty()) {
+    console.error(valErr);
+    res.status(400).json({ status: 400, message: valErr.array() });
     return;
   }
 
