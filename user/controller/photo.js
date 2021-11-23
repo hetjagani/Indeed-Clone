@@ -10,7 +10,7 @@ const getUserPhotos = async (req, res) => {
     const { id } = req.params;
 
     const result = await axios.get(`${global.gConfig.photos_url}/photos`, {
-      params: { userId: id },
+      params: { userId: id, page: req.query.page, limit: req.query.limit },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -29,13 +29,10 @@ const getUserPhotoById = async (req, res) => {
   try {
     const { id, photoId } = req.params;
 
-    const result = await axios.get(
-      `${global.gConfig.photos_url}/photos/${photoId}`,
-      {
-        params: { userId: id },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const result = await axios.get(`${global.gConfig.photos_url}/photos/${photoId}`, {
+      params: { userId: id },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     res.status(200).json(result.data);
   } catch (err) {
@@ -78,16 +75,12 @@ const createUserPhoto = async (req, res) => {
     data.append('userId', user);
     data.append('status', status);
 
-    const response = await axios.post(
-      `${global.gConfig.photos_url}/photos`,
-      data,
-      {
-        headers: {
-          Authorization: req.headers.authorization,
-          'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-        },
+    const response = await axios.post(`${global.gConfig.photos_url}/photos`, data, {
+      headers: {
+        Authorization: req.headers.authorization,
+        'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
       },
-    );
+    });
 
     if (!response) {
       res.status(500).json(errors.serverError);
@@ -160,13 +153,10 @@ const deleteUserPhoto = async (req, res) => {
       return;
     }
 
-    const result = await axios.delete(
-      `${global.gConfig.photos_url}/photos/${photoId}`,
-      {
-        params: { userId: id },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const result = await axios.delete(`${global.gConfig.photos_url}/photos/${photoId}`, {
+      params: { userId: id },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     res.status(200).json(result.data);
   } catch (err) {
