@@ -66,6 +66,11 @@ const createUserReview = async (req, res) => {
     }
 
     const data = req.body;
+    
+    data.isFeatured = false;
+    data.status = 'PENDING';
+    data.userId = user;
+
     const response = await axios.post(
       `${global.gConfig.review_url}/reviews`,
       data,
@@ -114,6 +119,8 @@ const updateUserReview = async (req, res) => {
     }
 
     const data = req.body;
+    data.userId = id;
+
     const result = await axios.put(
       `${global.gConfig.review_url}/reviews/${reviewId}`,
       data,
