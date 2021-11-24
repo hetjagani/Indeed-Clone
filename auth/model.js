@@ -1,23 +1,53 @@
 const { DataTypes } = require('sequelize');
 
-const User = global.DB.define('users', {
-  id: {
+const Chat = global.DB.define('chat', {
+  _id: {
     type: DataTypes.STRING,
     primaryKey: true,
     unique: true,
   },
-  email: {
+  employerId: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  userId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  subject: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+});
+
+const Message = global.DB.define('message', {
+  _id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
     unique: true,
+  },
+  content: {
+    type: DataTypes.TEXT,
     allowNull: false,
   },
-  password: {
+  to: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  role: {
-    type: DataTypes.ENUM('user', 'employer'),
+  from: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
+});
+
+Chat.hasMany(Message, {
+  foreignKey: 'chatId',
+  sourceKey: '_id',
+});
+
+Message.belongsTo(Chat, {
+  foreignKey: 'chatId',
+  targetKey: '_id',
 });
 
 const runMigration = async (force) => {
@@ -28,4 +58,4 @@ const runMigration = async (force) => {
   return Promise.resolve(global.DB);
 };
 
-module.exports = { User, runMigration };
+module.exports = { Chat, Message, runMigration };
