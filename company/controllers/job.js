@@ -9,44 +9,70 @@ const getAllJobs = async (req, res) => {
   const { compId } = req.params;
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
-  const jobsCount = await Job.count({ companyId: Types.ObjectId(compId) });
-  const result = await Job.aggregate([
-    { $match: { companyId: Types.ObjectId(compId) } },
-    {
-      $lookup: {
-        from: 'companies',
-        localField: 'companyId',
-        foreignField: '_id',
-        as: 'company',
+  try {
+    const jobsCount = await Job.count({ companyId: Types.ObjectId(compId) });
+    const result = await Job.aggregate([
+      { $match: { companyId: Types.ObjectId(compId) } },
+      {
+        $lookup: {
+          from: 'companies',
+          localField: 'companyId',
+          foreignField: '_id',
+          as: 'company',
+        },
       },
-    },
-  ])
-    .skip(offset)
-    .limit(limit);
+      {
+        $unwind: { path: '$company' },
+      },
+    ])
+      .skip(offset)
+      .limit(limit);
 
-  res.status(200).json({ total: jobsCount, nodes: result });
+    res.status(200).json({ total: jobsCount, nodes: result });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const getJobById = async (req, res) => {
   const { compId, id } = req.params;
 
-  const result = await Job.aggregate([
-    { $match: { _id: Types.ObjectId(id), companyId: Types.ObjectId(compId) } },
-    {
-      $lookup: {
-        from: 'companies',
-        localField: 'companyId',
-        foreignField: '_id',
-        as: 'company',
+  try {
+    const result = await Job.aggregate([
+      {
+        $match: { _id: Types.ObjectId(id), companyId: Types.ObjectId(compId) },
       },
-    },
-  ]);
-  if (result?.length === 0) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
+      {
+        $lookup: {
+          from: 'companies',
+          localField: 'companyId',
+          foreignField: '_id',
+          as: 'company',
+        },
+      },
+      {
+        $unwind: { path: '$company' },
+      },
+    ]);
+    if (result?.length === 0) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
 
-  res.status(200).json(result[0]);
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const createJob = async (req, res) => {
@@ -87,23 +113,126 @@ const updateJob = async (req, res) => {
 
   const job = req.body;
 
-  const dbJob = await Job.findOne({
-    _id: Types.ObjectId(id),
-    companyId: Types.ObjectId(compId),
-  });
-  if (!dbJob) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
-
-  makeRequest('job.update', { data: job, id: dbJob._id }, async (err, resp) => {
-    if (err) {
-      console.log(err);
-      res.status(500).json(errors.serverError);
+  try {
+    const dbJob = await Job.findOne({
+      _id: Types.ObjectId(id),
+      companyId: Types.ObjectId(compId),
+    });
+    if (!dbJob) {
+      res.status(404).json(errors.notFound);
       return;
     }
+
+    makeRequest(
+      'job.update',
+      { data: job, id: dbJob._id },
+      async (err, resp) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json(errors.serverError);
+          return;
+        }
+        const result = await Job.aggregate([
+          { $match: { _id: Types.ObjectId(resp._id) } },
+          {
+            $lookup: {
+              from: 'companies',
+              localField: 'companyId',
+              foreignField: '_id',
+              as: 'company',
+            },
+          },
+          {
+            $unwind: { path: '$company' },
+          },
+        ]);
+
+        res.status(200).json(result[0]);
+      },
+    );
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
+};
+
+const deleteJob = async (req, res) => {
+  const { compId, id } = req.params;
+
+  try {
+    const dbJob = await Job.findOne({
+      _id: Types.ObjectId(id),
+      companyId: Types.ObjectId(compId),
+    });
+    if (!dbJob) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    makeRequest('job.delete', { id: dbJob._id }, async (err, resp) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json(errors.serverError);
+        return;
+      }
+
+      if (resp.success) {
+        res.status(200).json(null);
+      } else {
+        res.status(500).json(errors.serverError);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
+};
+
+const getJobsList = async (req, res) => {
+  const whereOpts = [];
+  const { city, state, q, companyId, location, all } = req.query;
+
+  if (city && city !== '') {
+    whereOpts.push({ city });
+  }
+
+  if (state && state !== '') {
+    whereOpts.push({ state });
+  }
+
+  if (location && location !== '') {
+    whereOpts.push({ jobLocation: location });
+  }
+
+  if (companyId && companyId !== '') {
+    whereOpts.push({ companyId: Types.ObjectId(companyId) });
+  }
+
+  if (q && q !== '') {
+    whereOpts.push({ title: { $regex: q } });
+  }
+
+  let query = {};
+  if (whereOpts.length > 0) {
+    query.$and = whereOpts;
+  }
+  if (all) {
+    query = {};
+  }
+
+  try {
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+    const jobsCnt = await Job.count(query);
     const result = await Job.aggregate([
-      { $match: { _id: Types.ObjectId(resp._id) } },
+      { $match: query },
       {
         $lookup: {
           from: 'companies',
@@ -112,37 +241,60 @@ const updateJob = async (req, res) => {
           as: 'company',
         },
       },
-    ]);
+      {
+        $unwind: { path: '$company' },
+      },
+    ])
+      .skip(offset)
+      .limit(limit);
 
-    res.status(200).json(result[0]);
-  });
+    if (all) {
+      res.status(200).json(result);
+    } else {
+      res.status(200).json({ total: jobsCnt, nodes: result });
+    }
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
-const deleteJob = async (req, res) => {
-  const { compId, id } = req.params;
+const getJobInfoById = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  const dbJob = await Job.findOne({
-    _id: Types.ObjectId(id),
-    companyId: Types.ObjectId(compId),
-  });
-  if (!dbJob) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
-
-  makeRequest('job.delete', { id: dbJob._id }, async (err, resp) => {
-    if (err) {
-      console.log(err);
-      res.status(500).json(errors.serverError);
+    const result = await Job.aggregate([
+      { $match: { _id: Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: 'companies',
+          localField: 'companyId',
+          foreignField: '_id',
+          as: 'company',
+        },
+      },
+      {
+        $unwind: { path: '$company' },
+      },
+    ]);
+    if (!result || result.length === 0) {
+      res.status(404).json(errors.notFound);
       return;
     }
 
-    if (resp.success) {
-      res.status(200).json(null);
-    } else {
-      res.status(500).json(errors.serverError);
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
     }
-  });
+    res.status(500).json(errors.serverError);
+  }
 };
 
 module.exports = {
@@ -151,4 +303,6 @@ module.exports = {
   createJob,
   updateJob,
   deleteJob,
+  getJobsList,
+  getJobInfoById,
 };

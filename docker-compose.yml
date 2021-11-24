@@ -87,7 +87,7 @@ services:
 
   auth:
     depends_on:
-      - mongodb
+      - mysqldb
       - kafka-backend
     build:
       context: ./auth

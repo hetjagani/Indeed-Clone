@@ -95,6 +95,8 @@ const NavLeft = () => {
                 height: '25px',
                 borderTop: '2px solid #ececec',
                 marginTop: '35px',
+                marginLeft: '0px',
+                marginRight: '0px',
               }}
             />
             <AntTab label="Employers/Post job" />

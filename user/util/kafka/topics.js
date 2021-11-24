@@ -27,12 +27,26 @@ const createKafkaTopics = () => {
         partitions: 1,
         replicationFactor: 1,
       },
+      {
+        topic: 'salary.create',
+        partitions: 1,
+        replicationFactor: 1,
+      },
+      {
+        topic: 'salary.update',
+        partitions: 1,
+        replicationFactor: 1,
+      },{
+        topic: 'salary.delete',
+        partitions: 1,
+        replicationFactor: 1,
+      }
     ],
     (err) => {
       if (err) {
         console.error(err);
       }
-    },
+    }
   );
 };
 

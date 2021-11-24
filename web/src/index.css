@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans', 'Helvetica Neue',
-    'Helvetica', 'Arial', 'Liberation Sans', 'Roboto', 'Noto', 'sans-serif';
+  font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans,
+    Roboto, Noto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
