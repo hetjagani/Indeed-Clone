@@ -100,8 +100,12 @@ const updateReview = async (req, res) => {
       return;
     }
 
-    req.body.companyId = Types.ObjectId(req.body.companyId);
-    req.body.userId = Types.ObjectId(req.body.userId);
+    if (req.body.companyId) {
+      req.body.companyId = Types.ObjectId(req.body.companyId);
+    }
+    if (req.body.userId) {
+      req.body.userId = Types.ObjectId(req.body.userId);
+    }
     const review = req.body;
 
     const queryObj = {};
@@ -120,18 +124,14 @@ const updateReview = async (req, res) => {
       return;
     }
 
-    makeRequest(
-      'review.update',
-      { id: id, data: review },
-      async (err, resp) => {
-        if (err) {
-          res.status(500).json(errors.serverError);
-          return;
-        }
+    makeRequest('review.update', { id: id, data: review }, async (err, resp) => {
+      if (err) {
+        res.status(500).json(errors.serverError);
+        return;
+      }
 
-        res.status(200).json(resp);
-      },
-    );
+      res.status(200).json(resp);
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json(errors.serverError);

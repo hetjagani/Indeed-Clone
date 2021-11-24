@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const { errors, getPagination } = require('u-server-utils');
 const mongoose = require('mongoose');
 const { default: axios } = require('axios');
+const { ObjectId } = require('mongodb');
 const { makeRequest } = require('../util/kafka/client');
 const { Salary } = require('../model');
 
@@ -115,9 +116,7 @@ const getSalaries = async (req, res) => {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
     const salariesCount = await Salary.count({
       userId: mongoose.Types.ObjectId(String(req.params.id)),
-    })
-      .skip(offset)
-      .limit(limit);
+    });
 
     const salaryList = await Salary.find({
       userId: mongoose.Types.ObjectId(String(req.params.id)),
@@ -173,9 +172,18 @@ const deleteSalary = async (req, res) => {
 
 const generalGetSalaryById = async (req, res) => {
   try {
-    const salary = await Salary.findOne({
-      _id: mongoose.Types.ObjectId(String(req.params.id)),
-    });
+    const { companyId, userId } = req.query;
+
+    const searchObj = { _id: ObjectId(req.params.id) };
+    if (req.query.companyId && req.query.companyId !== '') {
+      searchObj.companyId = companyId;
+    }
+
+    if (req.query.userId && req.query.userId !== '') {
+      searchObj.userId = userId;
+    }
+
+    const salary = await Salary.findOne(searchObj);
     return res.status(200).send(salary);
   } catch (err) {
     res.status(500).send(errors.serverError);
@@ -196,7 +204,7 @@ const generalGetSalaries = async (req, res) => {
       searchObj.userId = userId;
     }
 
-    const salariesCount = await Salary.count(searchObj).skip(offset).limit(limit);
+    const salariesCount = await Salary.count(searchObj);
 
     const salaryList = await Salary.find(searchObj).skip(offset).limit(limit);
 
