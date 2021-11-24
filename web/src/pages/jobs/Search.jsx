@@ -130,6 +130,7 @@ function Search({ advancedSearch }) {
         flexDirection: 'column',
         justifyContent: 'start',
         alignItems: 'center',
+        marginTop: '20px',
       }}
     >
       <div

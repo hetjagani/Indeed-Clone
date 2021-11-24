@@ -45,7 +45,9 @@ function Jobs() {
 
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', minHeight: '85vh' }}
+      style={{
+        display: 'flex', flexDirection: 'column', minHeight: '85vh', marginTop: '30px',
+      }}
     >
       {searchFilter ? (
         <>
@@ -59,7 +61,7 @@ function Jobs() {
           <PopularSearches />
         </>
       )}
-      <hr className="separatingLine" style={{ margin: '30px 0 20px 0' }} />
+      <hr className="separatingLine" style={{ margin: '30px 0 20px 0', bottom: '-30px' }} />
       <Footer />
     </div>
   );
