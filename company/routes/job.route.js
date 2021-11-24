@@ -82,7 +82,7 @@ router.get('/:id', getJobById);
  * @param {string} compId.path
  * @param {string} id.path
  * @group Job
- * @security JWemployerCheckMiddleware, T
+ * @security JWT
  * @param {Job.model} Job.body.require
  * @returns {Job.model} 200 - Updated Job
  */

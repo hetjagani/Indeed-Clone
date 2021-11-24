@@ -28,4 +28,26 @@ const employerCheckMiddleware = async (req, res, next) => {
   next();
 };
 
-module.exports = employerCheckMiddleware;
+const employerCheckMiddlewareOnAll = async (req, res, next) => {
+  const { compId } = req.params;
+  const { user } = req.headers;
+  const company = await Company.findById(Types.ObjectId(compId));
+
+  if (!company) {
+    res.status(401).json({ ...errors.unauthorized, message: 'company does not exist' });
+    return;
+  }
+
+  if (!company.employers.find((e) => e.toString() === user)) {
+    res
+      .status(401)
+      .json({ ...errors.unauthorized, message: 'employer does not belong to this company' });
+    return;
+  }
+
+  req.params.compId = compId;
+
+  next();
+};
+
+module.exports = { employerCheckMiddleware, employerCheckMiddlewareOnAll };
