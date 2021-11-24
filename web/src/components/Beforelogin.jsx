@@ -53,7 +53,7 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 const Beforelogin = () => {
-  const [value, setValue] = React.useState();
+  const [value, setValue] = React.useState(0);
   const history = useHistory();
 
   const handleChange = (event, newValue) => {
