@@ -2,7 +2,7 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import './FindCompany.css';
+import './css/FindCompany.css';
 
 const FindCompany = () => (
   <div className="findCompany">

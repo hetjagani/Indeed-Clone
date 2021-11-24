@@ -1,7 +1,7 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import './Findsalary.css';
+import './css/Findsalary.css';
 
 const Findsalary = () => (
   <div className="findsalary">
