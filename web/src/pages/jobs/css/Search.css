@@ -92,6 +92,10 @@
 a {
   color: #2557a7;
   font-weight: bold;
+}
+
+a:hover {
+  cursor: pointer;
   text-decoration: underline;
 }
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import PopularSearches from './PopularSearches';
 import Search from './Search';
 import Footer from '../../components/Footer';
 import JobFeed from './JobFeed';
+import getJobs from '../../api/jobs/get';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -12,7 +13,24 @@ function useQuery() {
 
 function Jobs() {
   const query = useQuery();
+  const history = useHistory();
+
   const [searchFilter, setSearchFilter] = useState(null);
+  const [jobs, setJobs] = useState([]);
+
+  const getPaginatedJobs = async () => {
+    const queryParams = { page: 1, limit: 10 };
+    const locFilter = query.getAll('location');
+    if (locFilter.length) {
+      // eslint-disable-next-line prefer-destructuring
+      queryParams.city = locFilter[0];
+    }
+    const response = await getJobs(queryParams);
+    if (!response) {
+      return;
+    }
+    setJobs(response.data.nodes);
+  };
 
   useEffect(() => {
     const jobFilter = query.getAll('jobs');
@@ -21,8 +39,9 @@ function Jobs() {
       setSearchFilter(null);
       return;
     }
-    setSearchFilter(...jobFilter, ...locFilter);
-  }, [query]);
+    setSearchFilter(true);
+    getPaginatedJobs();
+  }, [history.location]);
 
   return (
     <div
@@ -32,7 +51,7 @@ function Jobs() {
         <>
           <Search advancedSearch />
           <hr className="separatingLine" />
-          <JobFeed />
+          <JobFeed jobs={jobs} />
         </>
       ) : (
         <>
@@ -40,6 +59,7 @@ function Jobs() {
           <PopularSearches />
         </>
       )}
+      <hr className="separatingLine" style={{ margin: '30px 0 20px 0' }} />
       <Footer />
     </div>
   );

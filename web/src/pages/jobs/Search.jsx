@@ -1,6 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable react/jsx-wrap-multilines */
 import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { Autocomplete, InputAdornment, TextField } from '@mui/material';
@@ -12,7 +10,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Button from '../../components/Button';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
 import getCompanies from '../../api/company/get';
-import getJobs from '../../api/jobs/get';
 
 const whatFilter = [
   { title: 'work from home' },
@@ -28,16 +25,16 @@ const whatFilter = [
 ];
 
 const whereFilter = [
-  { title: 'San Jose, CA' },
-  { title: 'San Francisco, CA' },
-  { title: 'Sunnyvale, CA' },
-  { title: 'Santa Clara, CA' },
-  { title: 'Sacramento, CA' },
+  { title: 'San Jose' },
+  { title: 'San Francisco' },
+  { title: 'Sunnyvale' },
+  { title: 'Santa Clara' },
+  { title: 'Sacramento' },
   { title: 'California' },
-  { title: 'Fremont, CA' },
-  { title: 'Los Angeles, CA' },
-  { title: 'Oakland, CA' },
-  { title: 'Las Vegas, NV' },
+  { title: 'Fremont' },
+  { title: 'Los Angeles' },
+  { title: 'Oakland' },
+  { title: 'Las Vegas' },
 ];
 
 const datePostedFilter = [
@@ -113,15 +110,6 @@ function Search({ advancedSearch }) {
     setCompanyNameOptions(companyNames);
   };
 
-  const getPaginatedJobs = async () => {
-    const queryParams = { page: 1, limit: 10 };
-    const response = await getJobs(queryParams);
-    if (!response) {
-      return;
-    }
-    console.log(response);
-  };
-
   useEffect(() => {
     const jobF = query.get('jobs');
     const locF = query.get('location');
@@ -132,7 +120,6 @@ function Search({ advancedSearch }) {
       setLocationFilter(locF);
     }
     getCompanyNames();
-    getPaginatedJobs();
   }, []);
 
   return (
@@ -210,7 +197,6 @@ function Search({ advancedSearch }) {
         <Autocomplete
           value={locationFilter}
           onChange={(_, newValue) => {
-            console.log(newValue);
             setLocationFilter(newValue);
           }}
           freeSolo
@@ -268,7 +254,11 @@ function Search({ advancedSearch }) {
       </div>
       {!advancedSearch ? (
         <span style={{ marginTop: '30px' }}>
-          <a href="#">Employers: post a job</a> - your next hire is here
+          <a href="#">
+            Employers: post a job
+          </a>
+          {' '}
+          - your next hire is here
         </span>
       ) : (
         <div
@@ -291,11 +281,11 @@ function Search({ advancedSearch }) {
             value={datePosted}
             setValue={setDatePosted}
             options={datePostedFilter}
-            endAdornmentIcon={
+            endAdornmentIcon={(
               <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                 <ArrowDropDownIcon fontSize="10px" />
               </div>
-            }
+            )}
           />
           <CustomAutocomplete
             sx={{
@@ -307,11 +297,11 @@ function Search({ advancedSearch }) {
             value={companyName}
             setValue={setCompanyName}
             options={companyNameOptions}
-            endAdornmentIcon={
+            endAdornmentIcon={(
               <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                 <ArrowDropDownIcon fontSize="10px" />
               </div>
-            }
+            )}
           />
           <CustomAutocomplete
             sx={{
@@ -323,11 +313,11 @@ function Search({ advancedSearch }) {
             value={jobType}
             setValue={setJobType}
             options={jobTypeFilter}
-            endAdornmentIcon={
+            endAdornmentIcon={(
               <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                 <ArrowDropDownIcon fontSize="10px" />
               </div>
-            }
+            )}
           />
           <CustomAutocomplete
             sx={{
@@ -339,11 +329,11 @@ function Search({ advancedSearch }) {
             value={industry}
             setValue={setIndustry}
             options={industryFilter}
-            endAdornmentIcon={
+            endAdornmentIcon={(
               <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                 <ArrowDropDownIcon fontSize="10px" />
               </div>
-            }
+            )}
           />
         </div>
       )}
