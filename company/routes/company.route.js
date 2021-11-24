@@ -8,17 +8,19 @@ const {
   updateCompany,
   deleteCompany,
 } = require('../controllers/company');
-const employerCheckMiddleware = require('../util/employerCheck');
+const { employerCheckMiddleware, employerCheckMiddlewareOnAll } = require('../util/employerCheck');
 
 const jobsRouter = require('./job.route');
 const reviewRouter = require('./review.route');
 const salaryRouter = require('./salary.route');
+const applicationRouter = require('./application.route');
 
 const router = express.Router();
 
 router.use('/:compId/jobs', employerCheckMiddleware, jobsRouter);
 router.use('/:compId/reviews', reviewRouter);
 router.use('/:compId/salaries', salaryRouter);
+router.use('/:compId/applications', employerCheckMiddlewareOnAll, applicationRouter);
 
 /**
  * @typedef Company
