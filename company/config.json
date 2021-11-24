@@ -2,6 +2,10 @@
   "development": {
     "database_conn": "mongodb://indeedadmin:indeedadminpass@mongodb:27017/company",
     "auth_url": "http://auth:3000",
+    "review_url": "http://review:3000",
+    "user_url": "http://user:3000",
+    "application_url": "http://application:3000",
+    "photos_url": "http://photos:3000",
     "kafka_host": "kafka:9092"
   },
   "test": {
