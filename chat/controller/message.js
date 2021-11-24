@@ -123,6 +123,8 @@ const getMessageById = async (req, res) => {
 
 const createMessage = async (req, res) => {
   try {
+    console.log('createMessage');
+
     const { role, user } = req.headers;
     const { id } = req.params;
 
@@ -164,9 +166,7 @@ const createMessage = async (req, res) => {
     data._id = new ObjectId().toString();
     data.chatId = id;
 
-    const newMessage = await Message.create({
-      data,
-    });
+    const newMessage = await Message.create(data);
 
     res.status(201).json(newMessage);
   } catch (err) {

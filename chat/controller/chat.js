@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { errors } = require('u-server-utils');
+const { errors, getPagination } = require('u-server-utils');
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { ObjectId } = require('mongodb');
@@ -9,9 +9,9 @@ const { forEach } = require('lodash');
 
 const getAllChats = async (req, res) => {
   try {
-    const { page, limit } = req.query;
-
     const { role, user } = req.headers;
+
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
     const queryObj = {};
     if (role === 'employer') {
@@ -28,9 +28,7 @@ const getAllChats = async (req, res) => {
 
     const listChats = await Chat.findAndCountAll({
       where: queryObj,
-      order: [
-        ['createdAt', 'DESC'],
-      ],
+      order: [['createdAt', 'DESC']],
       limit,
       offset,
     });
@@ -43,24 +41,48 @@ const getAllChats = async (req, res) => {
       return;
     }
 
+    if (role === 'user') {
+      const allEmployers = await axios.get(
+        `${global.gConfig.company_url}/employers`,
+        {
+          params: { all: 'true' },
+          headers: { Authorization: req.headers.authorization },
+        },
+      );
 
-    const allEmployers = await axios.get(`${global.gConfig.company_url}/employers`, {
-      params: { all: 'true' },
-      headers: { Authorization: req.headers.authorization },
-    });
+      console.log(listChats.rows[0].dataValues);
+      const employerMap = new Map();
 
-    const employerMap = new Map();
+      allEmployers.data.nodes.forEach((ele) => {
+        employerMap.set(ele._id, ele);
+      });
 
-    allEmployers.nodes.forEach((ele) => {
-      employerMap.set(ele._id, ele);
-    });
+      listChats.rows.forEach((ele) => {
+        ele.dataValues.employer = employerMap.get(ele.dataValues.employerId);
+        delete ele.dataValues.employerId;
+      });
+    }else if(role === 'employer'){
+      const allUsers = await axios.get(
+        `${global.gConfig.user_url}/users`,
+        {
+          params: { all: 'true' },
+          headers: { Authorization: req.headers.authorization },
+        },
+      );
 
-    listChats.rows.forEach((ele) => {
-      ele.employer = employerMap.get(ele.employerId);
-      delete ele.employerId;
-    });
+      const userMap = new Map();
 
-    res.status(200).json({total: listChats.count, nodes: listChats.rows});
+      allUsers.data.nodes.forEach((ele) => {
+        userMap.set(ele._id, ele);
+      });
+
+      listChats.rows.forEach((ele) => {
+        ele.dataValues.user = userMap.get(ele.dataValues.userId);
+        delete ele.dataValues.userId;
+      });
+    }
+
+    res.status(200).json({ total: listChats.count, nodes: listChats.rows });
   } catch (err) {
     console.log(err);
     if (err.isAxiosError) {
@@ -116,8 +138,9 @@ const getChatById = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-    chat.user = getUser;
-    delete chat.userId;
+
+    chat.dataValues.user = getUser.data;
+    delete chat.dataValues.userId;
 
     const getEmployee = await axios.get(
       `${global.gConfig.company_url}/employers/${chat.employerId}`,
@@ -132,10 +155,10 @@ const getChatById = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-    chat.employee = getEmployee;
-    delete chat.employerId;
+    chat.dataValues.employee = getEmployee.data;
+    delete chat.dataValues.employerId;
 
-    res.status(200).json(result.data);
+    res.status(200).json(chat);
   } catch (err) {
     console.log(err);
     if (err.isAxiosError) {
@@ -149,7 +172,7 @@ const getChatById = async (req, res) => {
 const createChat = async (req, res) => {
   try {
     const { user, role } = req.headers;
-    if (role === 'employer') {
+    if (role === 'user') {
       res.status(400).json({
         ...errors.badRequest,
         message: 'Only employer can initiate chat',
@@ -166,8 +189,8 @@ const createChat = async (req, res) => {
 
     const chatExists = await Chat.findOne({
       where: {
-        employerId: Types.ObjectId(user),
-        userId: Types.ObjectId(req.body.userId),
+        employerId: user,
+        userId: req.body.userId,
       },
     });
 
@@ -183,9 +206,7 @@ const createChat = async (req, res) => {
     data._id = new ObjectId().toString();
     data.employerId = user;
 
-    const newChat = await Chat.create({
-      data,
-    });
+    const newChat = await Chat.create(data);
 
     const getUser = await axios.get(
       `${global.gConfig.user_url}/users/${newChat.userId}`,
@@ -200,8 +221,8 @@ const createChat = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-    newChat.user = getUser;
-    delete newChat.userId;
+    newChat.dataValues.user = getUser.data;
+    delete newChat.dataValues.userId;
 
     const getEmployee = await axios.get(
       `${global.gConfig.company_url}/employers/${newChat.employerId}`,
@@ -216,8 +237,8 @@ const createChat = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-    newChat.employee = getEmployee;
-    delete newChat.employerId;
+    newChat.dataValues.employee = getEmployee.data;
+    delete newChat.dataValues.employerId;
 
     res.status(201).json(newChat);
   } catch (err) {

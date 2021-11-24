@@ -1,5 +1,7 @@
 const express = require('express');
 
+const { body } = require('express-validator');
+
 const {
   createMessage,
   getMessageById,
@@ -26,6 +28,7 @@ const bodyValidators = () => [
  * @route POST /chats/{id}/messages/
  * @group Message
  * @param {Message.model} Message.body.required
+ * @security JWT
  * @returns {Message.model} 201 - Message.model
  * @returns {Error} 500 - {error: Internal Server Error}
  */
@@ -37,6 +40,7 @@ router.post('/', ...bodyValidators(), createMessage);
  * @group Message
  * @param {string} id.path.required
  * @param {string} messageId.path.required
+ * @security JWT
  * @returns {Message.model} 200 - Returns Photo Object
  * @returns {Error} 500 - {error: Internal Server Error}
  */
@@ -48,8 +52,7 @@ router.get('/:messageId', getMessageById);
  * @group Message
  * @param {string} page.query.required
  * @param {string} limit.query.required
- * @param {string} employeeId.query.required
- * @param {string} userId.query.required
+ * @security JWT
  * @returns {array} 200 - [Array of Message Objects based on Query Params]
  * @returns {Error} 500 - {error: Internal Server Error}
  */

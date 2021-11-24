@@ -7,7 +7,7 @@ const { Employer, Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
 const getAllEmployers = async (req, res) => {
-  const { limit, offset } = getPagination(req.query.page, req.query.limit);
+  let { limit, offset } = getPagination(req.query.page, req.query.limit);
 
   const employersCount = await Employer.count();
 

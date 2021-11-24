@@ -38,6 +38,14 @@ const options = {
     host: 'localhost:7006',
     produces: ['application/json'],
     schemes: ['http'],
+    securityDefinitions: {
+      JWT: {
+        type: 'apiKey',
+        in: 'header',
+        name: 'Authorization',
+        description: 'JWT auth token',
+      },
+    },
   },
   // eslint-disable-next-line no-undef
   basedir: __dirname,
@@ -48,6 +56,6 @@ expressSwagger(options);
 
 app.use(getAuthMiddleware(validate));
 
-app.use('/chats', photoRoutes);
+app.use('/chats', chatRoutes);
 
 module.exports = app;

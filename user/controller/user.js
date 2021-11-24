@@ -38,10 +38,15 @@ const createUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  const { limit, offset } = getPagination(req.query.page, req.query.limit);
+  let { limit, offset } = getPagination(req.query.page, req.query.limit);
 
-  const usersCount = await User.count().skip(offset).limit(limit);
+  const usersCount = await User.count();
 
+  if(req.query.all === 'true'){
+    limit = usersCount;
+    offset = 0;
+  }
+ 
   const userList = await User.find({}).skip(offset).limit(limit);
 
   res.status(200).json({ total: usersCount, nodes: userList });
