@@ -57,17 +57,18 @@
 
 .searchStories {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
-  margin-top: 100px;
+  align-items: center;
+  margin-top: 60px;
+  font-size: smaller;
 }
 
 .stories {
   font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans,
     Roboto, Noto, sans-serif;
   font-weight: 400;
-  font-size: 0.975rem;
-  line-height: 1.5;
+  line-height: 1;
   padding: 2.5px;
 }
 
@@ -75,12 +76,53 @@
   font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans,
     Roboto, Noto, sans-serif;
   font-weight: 400;
-  font-size: 0.975rem;
-  line-height: 1.5;
+  line-height: 1;
   color: #2557a7;
   padding: 2.5px;
 }
 .stories2:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.MuiAutocomplete-root .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
+  height: 45px;
+}
+
+a {
+  color: #2557a7;
+  font-weight: bold;
+}
+
+a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+p {
+  color: #2d2d2d;
+}
+
+.separatingLine {
+  width: 99%;
+  top: 2rem;
+  margin-bottom: 1rem;
+  border-top: 1px solid #faf9f9;
+}
+
+.MuiAutocomplete-root .MuiFilledInput-root.MuiInputBase-sizeSmall .MuiFilledInput-input {
+  font-size: 14px;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.MuiFilledInput-input:hover {
+  padding: 0;
+  padding-bottom: 0;
+  cursor: pointer;
+}
+
+.MuiAutocomplete-root .MuiFilledInput-root.MuiInputBase-sizeSmall {
+  /* cursor: pointer; */
+  border-radius: 10px;
 }

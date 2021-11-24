@@ -66,7 +66,7 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 const NavLeft = () => {
-  const [value, setValue] = React.useState();
+  const [value, setValue] = React.useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleChange = (event, newValue) => {
@@ -95,6 +95,8 @@ const NavLeft = () => {
                 height: '25px',
                 borderTop: '2px solid #ececec',
                 marginTop: '35px',
+                marginLeft: '0px',
+                marginRight: '0px',
               }}
             />
             <AntTab label="Employers/Post job" />
