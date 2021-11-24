@@ -12,21 +12,20 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    console.log(err);
-    // if (err.response.status === 401) {
-    //   toast.error('Unauthorized!');
-    //   return;
-    // }
-    // if (err.response.status === 403) {
-    //   toast.error(err.response.data.message);
-    //   window.location.pathname = '/';
-    //   return;
-    // }
-    // if (err.response.data && err.response.data.error) {
-    //   toast.error(err.response.data.error);
-    //   return;
-    // }
-    // toast.error(err.response.data.message);
+    if (err.response.status === 401) {
+      toast.error('Unauthorized!');
+      return;
+    }
+    if (err.response.status === 403) {
+      toast.error(err.response.data.message);
+      window.location.pathname = '/';
+      return;
+    }
+    if (err.response.data && err.response.data.error) {
+      toast.error(err.response.data.error);
+      return;
+    }
+    toast.error(err.response.data.message);
   },
 );
 
