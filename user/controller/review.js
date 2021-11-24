@@ -9,7 +9,7 @@ const getUserReviews = async (req, res) => {
     const { page, limit } = req.query;
 
     const result = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { userId: id, page: page, limit: limit },
+      params: { userId: id, page, limit },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -28,13 +28,10 @@ const getUserReviewById = async (req, res) => {
   try {
     const { id, reviewId } = req.params;
 
-    const result = await axios.get(
-      `${global.gConfig.review_url}/reviews/${reviewId}`,
-      {
-        params: { userId: id },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const result = await axios.get(`${global.gConfig.review_url}/reviews/${reviewId}`, {
+      params: { userId: id },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     res.status(200).json(result.data);
   } catch (err) {
@@ -66,20 +63,16 @@ const createUserReview = async (req, res) => {
     }
 
     const data = req.body;
-    
+
     data.isFeatured = false;
     data.status = 'PENDING';
     data.userId = user;
 
-    const response = await axios.post(
-      `${global.gConfig.review_url}/reviews`,
-      data,
-      {
-        headers: {
-          Authorization: req.headers.authorization,
-        },
+    const response = await axios.post(`${global.gConfig.review_url}/reviews`, data, {
+      headers: {
+        Authorization: req.headers.authorization,
       },
-    );
+    });
 
     if (!response) {
       res.status(500).json(errors.serverError);
@@ -121,14 +114,10 @@ const updateUserReview = async (req, res) => {
     const data = req.body;
     data.userId = id;
 
-    const result = await axios.put(
-      `${global.gConfig.review_url}/reviews/${reviewId}`,
-      data,
-      {
-        params: { userId: id },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const result = await axios.put(`${global.gConfig.review_url}/reviews/${reviewId}`, data, {
+      params: { userId: id },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     res.status(200).json(result.data);
   } catch (err) {
@@ -154,13 +143,10 @@ const deleteUserReview = async (req, res) => {
       return;
     }
 
-    const result = await axios.delete(
-      `${global.gConfig.review_url}/reviews/${reviewId}`,
-      {
-        params: { userId: id },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const result = await axios.delete(`${global.gConfig.review_url}/reviews/${reviewId}`, {
+      params: { userId: id },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     res.status(200).json(result.data);
   } catch (err) {
