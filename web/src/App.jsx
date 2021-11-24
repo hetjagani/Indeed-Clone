@@ -10,6 +10,7 @@ import Jobs from './pages/jobs/Jobs';
 
 // Config / other files
 import withAuth from './utils/withAuth';
+import CompanyProfile from './pages/reviews/CompanyProfile';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/cmp/:id" component={withAuth(CompanyProfile, 'any', true)} />
           <Route path="/" component={withAuth(Jobs, 'any', true)} />
         </Switch>
       </Router>
