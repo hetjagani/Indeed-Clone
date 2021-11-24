@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col } from 'react-bootstrap';
 import getCompanyDetails from '../../api/reviews/getCompanyDetails';
 import './css/CompanyProfile.css';
 
@@ -11,13 +10,15 @@ function CompanyProfile({ match }) {
     setCompanyDetails(companyData);
   };
 
+  console.log(companyDetails);
+
   useEffect(() => {
     updateDetails();
   }, []);
 
   return (
     <div>
-      <div style={{ marginTop: '-50px' }}>
+      <div style={{ marginTop: '0px' }}>
         <img
           className="company-image"
           src="https://ubereats-media.s3.amazonaws.com/1619644672652.jpeg"
@@ -31,25 +32,30 @@ function CompanyProfile({ match }) {
           maxWidth: '900px',
           justifyContent: 'space-between',
           margin: '0 auto',
-          marginTop: '-20px',
           paddingLeft: '1rem',
           paddingRight: '1rem',
         }}
       >
-        <p>
-          <div>
-            <Row>
-              <Col>
-                <img
-                  className="company-logo"
-                  src="https://ubereats-media.s3.amazonaws.com/amazon-logo-square.jpg"
-                  alt=""
-                />
-              </Col>
-              <Col>{companyDetails.name}</Col>
-            </Row>
+        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+          <img
+            className="company-logo"
+            src="https://ubereats-media.s3.amazonaws.com/amazon-logo-square.jpg"
+            alt="Logo"
+          />
+          <div style={{ marginLeft: '20px', marginTop: '5px' }}>
+            <p style={{ fontSize: '1.25rem', color: 'black', fontWeight: 700 }}>{companyDetails ? companyDetails.name : ''}</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+              <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>
+                61
+              </p>
+              <hr style={{
+                borderWidth: '0.5px', height: '40px', color: 'grey', marginBottom: 0, display: 'inline-block',
+              }}
+              />
+              <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>3.5</p>
+            </div>
           </div>
-        </p>
+        </div>
         <p>Two</p>
       </div>
     </div>
