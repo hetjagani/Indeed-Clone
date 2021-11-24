@@ -8,6 +8,8 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Navbar from './pages/JobSeeker/Navbar';
 import Search from './pages/JobSeeker/Search';
+import FindCompany from './pages/companyReviews/FindCompany';
+import Findsalary from './pages/salaries/Findsalary';
 
 function App() {
   return (
@@ -20,6 +22,14 @@ function App() {
           <Route path="/nav">
             <Navbar />
             <Search />
+          </Route>
+          <Route path="/reviews">
+            <Navbar />
+            <FindCompany />
+          </Route>
+          <Route path="/salaries">
+            <Navbar />
+            <Findsalary />
           </Route>
         </Switch>
       </Router>
