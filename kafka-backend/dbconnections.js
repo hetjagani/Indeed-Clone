@@ -51,6 +51,7 @@ const getCompanyConnection = () => {
     city: String,
     state: String,
     country: String,
+    summary: [String],
     address: String,
     jobLocation: {
       type: String,
