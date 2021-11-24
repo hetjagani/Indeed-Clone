@@ -11,6 +11,11 @@ const getAllEmployers = async (req, res) => {
 
   const employersCount = await Employer.count();
 
+  if(req.query.all === 'true'){
+    limit = employersCount;
+    offset = 0;
+  }
+  
   const employerList = await Employer.aggregate([
     {
       $lookup: {

@@ -8,9 +8,14 @@ const {
 
 const router = express.Router({ mergeParams: true });
 
+const bodyValidators = () => [
+  body('to').exists().isString(),
+  body('from').exists().isString(),
+  body('content').exists().isString(),
+];
+
 /**
  * @typedef Message
- * @property {string} _id.required
  * @property {string} to.required
  * @property {string} from.required
  * @property {string} content.required
@@ -24,14 +29,14 @@ const router = express.Router({ mergeParams: true });
  * @returns {Message.model} 201 - Message.model
  * @returns {Error} 500 - {error: Internal Server Error}
  */
-router.post('/', createMessage);
+router.post('/', ...bodyValidators(), createMessage);
 
 /**
  * Get a Message by Id
  * @route GET /chats/{id}/messages/{messageId}
  * @group Message
  * @param {string} id.path.required
- * @param {string} mesaageId.path.required
+ * @param {string} messageId.path.required
  * @returns {Message.model} 200 - Returns Photo Object
  * @returns {Error} 500 - {error: Internal Server Error}
  */
