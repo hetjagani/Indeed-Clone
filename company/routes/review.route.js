@@ -5,7 +5,7 @@ const {
   getCompanyReviewById,
   updateCompanyReview,
 } = require('../controllers/review');
-const employerCheckMiddleware = require('../util/employerCheck');
+const { employerCheckMiddleware } = require('../util/employerCheck');
 
 const router = express.Router({ mergeParams: true });
 
