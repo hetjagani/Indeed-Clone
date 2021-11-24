@@ -21,6 +21,7 @@ const router = express.Router({ mergeParams: true });
  * @property {string} postedOn.required
  * @property {integer} salary.required
  * @property {object} description.required
+ * @property {Array.<string>} summary
  * @property {boolean} isFeatured.required
  * @property {Array.<string>} questions
  */
@@ -40,6 +41,7 @@ const bodyValidators = () => [
   body('description').exists().isObject(),
   body('isFeatured').exists().isBoolean(),
   body('questions').exists().isArray(),
+  body('summary').isArray(),
 ];
 
 /**
