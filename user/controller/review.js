@@ -1,16 +1,15 @@
 /* eslint-disable no-underscore-dangle */
 const { errors } = require('u-server-utils');
-const fs = require('fs');
-const FormData = require('form-data');
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 
-const getUserPhotos = async (req, res) => {
+const getUserReviews = async (req, res) => {
   try {
     const { id } = req.params;
+    const { page, limit } = req.query;
 
-    const result = await axios.get(`${global.gConfig.photos_url}/photos`, {
-      params: { userId: id, page: req.query.page, limit: req.query.limit },
+    const result = await axios.get(`${global.gConfig.review_url}/reviews`, {
+      params: { userId: id, page, limit },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -25,11 +24,11 @@ const getUserPhotos = async (req, res) => {
   }
 };
 
-const getUserPhotoById = async (req, res) => {
+const getUserReviewById = async (req, res) => {
   try {
-    const { id, photoId } = req.params;
+    const { id, reviewId } = req.params;
 
-    const result = await axios.get(`${global.gConfig.photos_url}/photos/${photoId}`, {
+    const result = await axios.get(`${global.gConfig.review_url}/reviews/${reviewId}`, {
       params: { userId: id },
       headers: { Authorization: req.headers.authorization },
     });
@@ -45,7 +44,7 @@ const getUserPhotoById = async (req, res) => {
   }
 };
 
-const createUserPhoto = async (req, res) => {
+const createUserReview = async (req, res) => {
   try {
     const { user } = req.headers;
     if (user !== req.params.id) {
@@ -63,22 +62,15 @@ const createUserPhoto = async (req, res) => {
       return;
     }
 
-    const { isFeatured, companyId } = req.body;
-    const status = 'PENDING';
+    const data = req.body;
 
-    const contents = fs.readFileSync(req.file.path);
+    data.isFeatured = false;
+    data.status = 'PENDING';
+    data.userId = user;
 
-    const data = new FormData();
-    data.append('imageData', contents, req.file.originalname);
-    data.append('isFeatured', isFeatured);
-    data.append('companyId', companyId);
-    data.append('userId', user);
-    data.append('status', status);
-
-    const response = await axios.post(`${global.gConfig.photos_url}/photos`, data, {
+    const response = await axios.post(`${global.gConfig.review_url}/reviews`, data, {
       headers: {
         Authorization: req.headers.authorization,
-        'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
       },
     });
 
@@ -98,36 +90,34 @@ const createUserPhoto = async (req, res) => {
   }
 };
 
-const updateUserPhoto = async (req, res) => {
-  const { id, photoId } = req.params;
-
-  const { user } = req.headers;
-  if (user !== id) {
-    res.status(400).json({
-      ...errors.badRequest,
-      message: 'id in path should be same as logged in user',
-    });
-    return;
-  }
-
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    console.error(valErr);
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
-  }
-
-  const { isFeatured } = req.body;
-
+const updateUserReview = async (req, res) => {
   try {
-    const result = await axios.put(
-      `${global.gConfig.photos_url}/photos/${photoId}`,
-      { isFeatured },
-      {
-        params: { userId: id },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const { id, reviewId } = req.params;
+
+    const { user } = req.headers;
+
+    if (user !== id) {
+      res.status(400).json({
+        ...errors.badRequest,
+        message: 'id in path should be same as logged in user',
+      });
+      return;
+    }
+
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      console.error(valErr);
+      res.status(400).json({ status: 400, message: valErr.array() });
+      return;
+    }
+
+    const data = req.body;
+    data.userId = id;
+
+    const result = await axios.put(`${global.gConfig.review_url}/reviews/${reviewId}`, data, {
+      params: { userId: id },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     res.status(200).json(result.data);
   } catch (err) {
@@ -140,9 +130,9 @@ const updateUserPhoto = async (req, res) => {
   }
 };
 
-const deleteUserPhoto = async (req, res) => {
+const deleteUserReview = async (req, res) => {
   try {
-    const { id, photoId } = req.params;
+    const { id, reviewId } = req.params;
 
     const { user } = req.headers;
     if (user !== id) {
@@ -153,7 +143,7 @@ const deleteUserPhoto = async (req, res) => {
       return;
     }
 
-    const result = await axios.delete(`${global.gConfig.photos_url}/photos/${photoId}`, {
+    const result = await axios.delete(`${global.gConfig.review_url}/reviews/${reviewId}`, {
       params: { userId: id },
       headers: { Authorization: req.headers.authorization },
     });
@@ -170,9 +160,9 @@ const deleteUserPhoto = async (req, res) => {
 };
 
 module.exports = {
-  getUserPhotos,
-  getUserPhotoById,
-  createUserPhoto,
-  deleteUserPhoto,
-  updateUserPhoto,
+  getUserReviews,
+  getUserReviewById,
+  createUserReview,
+  deleteUserReview,
+  updateUserReview,
 };
