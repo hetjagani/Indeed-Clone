@@ -21,6 +21,7 @@ const router = express.Router({ mergeParams: true });
  * @property {string} postedOn.required
  * @property {integer} salary.required
  * @property {object} description.required
+ * @property {Array.<string>} summary
  * @property {boolean} isFeatured.required
  * @property {Array.<string>} questions
  */
@@ -35,11 +36,12 @@ const bodyValidators = () => [
   body('jobLocation').exists().isString().isIn(['remote', 'in_person']),
   body('type').exists().isString().isIn(['internship', 'full_time', 'contract']),
   body('zipcode').exists().isNumeric(),
-  body('postedOn').exists().isDate({ format: 'mm-dd-yyyy' }),
+  body('postedOn').exists().isDate({ format: 'mm/dd/yyyy' }),
   body('salary').exists().isNumeric(),
   body('description').exists().isObject(),
   body('isFeatured').exists().isBoolean(),
   body('questions').exists().isArray(),
+  body('summary').isArray(),
 ];
 
 /**
