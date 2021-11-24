@@ -31,7 +31,7 @@ router.use('/:compId/jobs', employerCheckMiddleware, jobsRouter);
  * @property {string} revenue.required
  * @property {integer} size.required
  * @property {string} website.required
- * @property {object} media
+ * @property {Array.<Object>} media
  */
 
 const bodyValidators = () => [

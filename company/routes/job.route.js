@@ -35,7 +35,7 @@ const bodyValidators = () => [
   body('jobLocation').exists().isString().isIn(['remote', 'in_person']),
   body('type').exists().isString().isIn(['internship', 'full_time', 'contract']),
   body('zipcode').exists().isNumeric(),
-  body('postedOn').exists().isDate({ format: 'mm-dd-yyyy' }),
+  body('postedOn').exists().isDate({ format: 'mm/dd/yyyy' }),
   body('salary').exists().isNumeric(),
   body('description').exists().isObject(),
   body('isFeatured').exists().isBoolean(),
