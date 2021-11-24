@@ -47,7 +47,10 @@ const getApplications = async (req, res) => {
     if (jobIds && jobIds !== '') {
       const jobIdList = String(jobIds)
         .split(',')
-        .map((i) => Types.ObjectId(i.trim()));
+        .map((i) => {
+          if (i.trim() !== '') return Types.ObjectId(i.trim());
+        });
+      console.log(jobIdList);
       whereOpts.jobId = { $in: jobIdList };
     }
 
@@ -75,10 +78,25 @@ const getApplications = async (req, res) => {
 };
 
 const getApplicationById = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const application = await Application.findById(Types.ObjectId(id));
+    const { id } = req.params;
+    const { userId, jobIds } = req.query;
+    const whereOpts = { _id: Types.ObjectId(id) };
+    if (userId && userId !== '') {
+      whereOpts.userId = Types.ObjectId(userId);
+    }
+
+    if (jobIds && jobIds !== '') {
+      const jobIdList = String(jobIds)
+        .split(',')
+        .map((i) => {
+          if (i.trim() !== '') return Types.ObjectId(i.trim());
+        });
+      console.log(jobIdList);
+      whereOpts.jobId = { $in: jobIdList };
+    }
+
+    const application = await Application.findOne(whereOpts);
     if (!application) {
       res.status(404).json(errors.notFound);
       return;
@@ -122,39 +140,62 @@ const createApplication = async (req, res) => {
 
 // TODO: only employer should be able to update status
 const updateApplication = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
+    const { userId, jobIds } = req.query;
 
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    console.error(valErr);
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      console.error(valErr);
+      res.status(400).json({ status: 400, message: valErr.array() });
+      return;
+    }
+
+    const whereOpts = { _id: Types.ObjectId(id) };
+    if (userId && userId !== '') {
+      whereOpts.userId = Types.ObjectId(userId);
+    }
+
+    if (jobIds && jobIds !== '') {
+      const jobIdList = String(jobIds)
+        .split(',')
+        .map((i) => {
+          if (i.trim() !== '') return Types.ObjectId(i.trim());
+        });
+      whereOpts.jobId = { $in: jobIdList };
+    }
+
+    const application = req.body;
+
+    const dbApplication = await Application.findOne(whereOpts);
+    if (!dbApplication) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    makeRequest(
+      'application.update',
+      { id: dbApplication._id, data: application },
+      async (err, resp) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json(errors.serverError);
+          return;
+        }
+
+        const result = await Application.findById(Types.ObjectId(resp._id));
+        const job = await getJob(application.jobId, req.headers.authorization);
+
+        res.status(200).json({ ...result._doc, job });
+      },
+    );
+  } catch (err) {
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
   }
-
-  const application = req.body;
-
-  const dbApplication = await Application.findById(Types.ObjectId(id));
-  if (!dbApplication) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
-
-  makeRequest(
-    'application.update',
-    { id: dbApplication._id, data: application },
-    async (err, resp) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json(errors.serverError);
-        return;
-      }
-
-      const result = await Application.findById(Types.ObjectId(resp._id));
-      const job = await getJob(application.jobId, req.headers.authorization);
-
-      res.status(200).json({ ...result._doc, job });
-    },
-  );
 };
 
 const deleteApplication = async (req, res) => {
