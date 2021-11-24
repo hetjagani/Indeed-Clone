@@ -21,6 +21,9 @@ const getAllJobs = async (req, res) => {
           as: 'company',
         },
       },
+      {
+        $unwind: { path: '$company' },
+      },
     ])
       .skip(offset)
       .limit(limit);
@@ -41,7 +44,9 @@ const getJobById = async (req, res) => {
 
   try {
     const result = await Job.aggregate([
-      { $match: { _id: Types.ObjectId(id), companyId: Types.ObjectId(compId) } },
+      {
+        $match: { _id: Types.ObjectId(id), companyId: Types.ObjectId(compId) },
+      },
       {
         $lookup: {
           from: 'companies',
@@ -49,6 +54,9 @@ const getJobById = async (req, res) => {
           foreignField: '_id',
           as: 'company',
         },
+      },
+      {
+        $unwind: { path: '$company' },
       },
     ]);
     if (result?.length === 0) {
@@ -115,26 +123,33 @@ const updateJob = async (req, res) => {
       return;
     }
 
-    makeRequest('job.update', { data: job, id: dbJob._id }, async (err, resp) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json(errors.serverError);
-        return;
-      }
-      const result = await Job.aggregate([
-        { $match: { _id: Types.ObjectId(resp._id) } },
-        {
-          $lookup: {
-            from: 'companies',
-            localField: 'companyId',
-            foreignField: '_id',
-            as: 'company',
+    makeRequest(
+      'job.update',
+      { data: job, id: dbJob._id },
+      async (err, resp) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json(errors.serverError);
+          return;
+        }
+        const result = await Job.aggregate([
+          { $match: { _id: Types.ObjectId(resp._id) } },
+          {
+            $lookup: {
+              from: 'companies',
+              localField: 'companyId',
+              foreignField: '_id',
+              as: 'company',
+            },
           },
-        },
-      ]);
+          {
+            $unwind: { path: '$company' },
+          },
+        ]);
 
-      res.status(200).json(result[0]);
-    });
+        res.status(200).json(result[0]);
+      },
+    );
   } catch (err) {
     console.log(err);
     if (err instanceof TypeError) {
@@ -226,6 +241,9 @@ const getJobsList = async (req, res) => {
           as: 'company',
         },
       },
+      {
+        $unwind: { path: '$company' },
+      },
     ])
       .skip(offset)
       .limit(limit);
@@ -258,6 +276,9 @@ const getJobInfoById = async (req, res) => {
           foreignField: '_id',
           as: 'company',
         },
+      },
+      {
+        $unwind: { path: '$company' },
       },
     ]);
     if (!result || result.length === 0) {
