@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { validate as validateEmail } from 'email-validator';
 // import toast from 'react-hot-toast';
-// import Cookies from 'universal-cookie';
-import { setCookie } from 'react-use-cookie';
+import Cookies from 'universal-cookie';
 
 // Import files
 import './css/Login.css';
@@ -15,9 +14,7 @@ import login from '../../api/auth/login';
 import Button from '../../components/Button';
 
 const Login = () => {
-  // eslint-disable-next-line no-unused-vars
   const history = useHistory();
-  // eslint-disable-next-line no-unused-vars
 
   const [email, setEmail] = useState('');
   const [emailIsVisited, setEmailIsVisited] = useState(false);
@@ -58,23 +55,19 @@ const Login = () => {
     }
   }, [emailShouldShowError]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (emailShouldShowError && passwordShouldShowError) {
       return;
     }
     const payload = { email, password };
-    login(payload)
-      .then((response) => {
-        if (response === null || response === undefined) {
-          return;
-        }
-        setCookie('token', response.data.token, { path: '/' });
-        history.push('/');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const response = await login(payload);
+    if (!response) {
+      return;
+    }
+    const cookies = new Cookies();
+    cookies.set('token', response.data.token, { path: '/' });
+    history.push('/');
   };
 
   return (
@@ -141,11 +134,14 @@ const Login = () => {
                   letterSpacing: '0',
                 }}
               >
-                By signing in to your account, you agree to Indeed&apos;s Terms of Service and
-                consent to our Cookie Policy and Privacy Policy.
+                By signing in to your account, you agree to Indeed&apos;s Terms
+                of Service and consent to our Cookie Policy and Privacy Policy.
               </p>
             </div>
-            <form style={{ display: 'flex', flexDirection: 'column' }} onSubmit={handleSubmit}>
+            <form
+              style={{ display: 'flex', flexDirection: 'column' }}
+              onSubmit={handleSubmit}
+            >
               <Input
                 label="Email address *"
                 type="email"
@@ -178,10 +174,12 @@ const Login = () => {
                 label="Keep me signed in on this device."
               />
               <div style={{ marginTop: '20px', marginBottom: '30px' }}>
-                <Button label="Sign in" type="submit" />
+                <Button label="Create an account" type="submit" />
               </div>
             </form>
-            <div style={{ display: 'flex', flexDirection: 'row', width: '450px' }}>
+            <div
+              style={{ display: 'flex', flexDirection: 'row', width: '450px' }}
+            >
               <hr className="LRlin" />
               <span className="LRor">or</span>
               <hr className="LRlin" />

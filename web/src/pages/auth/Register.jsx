@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { validate as validateEmail } from 'email-validator';
 // import toast from 'react-hot-toast';
-import useCookie from 'react-use-cookie';
+import Cookies from 'universal-cookie';
 
 // Import files
 import './css/Login.css';
@@ -28,8 +28,6 @@ const Register = () => {
   const [emailErrorText, setEmailErrorText] = useState('');
   const emailShouldShowError = !emailHasError && emailIsVisited;
 
-  // eslint-disable-next-line no-unused-vars
-  const [userToken, setUserToken] = useCookie('token', 0);
   const [password, setPassword] = useState('');
   const [passwordIsVisited, setPasswordIsVisited] = useState(false);
   const [passwordHasError, setPasswordHasError] = useState(false);
@@ -82,10 +80,10 @@ const Register = () => {
     if (!response) {
       return;
     }
-    setUserToken(response.data.token);
+    const cookies = new Cookies();
+    cookies.set('token', response.data.token, { path: '/' });
     history.push('/');
   };
-
   return (
     <div
       style={{

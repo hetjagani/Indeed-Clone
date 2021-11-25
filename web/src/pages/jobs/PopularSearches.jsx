@@ -4,7 +4,7 @@ import './css/Search.css';
 import SearchIcon from '@mui/icons-material/Search';
 
 const PopularSearches = () => (
-  <div style={{ marginTop: '30px' }}>
+  <>
     <hr className="separatingLine" />
     <div className="search">
       <div>
@@ -95,7 +95,7 @@ const PopularSearches = () => (
         <span className="stories2">español</span>
       </p>
     </div>
-  </div>
+  </>
 );
 
 export default PopularSearches;
