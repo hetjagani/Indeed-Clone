@@ -42,8 +42,4 @@ DB Objects: users, salaries (Mongo)
   - PUT /:id
 
 * GET /salaries (with filters)
-<<<<<<< HEAD
 * GET /salaries/:id 
-=======
-* GET /salaries/:id 
->>>>>>> 39790e9eab7a30d70949de4ed5560958cd38c453
