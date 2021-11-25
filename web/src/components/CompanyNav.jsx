@@ -95,11 +95,8 @@ const CompanyNav = () => {
             <AntTab label="Why Join Us" />
             <AntTab label="Reviews" />
             <AntTab label="Salaries" />
-            <AntTab label="Benefits" />
             <AntTab label="Photos" />
             <AntTab label="Jobs" />
-            <AntTab label="Q&A" />
-            <AntTab label="Interviews" />
           </AntTabs>
         </Box>
       </div>

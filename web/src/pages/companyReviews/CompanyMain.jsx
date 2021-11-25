@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import StarRatings from 'react-star-ratings';
 import { Route } from 'react-router';
+import { Container, Row } from 'react-bootstrap';
 
 import Button from '../../components/Button';
 import getCompanyDetails from '../../api/reviews/getCompanyDetails';
@@ -24,14 +25,14 @@ function CompanyMain({ match }) {
   }, []);
 
   return (
-    <div>
-      <div style={{ marginTop: '0px' }}>
+    <Container fluid>
+      <Row>
         <img
           className="company-image"
           src="https://ubereats-media.s3.amazonaws.com/1619644672652.jpeg"
           alt="sample"
         />
-      </div>
+      </Row>
       <div
         style={{
           display: 'flex',
@@ -113,7 +114,7 @@ function CompanyMain({ match }) {
           <Route path={`${match.path}/about`} component={AboutCompany} />
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
 
