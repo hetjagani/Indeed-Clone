@@ -66,7 +66,7 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 const NavLeft = () => {
-  const [value, setValue] = React.useState();
+  const [value, setValue] = React.useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleChange = (event, newValue) => {
