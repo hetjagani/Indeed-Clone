@@ -1,3 +1,11 @@
+## Should add this to config
+```
+"s3_access_key": "AKIAVEYWO6SSQC5AZUOE",
+"s3_secret_key": "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",
+"s3_region": "us-east-1",
+"s3_bucket_name": "indeed-media",
+```
+
 ## API
 DB Objects: users, salaries (Mongo)
 * /users
@@ -34,4 +42,8 @@ DB Objects: users, salaries (Mongo)
   - PUT /:id
 
 * GET /salaries (with filters)
+<<<<<<< HEAD
 * GET /salaries/:id 
+=======
+* GET /salaries/:id 
+>>>>>>> 39790e9eab7a30d70949de4ed5560958cd38c453
