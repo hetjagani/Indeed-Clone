@@ -1,0 +1,11 @@
+.fixed {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  margin: 0;
+}
+
+.wrapper {
+  width: 75%;
+  margin: auto auto 50px auto;
+}
