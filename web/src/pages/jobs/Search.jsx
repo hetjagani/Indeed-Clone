@@ -71,6 +71,7 @@ function useQuery() {
 function Search({ advancedSearch }) {
   const history = useHistory();
   const query = useQuery();
+  const location = useLocation();
 
   // For getting options for select
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
@@ -119,7 +120,9 @@ function Search({ advancedSearch }) {
     if (locF !== 'null' && locF !== null && locF !== undefined && locF !== '') {
       setLocationFilter(locF);
     }
-    getCompanyNames();
+    if (location.search && location.search.length > 0) {
+      getCompanyNames();
+    }
   }, []);
 
   return (

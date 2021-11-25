@@ -14,6 +14,7 @@ function useQuery() {
 function Jobs() {
   const query = useQuery();
   const history = useHistory();
+  const location = useLocation();
 
   const [searchFilter, setSearchFilter] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -40,7 +41,7 @@ function Jobs() {
       return;
     }
     setSearchFilter(true);
-    getPaginatedJobs();
+    if (location.search && location.search.length > 0) { getPaginatedJobs(); }
   }, [history.location]);
 
   return (

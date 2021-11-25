@@ -1,15 +1,14 @@
-import Cookies from 'universal-cookie';
+import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const cookies = new Cookies();
-const token = cookies.get('token');
-
-const getJobs = async (params) => axiosInstance('/jobs', {
-  method: 'GET',
-  headers: {
-    Authorization: token,
-  },
-  params,
-}).then((response) => response);
+const getJobs = async (params) => {
+  const token = getCookie('token');
+  return axiosInstance.get('/jobs', {
+    headers: {
+      Authorization: token,
+    },
+    params,
+  });
+};
 
 export default getJobs;
