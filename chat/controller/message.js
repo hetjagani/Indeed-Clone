@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { errors } = require('u-server-utils');
+const { errors, getPagination } = require('u-server-utils');
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { Chat, Message } = require('../model');
@@ -9,8 +9,7 @@ const { ObjectId } = require('mongodb');
 const getAllMessages = async (req, res) => {
   try {
     const { id } = req.params;
-    const { page, limit } = req.query;
-
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
     const { role, user } = req.headers;
 
     const queryObj = {};
@@ -44,14 +43,14 @@ const getAllMessages = async (req, res) => {
       where: {
         chatId: chat._id,
       },
-      order: [
-        ['createdAt', 'DESC'],
-      ],
+      order: [['createdAt', 'DESC']],
       limit,
       offset,
     });
 
-    res.status(200).json({ total: listMessages.count, nodes: listMessages.rows });
+    res
+      .status(200)
+      .json({ total: listMessages.count, nodes: listMessages.rows });
   } catch (err) {
     console.log(err);
     if (err.isAxiosError) {
@@ -164,6 +163,7 @@ const createMessage = async (req, res) => {
 
     const data = req.body;
     data._id = new ObjectId().toString();
+    data.from = user;
     data.chatId = id;
 
     const newMessage = await Message.create(data);

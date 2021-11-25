@@ -12,14 +12,12 @@ const router = express.Router({ mergeParams: true });
 
 const bodyValidators = () => [
   body('to').exists().isString(),
-  body('from').exists().isString(),
   body('content').exists().isString(),
 ];
 
 /**
  * @typedef Message
  * @property {string} to.required
- * @property {string} from.required
  * @property {string} content.required
  */
 
@@ -27,6 +25,7 @@ const bodyValidators = () => [
  * Create Message
  * @route POST /chats/{id}/messages/
  * @group Message
+ * @param {string} id.path.required
  * @param {Message.model} Message.body.required
  * @security JWT
  * @returns {Message.model} 201 - Message.model
@@ -52,6 +51,7 @@ router.get('/:messageId', getMessageById);
  * @group Message
  * @param {string} page.query.required
  * @param {string} limit.query.required
+ * @param {string} id.path.required
  * @security JWT
  * @returns {array} 200 - [Array of Message Objects based on Query Params]
  * @returns {Error} 500 - {error: Internal Server Error}
