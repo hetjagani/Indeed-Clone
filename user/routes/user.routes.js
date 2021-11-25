@@ -68,6 +68,7 @@ router.post('/', ...bodyValidators(), createUser);
  * @route GET /users
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {string} all.query
  * @group Users
  * @security JWT
  * @returns {Array.<User>} 200 - List of user info

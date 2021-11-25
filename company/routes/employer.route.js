@@ -38,6 +38,7 @@ const [, ...updateValidators] = bodyValidators();
  * @route GET /employers
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {string} all.query
  * @group Employer
  * @security JWT
  * @returns {Array.<Employer>} 200 - List of employer info

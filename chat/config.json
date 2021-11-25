@@ -1,0 +1,17 @@
+{
+  "development": {
+    "database_host": "mysqldb",
+    "database_user": "indeedadmin",
+    "database_password": "indeedadminpass",
+    "database_name": "chat",
+    "auth_url": "http://auth:3000",
+    "company_url": "http://company:3000",
+    "user_url": "http://user:3000"
+  },
+  "test": {
+    "database_host": "localhost",
+    "database_user": "indeedadmin",
+    "database_password": "indeedadminpass",
+    "database_name": "chat_test"
+  }
+}
