@@ -1,9 +1,9 @@
 ## Should add this to config
 ```
-"s3_access_key": "AKIAVEYWO6SSQC5AZUOE",
-"s3_secret_key": "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",
-"s3_region": "us-east-1",
-"s3_bucket_name": "indeed-media",
+"s3_access_key": "",
+"s3_secret_key": "",
+"s3_region": "",
+"s3_bucket_name": "",
 ```
 
 ## API
