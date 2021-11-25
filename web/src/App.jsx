@@ -14,6 +14,7 @@ import Jobs from './pages/jobs/Jobs';
 
 // Config / other files
 import withAuth from './utils/withAuth';
+import CompanyProfile from './pages/reviews/CompanyProfile';
 
 function App() {
   return (
@@ -23,18 +24,7 @@ function App() {
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/nav">
-            <Navbar />
-            <Search />
-          </Route>
-          <Route path="/reviews">
-            <Navbar />
-            <FindCompany />
-          </Route>
-          <Route path="/salaries">
-            <Navbar />
-            <Findsalary />
-          </Route>
+          <Route path="/cmp/:id" component={withAuth(CompanyProfile, 'any', true)} />
           <Route path="/" component={withAuth(Jobs, 'any', true)} />
         </Switch>
       </Router>

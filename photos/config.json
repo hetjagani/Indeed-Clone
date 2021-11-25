@@ -4,10 +4,6 @@
         "database_user": "indeedadmin",
         "database_password": "indeedadminpass",
         "database_name": "photos",
-        "s3_access_key": "AKIAVEYWO6SSQC5AZUOE",
-        "s3_secret_key": "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",
-        "s3_region": "us-east-1",
-        "s3_bucket_name": "indeed-media",
         "auth_url": "http://auth:3000"
     },
     "test": {
