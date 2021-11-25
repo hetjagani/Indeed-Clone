@@ -1,4 +1,6 @@
-import * as React from 'react';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router';
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -54,10 +56,18 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
   }),
 );
 const CompanyNav = () => {
+  const history = useHistory();
+  const location = useLocation();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    const paths = location.pathname.split('/');
+    if (newValue === 0) {
+      history.push(`/${paths[1]}/${paths[2]}`);
+    } else if (newValue === 1) {
+      history.push(`/${paths[1]}/${paths[2]}/about`);
+    }
   };
   return (
     <>

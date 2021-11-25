@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import StarRatings from 'react-star-ratings';
+import { Route } from 'react-router';
 
-import Button from '../../../components/Button';
-import getCompanyDetails from '../../../api/reviews/getCompanyDetails';
-import CompanyNav from '../../../components/CompanyNav';
-import '../css/CompanyProfile.css';
-import WorkHappiness from './WorkHappiness';
-import CompanyAbout from './CompanyAbout';
-import Salaries from './Salaries';
-import Reviews from './Reviews';
+import Button from '../../components/Button';
+import getCompanyDetails from '../../api/reviews/getCompanyDetails';
+import CompanyNav from '../../components/CompanyNav';
+import './css/CompanyProfile.css';
+import Snapshot from './snapshot/Snapshot';
+import AboutCompany from './about/AboutCompany';
 
-function CompanyProfile({ match }) {
+function CompanyMain({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
   const updateDetails = async () => {
     const companyData = await getCompanyDetails(match.params.id);
@@ -110,21 +109,12 @@ function CompanyProfile({ match }) {
             paddingRight: '1rem',
           }}
         >
-          <p style={{ fontSize: '12px', color: '#6f6f6f' }}>
-            {' '}
-            Work at
-            {' '}
-            {companyDetails ? companyDetails.name : ''}
-            : Jobs and careers
-          </p>
-          <WorkHappiness />
-          <CompanyAbout />
-          <Salaries />
-          <Reviews />
+          <Route exact path={`${match.path}/`} component={Snapshot} />
+          <Route path={`${match.path}/about`} component={AboutCompany} />
         </div>
       </div>
     </div>
   );
 }
 
-export default CompanyProfile;
+export default CompanyMain;

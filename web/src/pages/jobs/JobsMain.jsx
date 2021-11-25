@@ -11,7 +11,7 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-function Jobs() {
+function JobsMain() {
   const query = useQuery();
   const history = useHistory();
 
@@ -67,4 +67,4 @@ function Jobs() {
   );
 }
 
-export default Jobs;
+export default JobsMain;
