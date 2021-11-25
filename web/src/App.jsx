@@ -10,7 +10,7 @@ import Jobs from './pages/jobs/Jobs';
 
 // Config / other files
 import withAuth from './utils/withAuth';
-import CompanyProfile from './pages/reviews/CompanyProfile';
+import CompanyProfile from './pages/reviews/snapshot/CompanyProfile';
 
 function App() {
   return (

@@ -43,7 +43,7 @@ function JobCard({ job, selectedJobFlag }) {
           <MoreVertIcon />
         </div>
         <Typography variant="subtitle1" style={{ marginTop: '-15px' }}>
-          {job ? job.company.length > 0 ? job.company[0].name : '' : ''}
+          {job ? job.company ? job.company.name : '' : ''}
         </Typography>
         <Typography variant="subtitle1" style={{ marginTop: '-1px' }}>
           {job ? job.address : ''}
