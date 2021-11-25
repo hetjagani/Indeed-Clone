@@ -1,3 +1,11 @@
+## Should add this to config
+```
+"s3_access_key": "AKIAVEYWO6SSQC5AZUOE",
+"s3_secret_key": "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",
+"s3_region": "us-east-1",
+"s3_bucket_name": "indeed-media",
+```
+
 ## API
 DB Objects: users, salaries (Mongo)
 * /users
