@@ -1,0 +1,32 @@
+.modal-company-logo {
+  width: 100px;
+  height: 100px;
+}
+
+.ceoButtonHover {
+  border: 1px solid rgb(212, 210, 208);
+  background-color: white;
+}
+
+.ceoButtonHover:hover {
+  cursor: pointer;
+}
+
+.ceoButtonHover:first {
+  background-color: #EBF3FF;
+}
+
+.ceoButtonOnSelect {
+  color: white;
+  background-color: #265FF6;
+}
+
+.reviewSubmitButton {
+  border: 1px solid rgb(212, 210, 208);
+  color: white;
+  background-color: #265FF6;
+}
+
+.reviewSubmitButton:hover {
+  cursor: pointer;
+}
