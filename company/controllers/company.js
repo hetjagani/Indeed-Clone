@@ -6,7 +6,14 @@ const { Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
 const getAllCompanies = async (req, res) => {
+  const { all } = req.query;
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
+
+  if (all) {
+    const companies = await Company.find({});
+    res.status(200).json(companies);
+    return;
+  }
 
   const companyCount = await Company.count();
 
