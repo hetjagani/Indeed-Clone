@@ -84,7 +84,7 @@ const getAllPhotos = async (req, res) => {
       offset,
     });
 
-    return res.status(200).json({ total: photos.count, photos: photos.rows });
+    return res.status(200).json({ total: photos.count, nodes: photos.rows });
   } catch (err) {
     return res.status(500).json(errors.serverError);
   }

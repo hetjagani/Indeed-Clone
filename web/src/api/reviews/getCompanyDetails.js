@@ -1,8 +1,7 @@
-import Cookies from 'universal-cookie';
+import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const cookies = new Cookies();
-const token = cookies.get('token');
+const token = getCookie('token');
 
 const getCompanyDetails = (payload) => axiosInstance
   .get(`/companies/${payload}`, {
