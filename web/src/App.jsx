@@ -6,11 +6,13 @@ import { Toaster } from 'react-hot-toast';
 // Import components
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import Jobs from './pages/jobs/Jobs';
+import JobsMain from './pages/jobs/JobsMain';
+import CompanyMain from './pages/companyReviews/CompanyMain';
+import FindCompany from './pages/companyReviews/FindCompany';
+import FindSalary from './pages/salaries/Findsalary';
 
 // Config / other files
 import withAuth from './utils/withAuth';
-import CompanyProfile from './pages/reviews/CompanyProfile';
 
 function App() {
   return (
@@ -20,8 +22,10 @@ function App() {
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/cmp/:id" component={withAuth(CompanyProfile, 'any', true)} />
-          <Route path="/" component={withAuth(Jobs, 'any', true)} />
+          <Route path="/cmp/:id" component={withAuth(CompanyMain, 'any', true)} />
+          <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
+          <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
+          <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>
       </Router>
     </>

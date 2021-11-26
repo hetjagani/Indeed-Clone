@@ -1,0 +1,115 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React from 'react';
+import { Typography } from '@mui/material';
+import HappyEmojiSVG from '../../../components/svg/HappyEmojiSVG';
+import Button from '../../../components/Button';
+
+function WorkHappiness() {
+  return (
+    <>
+      <Typography style={{
+        marginTop: '15px', fontWeight: 'bold', fontSize: '1.75rem', lineHeight: '1.25', marginBottom: '0.5rem',
+      }}
+      >
+        Work happiness
+      </Typography>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        <p style={{ fontSize: '.875rem', lineHeight: '1.5', color: '#595959' }}>
+          Scores based on about customer responses to Indeed&apos;s survey on work happiness
+        </p>
+        <Button
+          label="About work happiness"
+          style={{
+            width: '200px', backgroundColor: 'white', color: '#2557a7', border: '1px solid #d4d2d0',
+          }}
+        />
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        {/* Average happiness score */}
+        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <div style={{
+                backgroundColor: '#f3f2f1', boxSizing: 'border-box', fontSize: '1.25rem', fontWeight: 'bold', borderRadius: '0.5rem', lineHeight: '1.5', padding: '.25rem .75rem',
+              }}
+              >
+                65
+              </div>
+              <HappyEmojiSVG />
+              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
+                <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
+                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>
+                  Average
+                </p>
+              </div>
+            </div>
+            <div
+              style={{
+                backgroundColor: 'white', color: 'rgb(89,89,89)', border: '1px solid rgb(212, 210, 208)', padding: '.5rem 1rem', fontSize: '0.875rem', width: '80%', borderRadius: '0.5rem',
+              }}
+            >
+              Do people feel happy at work most of the time?
+            </div>
+          </div>
+        </div>
+        {/* Learning score */}
+        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <div style={{
+                backgroundColor: '#f3f2f1', boxSizing: 'border-box', fontSize: '1.25rem', fontWeight: 'bold', borderRadius: '0.5rem', lineHeight: '1.5', padding: '.25rem .75rem',
+              }}
+              >
+                65
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
+                <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
+                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>
+                  Learning Score
+                </p>
+              </div>
+            </div>
+            <div
+              style={{
+                backgroundColor: 'white', color: 'rgb(89,89,89)', border: '1px solid rgb(212, 210, 208)', padding: '.5rem 1rem', fontSize: '0.875rem', width: '80%', borderRadius: '0.5rem',
+              }}
+            >
+              Do people feel happy at work most of the time?
+            </div>
+          </div>
+        </div>
+        {/* Appreciation score */}
+        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+              <div style={{
+                backgroundColor: '#f3f2f1', boxSizing: 'border-box', fontSize: '1.25rem', fontWeight: 'bold', borderRadius: '0.5rem', lineHeight: '1.5', padding: '.25rem .75rem',
+              }}
+              >
+                65
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
+                <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
+                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>
+                  Appreciation
+                </p>
+              </div>
+            </div>
+            <div
+              style={{
+                backgroundColor: 'white', color: 'rgb(89,89,89)', border: '1px solid rgb(212, 210, 208)', padding: '.5rem 1rem', fontSize: '0.875rem', width: '80%', borderRadius: '0.5rem',
+              }}
+            >
+              Do people feel happy at work most of the time?
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style={{ marginTop: '30px', color: '#2557a7' }}>See full report</p>
+    </>
+  );
+}
+
+export default WorkHappiness;

@@ -1,0 +1,130 @@
+.findsalary {
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    width: 782px;
+    padding-left:25px;
+    padding-right: 25px;
+    height: 233px;
+}
+
+.findsalary_header {
+    display: flex;
+    flex-direction:column;
+    align-items: left;
+}
+
+.headersalary1{
+    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    font-size: 1.75rem;
+    line-height: 1.25;
+    letter-spacing: -0.0625rem;
+    font-weight: 700;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    color:#2d2d2d;
+}
+
+.headersalary2{
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    color: #595959;
+    font-weight: 400;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.findsalary_form{
+    display: flex;
+    flex-direction:row;
+    padding: 1.5em;
+    padding-top:1rem;
+    padding-bottom:2rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border: 1px solid black;
+}
+
+.salarylabel {
+    display: flex;
+    flex-direction:column;
+}
+
+.namesalaryLabel {
+    font-weight: 700;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    color:#2d2d2d;
+    padding:0;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.inputsalaryLabel {
+    display: flex;
+    flex-direction:row;
+    width: 235px;
+    height: 40px;
+    border-radius: 0.5rem;
+    border: 1px solid #949494;
+    margin-right:10px;
+}
+
+.inputsalaryLabel:hover{
+    border-color: #2557a7;
+  border-bottom: 5px solid #2557a7;
+}
+
+.takesalaryinput {
+    width:187px;
+    height: 30px;
+    margin: 5px;
+    border: none;
+    font-size: 1.2rem;
+}
+
+.takesalaryinput:focus {
+    outline: none;
+}
+
+.salaryIcons {
+    margin: 5px;
+    margin-right: 5px;
+}
+
+.salaryButton {
+    width:215px;
+    height: 44px;
+    border-radius: 0.5rem;
+    background-color: #085ff7;
+    color: white;
+    font-weight: 700;
+    border: 1px solid #085ff7;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    font-size: 1rem;
+    margin-top: 43px;
+}
+.salaryButton:hover {
+    background-color: #2557a7;
+}
+
+.salaryiconsinput{
+    color: #595959;
+}
+
+.salaryBox {
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    border-radius: 0.5rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #7eacfb;
+    height: 10px;
+    width: 100%;
+}

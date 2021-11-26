@@ -1,0 +1,114 @@
+.findCompany {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.findCompany_header {
+    display: flex;
+    flex-direction:column;
+    align-items: left;
+}
+
+.findCompany_form {
+    display: flex;
+    flex-direction:row;
+}
+
+.label {
+    display: flex;
+    flex-direction:column;
+}
+.nameLabel {
+    font-weight: 700;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    color:#2d2d2d;
+    padding:0;
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+.header1 {
+    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    font-size: 2.75rem;
+    line-height: 1.25;
+    letter-spacing: -0.0625rem;
+    font-weight: 700;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    color:#2d2d2d;
+}
+
+.header2 {
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    color: #595959;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.inputLabel{
+    display: flex;
+    flex-direction:row;
+    width: 330px;
+    height: 40px;
+    border-radius: 0.5rem;
+    border: 1px solid #949494;
+    margin-right:10px;
+}
+
+.inputLabel:hover{
+    border-color: #2557a7;
+  border-bottom: 5px solid #2557a7;
+}
+
+.takeinput {
+    width:290px;
+    height: 30px;
+    margin-top: 5px;
+    border: none;
+    font-size: 1.2rem;
+}
+
+.takeinput:focus {
+    outline: none;
+}
+
+.reviewIcons {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.iconsinput {
+    color: #595959;
+}
+
+.findButton {
+    width:290px;
+    height: 44px;
+    border-radius: 0.5rem;
+    background-color: #2557a7;
+    color: white;
+    font-weight: 700;
+    border: 1px solid #2557a7;
+    font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
+    font-size: 1rem;
+    margin-top: 43px;
+}
+
+.findButton:hover {
+    background-color: #1c417d;
+}
+
+.reviewsSalary {
+    margin-top: 25px;
+    text-decoration: underline;
+    color:#2557a7;
+}

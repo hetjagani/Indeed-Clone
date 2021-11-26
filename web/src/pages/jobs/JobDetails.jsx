@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/anchor-is-valid */
@@ -42,8 +43,8 @@ function JobDetails({ job }) {
             variant="subtitle1"
             style={{ fontSize: '14px', marginTop: '-15px' }}
           >
-            <a href={job ? job.company.length > 0 ? job.company[0].website : '' : ''}>
-              {job ? job.company.length > 0 ? job.company[0].name : '' : ''}
+            <a href="#">
+              {job ? job.company ? job.company.name : '' : ''}
             </a>
           </Typography>
           <div
