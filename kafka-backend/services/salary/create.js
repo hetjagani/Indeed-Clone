@@ -7,6 +7,7 @@ const handle_request = async (msg, callback) => {
     const salary = await Salary.create(msg);
     callback(null, salary);
   } catch (err) {
+    console.log(err);
     callback({ isError: true, error: err.toString() });
   }
 };
