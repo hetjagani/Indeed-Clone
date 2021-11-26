@@ -15,7 +15,7 @@ const {
 /**
  * @typedef Salary
  * @property {string} companyId
- * @property {string} currentlyWorking
+ * @property {boolean} currentlyWorking
  * @property {string} endDate
  * @property {string} salary
  * @property {string} title
@@ -30,7 +30,7 @@ const {
 
 const salaryBodyValidators = () => [
   body('companyId').exists().isString(),
-  body('currentlyWorking').optional().isString(),
+  body('currentlyWorking').optional().isBoolean(),
   body('endDate').optional().isString(),
   body('salary').optional().isString(),
   body('title').optional().isString(),
@@ -55,13 +55,17 @@ router.get('/:id', generalGetSalaryById);
 
 /**
  * Get a User Salaries (General)
- * @route GET /salaries/
+ * @route GET /salaries
  * @group Salaries
  * @security JWT
  * @param {integer} page.query
  * @param {integer} limit.query
  * @param {String} companyId.query
  * @param {String} userId.query
+ * @param {String} title.query
+ * @param {String} city.query
+ * @param {String} state.query
+ * @param {String} company.query
  * @returns {Salary.model} 200 - Get User Salary
  */
 router.get('/', generalGetSalaries);
