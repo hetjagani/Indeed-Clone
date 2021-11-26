@@ -92,11 +92,11 @@ function JobCard({ job, selectedJobFlag }) {
         </div>
 
         <ul className="bulletList">
-          <li className="bullet">
+          <li className="bullet" style={{ listStyleType: 'circle' }}>
             Prepare project reports to summarize results and trends, address
             issues, and recommend solutions for issues.
           </li>
-          <li className="bullet">Help desk: 1 year (Preferred)</li>
+          <li className="bullet" style={{ listStyleType: 'circle' }}>Help desk: 1 year (Preferred)</li>
         </ul>
       </CardContent>
       <CardActions sx={{ marginTop: '-20px' }}>
