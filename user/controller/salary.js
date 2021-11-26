@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 const { validationResult } = require('express-validator');
@@ -7,6 +9,21 @@ const { default: axios } = require('axios');
 const { ObjectId } = require('mongodb');
 const { makeRequest } = require('../util/kafka/client');
 const { Salary } = require('../model');
+
+const getCompanies = async (auth) => {
+  const resp = await axios.get(`${global.gConfig.company_url}/companies`, {
+    headers: { Authorization: auth },
+    params: { all: true },
+  });
+
+  const companiesMap = {};
+
+  resp.data.forEach((comp) => {
+    companiesMap[comp._id] = comp;
+  });
+
+  return companiesMap;
+};
 
 const createSalary = async (req, res) => {
   const { user } = req.headers;
@@ -193,24 +210,82 @@ const generalGetSalaryById = async (req, res) => {
 const generalGetSalaries = async (req, res) => {
   try {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
-    const { companyId, userId } = req.query;
+    const { companyId, userId, city, state, company, title } = req.query;
 
     const searchObj = {};
-    if (req.query.companyId && req.query.companyId !== '') {
+    if (companyId && companyId !== '') {
       searchObj.companyId = companyId;
     }
 
-    if (req.query.userId && req.query.userId !== '') {
+    if (userId && userId !== '') {
       searchObj.userId = userId;
     }
 
-    const salariesCount = await Salary.count(searchObj);
+    if (city && city !== '') {
+      searchObj.city = city;
+    }
 
-    const salaryList = await Salary.find(searchObj).skip(offset).limit(limit);
+    if (state && state !== '') {
+      searchObj.state = state;
+    }
 
-    return res.status(200).json({ total: salariesCount, nodes: salaryList });
+    if (title && title !== '') {
+      searchObj.title = { $regex: title };
+    }
+
+    const salaryList = await Salary.aggregate([
+      {
+        $match: searchObj,
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+    ]);
+
+    const result = {
+      total: salaryList.length,
+    };
+
+    const companiesMap = await getCompanies(req.headers.authorization);
+
+    const salaryListWithCompany = salaryList.map((s) => {
+      return {
+        ...s,
+        company: companiesMap[s.companyId.toString()],
+      };
+    });
+
+    if (company && company !== '') {
+      const filteredSalaries = salaryListWithCompany.filter((s) => {
+        if (s.company?.name?.toLowerCase().includes(company.toLowerCase())) {
+          return s;
+        }
+      });
+
+      result.total = filteredSalaries.length;
+      result.nodes = filteredSalaries.slice(offset, limit + offset);
+      res.status(200).json(result);
+      return;
+    }
+
+    result.total = salaryListWithCompany.length;
+    result.nodes = salaryListWithCompany.slice(offset, limit + offset);
+    res.status(200).json(result);
   } catch (err) {
-    res.status(500).send(errors.serverError);
+    console.log(err);
+    if (err.isAxiosError) {
+      res.status(err.response.status).json(err.response.data);
+      return;
+    }
+    res.status(500).json(errors.serverError);
   }
 };
 
