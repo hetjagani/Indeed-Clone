@@ -10,13 +10,14 @@ import {
   Checkbox,
 } from '@mui/material';
 import { validate as validateEmail } from 'email-validator';
-import toast from 'react-hot-toast';
-import Cookies from 'universal-cookie';
+// import toast from 'react-hot-toast';
+import useCookie from 'react-use-cookie';
 
 // Import files
 import './css/Login.css';
 import Input from '../../components/Input';
 import register from '../../api/auth/register';
+import Button from '../../components/Button';
 
 const Register = () => {
   const history = useHistory();
@@ -27,6 +28,8 @@ const Register = () => {
   const [emailErrorText, setEmailErrorText] = useState('');
   const emailShouldShowError = !emailHasError && emailIsVisited;
 
+  // eslint-disable-next-line no-unused-vars
+  const [userToken, setUserToken] = useCookie('token', 0);
   const [password, setPassword] = useState('');
   const [passwordIsVisited, setPasswordIsVisited] = useState(false);
   const [passwordHasError, setPasswordHasError] = useState(false);
@@ -77,13 +80,12 @@ const Register = () => {
     };
     const response = await register(payload);
     if (!response) {
-      toast.error('Incorrect email or password!');
       return;
     }
-    const cookies = new Cookies();
-    cookies.set('token', response.data.token, { path: '/' });
-    history.push('/nav');
+    setUserToken(response.data.token);
+    history.push('/');
   };
+
   return (
     <div
       style={{
@@ -256,10 +258,9 @@ const Register = () => {
                 )}
                 label="Keep me signed in on this device."
               />
-
-              <button className="LRbutton" type="submit">
-                Create an account
-              </button>
+              <div style={{ marginTop: '20px', marginBottom: '30px' }}>
+                <Button label="Create an account" type="submit" />
+              </div>
             </form>
           </div>
         </div>

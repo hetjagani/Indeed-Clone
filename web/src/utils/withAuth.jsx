@@ -1,21 +1,42 @@
 import React from 'react';
 import { Redirect } from 'react-router';
+import Navbar from '../components/Navbar';
 import getLoginDetails from './getLoginDetails';
 
-const withAuth = (WrappedComponent, ar) => (props) => {
-  const { role } = getLoginDetails();
-
-  if (!role) {
+const withAuth = (WrappedComponent, ar, withNav) => (props) => {
+  const decoded = getLoginDetails();
+  if (!decoded) {
     return <Redirect to="/login" />;
   }
-  if (role === 'employer' && ar === 'employer') {
-    return <WrappedComponent {...props} />;
+  if (decoded.role === 'employer' && ar === 'employer') {
+    return withNav ? (
+      <>
+        <Navbar />
+        <WrappedComponent {...props} />
+      </>
+    ) : (
+      <WrappedComponent {...props} />
+    );
   }
-  if (role === 'user' && ar === 'user') {
-    return <WrappedComponent {...props} />;
+  if (decoded.role === 'user' && ar === 'user') {
+    return withNav ? (
+      <>
+        <Navbar />
+        <WrappedComponent {...props} />
+      </>
+    ) : (
+      <WrappedComponent {...props} />
+    );
   }
   if (ar === 'any') {
-    return <WrappedComponent {...props} />;
+    return withNav ? (
+      <>
+        <Navbar />
+        <WrappedComponent {...props} />
+      </>
+    ) : (
+      <WrappedComponent {...props} />
+    );
   }
   return <Redirect to="/" />;
 };

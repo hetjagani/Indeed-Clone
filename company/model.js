@@ -47,6 +47,7 @@ const JobSchema = new mongoose.Schema({
   state: String,
   country: String,
   address: String,
+  summary: [String],
   jobLocation: {
     type: String,
     enum: ['remote', 'in_person'],

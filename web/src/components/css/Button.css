@@ -1,0 +1,19 @@
+.LRbutton {
+  border: none;
+  outline: none;
+  width: 432px;
+  height: 44px;
+  border-color: #2557a7;
+  background-color: #2557a7;
+  color: white;
+  font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans,
+    Roboto, Noto, sans-serif;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.LRbutton:hover {
+  background-color: #1c417d;
+}
