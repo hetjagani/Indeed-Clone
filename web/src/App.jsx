@@ -8,6 +8,8 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import JobsMain from './pages/jobs/JobsMain';
 import CompanyMain from './pages/companyReviews/CompanyMain';
+import FindCompany from './pages/companyReviews/FindCompany';
+import FindSalary from './pages/salaries/Findsalary';
 
 // Config / other files
 import withAuth from './utils/withAuth';
@@ -21,6 +23,8 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/cmp/:id" component={withAuth(CompanyMain, 'any', true)} />
+          <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
+          <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>
       </Router>
