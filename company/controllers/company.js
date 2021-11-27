@@ -34,149 +34,180 @@ const getAllCompanies = async (req, res) => {
 };
 
 const getCompanyById = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const companyList = await Company.aggregate([
-    { $match: { _id: Types.ObjectId(id) } },
-    {
-      $lookup: {
-        from: 'employers',
-        localField: 'employers',
-        foreignField: '_id',
-        as: 'employers',
+    const companyList = await Company.aggregate([
+      { $match: { _id: Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: 'employers',
+          localField: 'employers',
+          foreignField: '_id',
+          as: 'employers',
+        },
       },
-    },
-  ]);
+    ]);
 
-  if (companyList.length === 0) {
-    res.status(404).json(errors.notFound);
-    return;
+    if (companyList.length === 0) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    res.status(200).json(companyList[0]);
+  } catch (err) {
+    res.status(500).json(errors.serverError);
   }
-
-  res.status(200).json(companyList[0]);
 };
 
 const createCompany = async (req, res) => {
-  const { user } = req.headers;
+  try {
+    const { user } = req.headers;
 
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    console.error(valErr);
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
-  }
-
-  const company = req.body;
-  company.employers = [user];
-
-  makeRequest('company.create', { company, user }, async (err, resp) => {
-    if (err) {
-      res.status(500).json(errors.serverError);
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      console.error(valErr);
+      res.status(400).json({ status: 400, message: valErr.array() });
       return;
     }
 
-    const { _id } = resp;
+    const company = req.body;
+    company.employers = [user];
 
-    const companyList = await Company.aggregate([
-      { $match: { _id: Types.ObjectId(_id) } },
-      {
-        $lookup: {
-          from: 'employers',
-          localField: 'employers',
-          foreignField: '_id',
-          as: 'employers',
+    makeRequest('company.create', { company, user }, async (err, resp) => {
+      if (err) {
+        res.status(500).json(errors.serverError);
+        return;
+      }
+
+      const { _id } = resp;
+
+      const companyList = await Company.aggregate([
+        { $match: { _id: Types.ObjectId(_id) } },
+        {
+          $lookup: {
+            from: 'employers',
+            localField: 'employers',
+            foreignField: '_id',
+            as: 'employers',
+          },
         },
-      },
-    ]);
+      ]);
 
-    res.status(201).json(companyList[0]);
-  });
+      res.status(201).json(companyList[0]);
+    });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const updateCompany = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const { user } = req.headers;
+    const { user } = req.headers;
 
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    console.error(valErr);
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
-  }
-
-  const company = req.body;
-  delete company.employers;
-
-  const dbCompany = await Company.findById(Types.ObjectId(id));
-  if (!dbCompany) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
-
-  // check if employer is in the company
-  if (!dbCompany.employers.find((e) => e.toString() === user)) {
-    res.status(401).json(errors.unauthorized);
-    return;
-  }
-
-  makeRequest('company.update', { id: dbCompany._id, data: company }, async (err, resp) => {
-    if (err) {
-      res.status(500).json(errors.serverError);
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      console.error(valErr);
+      res.status(400).json({ status: 400, message: valErr.array() });
       return;
     }
 
-    const { _id } = resp;
+    const company = req.body;
+    delete company.employers;
 
-    const companyList = await Company.aggregate([
-      { $match: { _id: Types.ObjectId(_id) } },
-      {
-        $lookup: {
-          from: 'employers',
-          localField: 'employers',
-          foreignField: '_id',
-          as: 'employers',
+    const dbCompany = await Company.findById(Types.ObjectId(id));
+    if (!dbCompany) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    // check if employer is in the company
+    if (!dbCompany.employers.find((e) => e.toString() === user)) {
+      res.status(401).json(errors.unauthorized);
+      return;
+    }
+
+    makeRequest('company.update', { id: dbCompany._id, data: company }, async (err, resp) => {
+      if (err) {
+        res.status(500).json(errors.serverError);
+        return;
+      }
+
+      const { _id } = resp;
+
+      const companyList = await Company.aggregate([
+        { $match: { _id: Types.ObjectId(_id) } },
+        {
+          $lookup: {
+            from: 'employers',
+            localField: 'employers',
+            foreignField: '_id',
+            as: 'employers',
+          },
         },
-      },
-    ]);
+      ]);
 
-    res.status(201).json(companyList[0]);
-  });
+      res.status(201).json(companyList[0]);
+    });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 const deleteCompany = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const { user } = req.headers;
-  const dbCompany = await Company.findById(Types.ObjectId(id));
-  if (!dbCompany) {
-    res.status(404).json(errors.notFound);
-    return;
-  }
-
-  // check if employer is in the company
-  if (
-    !dbCompany.employers.find((e) => {
-      console.log(user);
-      console.log(e);
-      return e.toString() === user;
-    })
-  ) {
-    res.status(401).json(errors.unauthorized);
-    return;
-  }
-
-  makeRequest('company.delete', { id: dbCompany._id }, async (err, resp) => {
-    if (err) {
-      res.status(500).json(errors.serverError);
+    const { user } = req.headers;
+    const dbCompany = await Company.findById(Types.ObjectId(id));
+    if (!dbCompany) {
+      res.status(404).json(errors.notFound);
       return;
     }
 
-    if (resp.success) {
-      res.status(200).json(null);
-    } else {
-      res.status(500).json(errors.serverError);
+    // check if employer is in the company
+    if (
+      !dbCompany.employers.find((e) => {
+        console.log(user);
+        console.log(e);
+        return e.toString() === user;
+      })
+    ) {
+      res.status(401).json(errors.unauthorized);
+      return;
     }
-  });
+
+    makeRequest('company.delete', { id: dbCompany._id }, async (err, resp) => {
+      if (err) {
+        res.status(500).json(errors.serverError);
+        return;
+      }
+
+      if (resp.success) {
+        res.status(200).json(null);
+      } else {
+        res.status(500).json(errors.serverError);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof TypeError) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
 };
 
 module.exports = {
