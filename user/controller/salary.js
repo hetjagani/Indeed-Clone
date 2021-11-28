@@ -124,7 +124,7 @@ const updateSalary = async (req, res) => {
         resp.company = company.data;
       }
       res.status(200).json(resp);
-    },
+    }
   );
 };
 
@@ -148,6 +148,7 @@ const getSalaries = async (req, res) => {
 };
 
 const getSalaryById = async (req, res) => {
+  console.log('get slaary by id');
   const { user } = req.headers;
   if (user !== req.params.id) {
     res.status(400).json({
@@ -189,10 +190,11 @@ const deleteSalary = async (req, res) => {
 
 const generalGetSalaryById = async (req, res) => {
   try {
+    console.log('get salary b id');
     const { companyId, userId } = req.query;
 
     const searchObj = { _id: ObjectId(req.params.id) };
-    if (req.query.companyId && req.query.companyId !== '') {
+    if (companyId && companyId !== '') {
       searchObj.companyId = companyId;
     }
 
@@ -200,6 +202,7 @@ const generalGetSalaryById = async (req, res) => {
       searchObj.userId = userId;
     }
 
+    console.log(searchObj);
     const salary = await Salary.findOne(searchObj);
     return res.status(200).send(salary);
   } catch (err) {
@@ -214,11 +217,11 @@ const generalGetSalaries = async (req, res) => {
 
     const searchObj = {};
     if (companyId && companyId !== '') {
-      searchObj.companyId = companyId;
+      searchObj.companyId = mongoose.Types.ObjectId(String(companyId));
     }
 
     if (userId && userId !== '') {
-      searchObj.userId = userId;
+      searchObj.userId = mongoose.Types.ObjectId(String(userId));
     }
 
     if (city && city !== '') {
@@ -248,7 +251,9 @@ const generalGetSalaries = async (req, res) => {
       {
         $unwind: '$user',
       },
-    ]);
+    ])
+      .skip(offset)
+      .limit(limit);
 
     const result = {
       total: salaryList.length,
@@ -270,7 +275,6 @@ const generalGetSalaries = async (req, res) => {
         }
       });
 
-      result.total = filteredSalaries.length;
       result.nodes = filteredSalaries.slice(offset, limit + offset);
       res.status(200).json(result);
       return;

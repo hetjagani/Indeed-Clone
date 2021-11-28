@@ -1,10 +1,11 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import CompanyAbout from './CompanyAbout';
 import Reviews from './Reviews';
 import Salaries from './Salaries';
 import WorkHappiness from './WorkHappiness';
 
-function Snapshot() {
+function Snapshot(props) {
   return (
     <>
       <p style={{ fontSize: '12px', color: '#6f6f6f' }}>
@@ -13,10 +14,10 @@ function Snapshot() {
         {' '}
         Facebook: Jobs and careers
       </p>
-      <WorkHappiness />
-      <CompanyAbout />
-      <Salaries title="Salaries" />
-      <Reviews />
+      <WorkHappiness data={props.data} />
+      <CompanyAbout data={props.data} />
+      <Salaries salaries={props.salaries} />
+      <Reviews reviews={props.reviews} />
     </>
   );
 }

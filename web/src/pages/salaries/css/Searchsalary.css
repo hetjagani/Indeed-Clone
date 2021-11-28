@@ -1,0 +1,76 @@
+.searchheader {
+    margin-bottom: 0;
+    margin-top: 1.5rem;
+    font-size: 1.4375rem;
+    line-height: 1.22;
+    font-weight: 700;
+    color: #2d2d2d;
+    font-family: "Helvetica Neue","Helvetica","Arial","Liberation Sans","Roboto","Noto",sans-serif;
+}
+
+.salary {
+    display: flex;
+    flex-direction:column;
+    width: 340px;
+    height: 120px;
+    border: 1px solid #ECECEC;
+    border-radius: 8px;
+    padding:1rem;
+    margin: 20px;
+}
+
+.salarydiv {
+    display: flex;
+    flex-direction:column;
+    margin-bottom: 1.5rem;
+}
+
+.salaryAverage {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.salaryskills{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top: 1px solid #ECECEC;
+    margin: 0 -1rem 0 -1rem;
+    padding: 1rem 1rem 0;
+    line-height: 1.43;
+    font-size: 0.875rem;
+}
+
+.salaryheader {
+    font-size: 16px;
+    margin-bottom: 0.5rem;
+    color: #2d2d2d;
+    font-family: "Helvetica Neue","Helvetica","Arial","Liberation Sans","Roboto","Noto",sans-serif;
+    line-height: 1.7;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.salarytitle{
+    font-family: "Helvetica Neue","Helvetica","Arial","Liberation Sans","Roboto","Noto",sans-serif;
+    text-decoration: underline;
+    font-weight: 400;
+    font-size: 0.875em;
+    line-height: 1.43;
+    letter-spacing:0;
+}
+
+.salaryamount {
+    font-family: "Helvetica Neue","Helvetica","Arial","Liberation Sans","Roboto","Noto",sans-serif;
+    text-decoration: underline;
+    font-weight: 700;
+    font-size: 0.875em;
+    line-height: 1.43;
+    letter-spacing:0;
+}
+
+.salaryjobs{
+    color:#085ff7;
+    text-decoration: underline;
+}

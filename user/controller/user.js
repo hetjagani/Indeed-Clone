@@ -31,8 +31,6 @@ const createUser = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-
-    console.log(resp);
     res.status(201).json(resp);
   });
 };
@@ -42,11 +40,11 @@ const getAllUsers = async (req, res) => {
 
   const usersCount = await User.count();
 
-  if(req.query.all === 'true'){
+  if (req.query.all === 'true') {
     limit = usersCount;
     offset = 0;
   }
- 
+
   const userList = await User.find({}).skip(offset).limit(limit);
 
   res.status(200).json({ total: usersCount, nodes: userList });

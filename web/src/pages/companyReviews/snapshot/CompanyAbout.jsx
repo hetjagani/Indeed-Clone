@@ -1,9 +1,10 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable max-len */
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
 import CompanyInfoCard from './CompanyInfoCard';
 
-function CompanyAbout() {
+function CompanyAbout(props) {
   return (
     <>
       <Typography style={{
@@ -32,16 +33,16 @@ function CompanyAbout() {
             <Grid item xs={12}>
               <Grid container justifyContent="center" spacing={2}>
                 <Grid item>
-                  <CompanyInfoCard title="CEO" subtitle="Jill Soltau" />
+                  <CompanyInfoCard title="CEO" subtitle={(props.data && props.data.ceo) ? props.data.ceo : 'CEO'} />
                 </Grid>
                 <Grid item>
-                  <CompanyInfoCard title="Founded" subtitle="1902" />
+                  <CompanyInfoCard title="Founded" subtitle={(props.data && props.data.foundedOn) ? new Date(props.data.foundedOn).getFullYear() : 'YEAR'} />
                 </Grid>
                 <Grid item>
-                  <CompanyInfoCard title="Company size" subtitle="1000000" />
+                  <CompanyInfoCard title="Company size" subtitle={(props.data && props.data.size) ? props.data.size : 'NA'} />
                 </Grid>
                 <Grid item>
-                  <CompanyInfoCard title="Revenue" subtitle="$10B (USD)" />
+                  <CompanyInfoCard title="Revenue" subtitle={(props.data && props.data.revenue) ? props.data.revenue : 'NA'} />
                 </Grid>
               </Grid>
             </Grid>
@@ -51,7 +52,7 @@ function CompanyAbout() {
             <Grid item xs={12}>
               <Grid container justifyContent="flex-start" spacing={2}>
                 <Grid item>
-                  <CompanyInfoCard title="Industry" subtitle="Technology" />
+                  <CompanyInfoCard title="Industry" subtitle={(props.data && props.data.industry && props.data.industry.name) ? props.data.industry.name : 'NA'} />
                 </Grid>
               </Grid>
             </Grid>
@@ -65,7 +66,7 @@ function CompanyAbout() {
           J. C. Penney Company, Inc. (NYSE:JCP), one of the nations largest apparel and home furnishings retailers, is on a mission to ensure every shopping experience is worth the customers time, money and effort. Whether shopping jcp.com or visiting one of over 850 store locations across the United States and Puerto Rico, customers will discover a broad assortment of products from a leading portfolio of private, exclusive and national brands. Supporting this value proposition is the warrior spirit of over 100,000 JCPenney associates worldwide, who are focused on the Companys three strategic priorities of strengthening private brands, becoming a world-class omni-channel retailer and increasing revenue per customer.
         </p>
         <p style={{ fontSize: '1rem', color: 'rgb(89, 89, 89)', lineHeight: '1.5' }}>
-          More than a century ago, James Cash Penney founded our company as an active and responsible member of the community and earned a special place in the hearts of American families. Today, as we invest in the future of our business, we are committed to building on our proud legacy of responsible corporate citizenship by advancing social, environmental and ethical standards across our operations. At JCPenney, we are working to integrate sustainability into everything we do, from our global supply chain to the environmental impact of our stores.
+          {(props.data && props.data.mission) ? props.data.mission : 'NA'}
         </p>
 
         <p style={{

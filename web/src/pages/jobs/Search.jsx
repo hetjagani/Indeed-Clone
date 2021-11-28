@@ -253,6 +253,7 @@ function Search({ advancedSearch }) {
             marginLeft: '10px',
             marginTop: '5px',
             fontSize: '14px',
+            border: '1px solid #2557a7',
           }}
         />
       </div>

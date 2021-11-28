@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable react/jsx-no-comment-textnodes */
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -77,6 +79,7 @@ const NavLeft = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    setValue(0);
   };
   return (
     <div>
@@ -177,7 +180,11 @@ const NavLeft = () => {
           <p style={{ marginLeft: '15px' }}>Help Center</p>
         </MenuItem>
         <Divider />
-        <p style={{ textAlign: 'center', fontWeight: '700', color: '#2557a7' }}>
+        <p
+          style={{
+            textAlign: 'center', fontWeight: '700', color: '#2557a7', cursor: 'pointer',
+          }}
+        >
           Sign out
         </p>
       </Menu>

@@ -4,19 +4,23 @@ import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { validate as validateEmail } from 'email-validator';
+import jwt from 'jwt-decode';
 // import toast from 'react-hot-toast';
 // import Cookies from 'universal-cookie';
 import { setCookie } from 'react-use-cookie';
 
 // Import files
 import './css/Login.css';
+import { useDispatch } from 'react-redux';
 import Input from '../../components/Input';
 import login from '../../api/auth/login';
 import Button from '../../components/Button';
+import { loginRequest, loginFailure, loginSuccess } from '../../app/actions';
 
 const Login = () => {
   // eslint-disable-next-line no-unused-vars
   const history = useHistory();
+  const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
 
   const [email, setEmail] = useState('');
@@ -66,13 +70,21 @@ const Login = () => {
     const payload = { email, password };
     login(payload)
       .then((response) => {
+        dispatch(loginRequest());
         if (response === null || response === undefined) {
           return;
         }
         setCookie('token', response.data.token, { path: '/' });
+        const user = jwt(response.data.token);
+        console.log('user', user);
+        dispatch(loginSuccess({
+          loggedIn: true,
+          id: user.id,
+        }));
         history.push('/');
       })
       .catch((err) => {
+        dispatch(loginFailure(err));
         console.log(err);
       });
   };

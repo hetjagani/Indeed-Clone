@@ -12,6 +12,7 @@ const SadEmojiSVG = (props) => (
       height: 48,
       width: 48,
       margin: '-8px',
+      marginLeft: '1px',
     }}
     {...props}
   >
