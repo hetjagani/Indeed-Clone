@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography } from '@mui/material';
+
 import Button from '../../../components/Button';
 import AddReviewModal from './AddReviewModal';
+import '../css/ReviewsMain.css';
+import RatingsCard from './RatingsCard';
 
 function ReviewsMain() {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [reviewFilter, setReviewFilter] = useState(1);
+  const [sortFilter, setSortFilter] = useState(4);
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
@@ -30,42 +35,89 @@ function ReviewsMain() {
         />
       </div>
       <div style={{
-        width: '100%', backgroundColor: '#F3F2F1', height: '300px', borderRadius: '20px', marginTop: '30px',
+        width: '100%', backgroundColor: '#F3F2F1', height: '250px', borderRadius: '20px', marginTop: '30px',
       }}
       >
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Sort by</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Filter by</span>
           <div style={{ display: 'flex', marginTop: '20px' }}>
             <button
-              className="ceoButtonHover"
+              onClick={() => setReviewFilter(1)}
+              className={`ceoButtonHover ${reviewFilter === 1 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
-                borderRadius: '10px', width: '220px', height: '40px', fontSize: 'medium', color: '#2453d3',
+                borderRadius: '10px', width: '175px', height: '40px', fontSize: 'medium', color: '#2453d3',
               }}
             >
               Helpfulness
             </button>
             <button
-              className="ceoButtonHover"
+              onClick={() => setReviewFilter(2)}
+              className={`ceoButtonHover ${reviewFilter === 2 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
-                width: '220px', height: '40px', fontSize: 'medium', marginLeft: '-15px', color: '#2453d3',
+                width: '180px', height: '40px', fontSize: 'medium', marginLeft: '-15px', color: '#2453d3',
               }}
             >
               Rating
             </button>
             <button
-              className="ceoButtonHover"
+              onClick={() => setReviewFilter(3)}
+              className={`ceoButtonHover ${reviewFilter === 3 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
-                borderTopRightRadius: '10px', borderBottomRightRadius: '10px', width: '195px', height: '40px', marginLeft: '-15px', fontSize: 'medium', color: '#2453d3',
+                borderTopRightRadius: '10px', borderBottomRightRadius: '10px', width: '160px', height: '40px', marginLeft: '-15px', fontSize: 'medium', color: '#2453d3',
               }}
             >
               Date
             </button>
           </div>
         </div>
+
+        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Sort by</span>
+          <div style={{ display: 'flex', marginTop: '20px' }}>
+            <button
+              onClick={() => setSortFilter(4)}
+              className={`ceoButtonHover ${sortFilter === 4 ? 'reviewFilterButtonSelected' : ''}`}
+              type="button"
+              style={{
+                borderRadius: '10px', width: '175px', height: '40px', fontSize: 'medium', color: '#2453d3',
+              }}
+            >
+              Helpfulness
+            </button>
+            <button
+              onClick={() => setSortFilter(5)}
+              className={`ceoButtonHover ${sortFilter === 5 ? 'reviewFilterButtonSelected' : ''}`}
+              type="button"
+              style={{
+                borderTopRightRadius: '10px', borderBottomRightRadius: '10px', width: '160px', height: '40px', marginLeft: '-15px', fontSize: 'medium', color: '#2453d3',
+              }}
+            >
+              Rating
+            </button>
+          </div>
+        </div>
       </div>
+
+      <p style={{
+        fontSize: '.875rem', lineHeight: '1.5', color: '#595959', marginLeft: '5px', marginTop: '30px',
+      }}
+      >
+        Found
+        {' '}
+        <span style={{ fontWeight: 'bold' }}>24,308</span>
+        {' '}
+        reviews matching the search
+      </p>
+
+      <RatingsCard />
+      <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
+      <RatingsCard />
+      <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
+      <RatingsCard />
+
     </>
   );
 }

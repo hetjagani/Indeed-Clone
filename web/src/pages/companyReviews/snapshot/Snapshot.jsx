@@ -15,7 +15,7 @@ function Snapshot() {
       </p>
       <WorkHappiness />
       <CompanyAbout />
-      <Salaries />
+      <Salaries title="Salaries" />
       <Reviews />
     </>
   );
