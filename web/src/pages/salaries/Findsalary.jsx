@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import './css/FindSalary.css';
@@ -6,10 +6,10 @@ import './css/FindSalary.css';
 const Findsalary = () => {
   const [location, setLocation] = useState('');
   const [title, setTitle] = useState('');
-  const [searchSalary , setSearchSalary] = useState([]);
+  // const [searchSalary, setSearchSalary] = useState([]);
   const search = () => {
-    
-  }
+
+  };
   return (
     <div className="findsalary">
       <div>
