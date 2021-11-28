@@ -238,9 +238,7 @@ const getJobsList = async (req, res) => {
     }
 
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
-    const jobsCnt = await Job.count(query);
-    const result = await Job.aggregate([
-      { $match: query },
+    const jobsCnt = await Job.aggregate([
       {
         $lookup: {
           from: 'companies',
@@ -252,6 +250,23 @@ const getJobsList = async (req, res) => {
       {
         $unwind: { path: '$company' },
       },
+      { $match: query },
+      { $count: 'count' },
+    ]);
+    console.log(jobsCnt);
+    const result = await Job.aggregate([
+      {
+        $lookup: {
+          from: 'companies',
+          localField: 'companyId',
+          foreignField: '_id',
+          as: 'company',
+        },
+      },
+      {
+        $unwind: { path: '$company' },
+      },
+      { $match: query },
     ])
       .skip(offset)
       .limit(limit);
@@ -259,7 +274,7 @@ const getJobsList = async (req, res) => {
     if (all) {
       res.status(200).json(result);
     } else {
-      res.status(200).json({ total: jobsCnt, nodes: result });
+      res.status(200).json({ total: jobsCnt[0]?.count, nodes: result });
     }
   } catch (err) {
     console.log(err);
