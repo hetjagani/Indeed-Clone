@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
-const { Types } = require('mongoose');
+const { Types, Schema } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Job, Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
@@ -123,33 +123,29 @@ const updateJob = async (req, res) => {
       return;
     }
 
-    makeRequest(
-      'job.update',
-      { data: job, id: dbJob._id },
-      async (err, resp) => {
-        if (err) {
-          console.log(err);
-          res.status(500).json(errors.serverError);
-          return;
-        }
-        const result = await Job.aggregate([
-          { $match: { _id: Types.ObjectId(resp._id) } },
-          {
-            $lookup: {
-              from: 'companies',
-              localField: 'companyId',
-              foreignField: '_id',
-              as: 'company',
-            },
+    makeRequest('job.update', { data: job, id: dbJob._id }, async (err, resp) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json(errors.serverError);
+        return;
+      }
+      const result = await Job.aggregate([
+        { $match: { _id: Types.ObjectId(resp._id) } },
+        {
+          $lookup: {
+            from: 'companies',
+            localField: 'companyId',
+            foreignField: '_id',
+            as: 'company',
           },
-          {
-            $unwind: { path: '$company' },
-          },
-        ]);
+        },
+        {
+          $unwind: { path: '$company' },
+        },
+      ]);
 
-        res.status(200).json(result[0]);
-      },
-    );
+      res.status(200).json(result[0]);
+    });
   } catch (err) {
     console.log(err);
     if (err instanceof TypeError) {
@@ -197,42 +193,52 @@ const deleteJob = async (req, res) => {
 };
 
 const getJobsList = async (req, res) => {
-  const whereOpts = [];
-  const { city, state, q, companyId, location, all } = req.query;
-
-  if (city && city !== '') {
-    whereOpts.push({ city });
-  }
-
-  if (state && state !== '') {
-    whereOpts.push({ state });
-  }
-
-  if (location && location !== '') {
-    whereOpts.push({ jobLocation: location });
-  }
-
-  if (companyId && companyId !== '') {
-    whereOpts.push({ companyId: Types.ObjectId(companyId) });
-  }
-
-  if (q && q !== '') {
-    whereOpts.push({ title: { $regex: q } });
-  }
-
-  let query = {};
-  if (whereOpts.length > 0) {
-    query.$and = whereOpts;
-  }
-  if (all) {
-    query = {};
-  }
-
   try {
+    const whereOpts = [];
+    const { city, state, q, companyId, location, all, type, industry, since } = req.query;
+
+    if (city && city !== '') {
+      whereOpts.push({ city });
+    }
+
+    if (state && state !== '') {
+      whereOpts.push({ state });
+    }
+
+    if (location && location !== '') {
+      whereOpts.push({ jobLocation: location });
+    }
+
+    if (companyId && companyId !== '') {
+      whereOpts.push({ companyId: Types.ObjectId(companyId) });
+    }
+
+    if (type && type !== '') {
+      whereOpts.push({ type });
+    }
+
+    if (industry && industry !== '') {
+      whereOpts.push({ 'industry.name': industry });
+    }
+
+    if (q && q !== '') {
+      whereOpts.push({ $or: [{ title: { $regex: q } }, { 'company.name': { $regex: q } }] });
+    }
+
+    if (since && since !== '') {
+      whereOpts.push({ postedOn: { $lte: new Date(since) } });
+    }
+
+    let query = {};
+    if (whereOpts.length > 0) {
+      query.$and = whereOpts;
+    }
+    if (all) {
+      query = {};
+    }
+
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
-    const jobsCnt = await Job.count(query);
-    const result = await Job.aggregate([
-      { $match: query },
+    const jobsCnt = await Job.aggregate([
       {
         $lookup: {
           from: 'companies',
@@ -244,6 +250,23 @@ const getJobsList = async (req, res) => {
       {
         $unwind: { path: '$company' },
       },
+      { $match: query },
+      { $count: 'count' },
+    ]);
+
+    const result = await Job.aggregate([
+      {
+        $lookup: {
+          from: 'companies',
+          localField: 'companyId',
+          foreignField: '_id',
+          as: 'company',
+        },
+      },
+      {
+        $unwind: { path: '$company' },
+      },
+      { $match: query },
     ])
       .skip(offset)
       .limit(limit);
@@ -251,7 +274,7 @@ const getJobsList = async (req, res) => {
     if (all) {
       res.status(200).json(result);
     } else {
-      res.status(200).json({ total: jobsCnt, nodes: result });
+      res.status(200).json({ total: jobsCnt[0]?.count, nodes: result });
     }
   } catch (err) {
     console.log(err);

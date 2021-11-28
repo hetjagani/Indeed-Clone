@@ -40,6 +40,7 @@ router.use('/:compId/photos', photoRouter);
  * @property {integer} size.required
  * @property {string} website.required
  * @property {Array.<Object>} media
+ * @property {Object} logo
  */
 
 const bodyValidators = () => [

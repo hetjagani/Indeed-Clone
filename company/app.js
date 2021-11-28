@@ -15,6 +15,7 @@ const validate = require('./util/authValidator');
 const employerRouter = require('./routes/employer.route');
 const companyRouter = require('./routes/company.route');
 const jobRouter = require('./routes/alljobs.route');
+const mediaRouter = require('./routes/media.route');
 
 // all middlewares
 app.use(logger('dev'));
@@ -62,5 +63,6 @@ app.use(getAuthMiddleware(validate));
 app.use('/employers', employerRouter);
 app.use('/companies', companyRouter);
 app.use('/jobs', jobRouter);
+app.use('/media', mediaRouter);
 
 module.exports = app;
