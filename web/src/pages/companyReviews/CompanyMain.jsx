@@ -10,6 +10,7 @@ import './css/CompanyProfile.css';
 import Snapshot from './snapshot/Snapshot';
 import AboutCompany from './about/AboutCompany';
 import ReviewsMain from './reviews/ReviewsMain';
+import SalariesMain from './salaries/SalariesMain';
 
 function CompanyMain({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
@@ -119,6 +120,7 @@ function CompanyMain({ match }) {
           <Route exact path={`${match.path}/`} component={Snapshot} />
           <Route path={`${match.path}/about`} component={AboutCompany} />
           <Route path={`${match.path}/reviews`} component={ReviewsMain} />
+          <Route path={`${match.path}/salaries`} component={SalariesMain} />
         </div>
       </div>
     </Container>

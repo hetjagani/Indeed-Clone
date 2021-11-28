@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-return-assign */
 /* eslint-disable no-undef */
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -17,13 +19,12 @@ axiosInstance.interceptors.response.use(
       toast.error('Network error!');
     }
     if (err && err.response && err.response.status === 401) {
-      toast.error('Unauthorized!');
-      return;
+      toast.error('Unauthorized! Please login and try again.');
+      return window.location.href = '/login';
     }
     if (err && err.response && err.response.status === 403) {
       toast.error(err.response.data.message);
-      window.location.pathname = '/';
-      return;
+      return window.location.href = '/login';
     }
     if (err && err.response && err.response.data && err.response.data.error) {
       toast.error(err.response.data.error);
