@@ -15,8 +15,6 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Button from '../../components/Button';
 
 function JobDetails({ job }) {
-  console.log(job);
-
   return (
     <Card variant="outlined" className="fixed" sx={{ borderRadius: '12px' }}>
       <Paper elevation={3}>

@@ -1,15 +1,22 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { Typography } from '@mui/material';
 import HappyEmojiSVG from '../../../components/svg/HappyEmojiSVG';
+import SadEmojiSVG from '../../../components/svg/SadEmojiSVG';
 import Button from '../../../components/Button';
 
-function WorkHappiness() {
+function WorkHappiness(props) {
   return (
     <>
-      <Typography style={{
-        marginTop: '15px', fontWeight: 'bold', fontSize: '1.75rem', lineHeight: '1.25', marginBottom: '0.5rem',
-      }}
+      <Typography
+        style={{
+          marginTop: '15px',
+          fontWeight: 'bold',
+          fontSize: '1.75rem',
+          lineHeight: '1.25',
+          marginBottom: '0.5rem',
+        }}
       >
         Work happiness
       </Typography>
@@ -20,7 +27,10 @@ function WorkHappiness() {
         <Button
           label="About work happiness"
           style={{
-            width: '200px', backgroundColor: 'white', color: '#2557a7', border: '1px solid #d4d2d0',
+            width: '200px',
+            backgroundColor: 'white',
+            color: '#2557a7',
+            border: '1px solid #d4d2d0',
           }}
         />
       </div>
@@ -30,23 +40,40 @@ function WorkHappiness() {
         <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <div style={{
-                backgroundColor: '#f3f2f1', boxSizing: 'border-box', fontSize: '1.25rem', fontWeight: 'bold', borderRadius: '0.5rem', lineHeight: '1.5', padding: '.25rem .75rem',
-              }}
+              <div
+                style={{
+                  backgroundColor: '#f3f2f1',
+                  boxSizing: 'border-box',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  borderRadius: '0.5rem',
+                  lineHeight: '1.5',
+                  padding: '.25rem .75rem',
+                }}
               >
-                65
+                {props && props.data ? props.data.avgHappinessScore : 'NA'}
               </div>
-              <HappyEmojiSVG />
+              {props
+              && props.data
+              && props.data.avgHappinessScore
+              && props.data.avgHappinessScore > 65 ? (
+                <HappyEmojiSVG />
+                ) : <SadEmojiSVG />}
+
               <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
                 <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
-                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>
-                  Average
-                </p>
+                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
               </div>
             </div>
             <div
               style={{
-                backgroundColor: 'white', color: 'rgb(89,89,89)', border: '1px solid rgb(212, 210, 208)', padding: '.5rem 1rem', fontSize: '0.875rem', width: '80%', borderRadius: '0.5rem',
+                backgroundColor: 'white',
+                color: 'rgb(89,89,89)',
+                border: '1px solid rgb(212, 210, 208)',
+                padding: '.5rem 1rem',
+                fontSize: '0.875rem',
+                width: '80%',
+                borderRadius: '0.5rem',
               }}
             >
               Do people feel happy at work most of the time?
@@ -57,22 +84,39 @@ function WorkHappiness() {
         <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <div style={{
-                backgroundColor: '#f3f2f1', boxSizing: 'border-box', fontSize: '1.25rem', fontWeight: 'bold', borderRadius: '0.5rem', lineHeight: '1.5', padding: '.25rem .75rem',
-              }}
+              <div
+                style={{
+                  backgroundColor: '#f3f2f1',
+                  boxSizing: 'border-box',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  borderRadius: '0.5rem',
+                  lineHeight: '1.5',
+                  padding: '.25rem .75rem',
+                }}
               >
-                65
+                {props && props.data ? props.data.learningScore : 'NA'}
               </div>
+              {props
+              && props.data
+              && props.data.avgHappinessScore
+              && props.data.avgHappinessScore > 65 ? (
+                <HappyEmojiSVG />
+                ) : <SadEmojiSVG />}
               <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
-                <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
-                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>
-                  Learning Score
-                </p>
+                <p style={{ fontWeight: '700' }}>Learning Score</p>
+                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
               </div>
             </div>
             <div
               style={{
-                backgroundColor: 'white', color: 'rgb(89,89,89)', border: '1px solid rgb(212, 210, 208)', padding: '.5rem 1rem', fontSize: '0.875rem', width: '80%', borderRadius: '0.5rem',
+                backgroundColor: 'white',
+                color: 'rgb(89,89,89)',
+                border: '1px solid rgb(212, 210, 208)',
+                padding: '.5rem 1rem',
+                fontSize: '0.875rem',
+                width: '80%',
+                borderRadius: '0.5rem',
               }}
             >
               Do people feel happy at work most of the time?
@@ -83,22 +127,39 @@ function WorkHappiness() {
         <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-              <div style={{
-                backgroundColor: '#f3f2f1', boxSizing: 'border-box', fontSize: '1.25rem', fontWeight: 'bold', borderRadius: '0.5rem', lineHeight: '1.5', padding: '.25rem .75rem',
-              }}
+              <div
+                style={{
+                  backgroundColor: '#f3f2f1',
+                  boxSizing: 'border-box',
+                  fontSize: '1.25rem',
+                  fontWeight: 'bold',
+                  borderRadius: '0.5rem',
+                  lineHeight: '1.5',
+                  padding: '.25rem .75rem',
+                }}
               >
-                65
+                {props && props.data ? props.data.appreciationScore : 'NA'}
               </div>
+              {props
+              && props.data
+              && props.data.appreciationScore
+              && props.data.appreciationScore > 65 ? (
+                <HappyEmojiSVG />
+                ) : <SadEmojiSVG />}
               <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
-                <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
-                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>
-                  Appreciation
-                </p>
+                <p style={{ fontWeight: '700' }}>Appreciation Score</p>
+                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
               </div>
             </div>
             <div
               style={{
-                backgroundColor: 'white', color: 'rgb(89,89,89)', border: '1px solid rgb(212, 210, 208)', padding: '.5rem 1rem', fontSize: '0.875rem', width: '80%', borderRadius: '0.5rem',
+                backgroundColor: 'white',
+                color: 'rgb(89,89,89)',
+                border: '1px solid rgb(212, 210, 208)',
+                padding: '.5rem 1rem',
+                fontSize: '0.875rem',
+                width: '80%',
+                borderRadius: '0.5rem',
               }}
             >
               Do people feel happy at work most of the time?

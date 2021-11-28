@@ -3,15 +3,15 @@ import axiosInstance from '../../config/axiosConfig';
 
 const token = getCookie('token');
 
-const getCompanyDetails = (payload) => axiosInstance
-  .get(`/companies/${payload}`, {
+const getSalariesOfCompany = (payload) => axiosInstance
+  .get(`/companies/${payload}/salaries`, {
     headers: {
       Authorization: token,
     },
   })
-  .then((response) => response.data)
+  .then((response) => response.data.nodes)
   .catch((err) => {
     console.log(err);
   });
 
-export default getCompanyDetails;
+export default getSalariesOfCompany;
