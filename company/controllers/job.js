@@ -253,7 +253,7 @@ const getJobsList = async (req, res) => {
       { $match: query },
       { $count: 'count' },
     ]);
-    console.log(jobsCnt);
+
     const result = await Job.aggregate([
       {
         $lookup: {
