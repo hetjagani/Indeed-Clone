@@ -44,33 +44,6 @@ const salaryBodyValidators = () => [
 ];
 
 /**
- * Get a User Salary by Id
- * @route GET /salaries/{id}
- * @security JWT
- * @group Salaries
- * @param {String} id.path.require
- * @returns {Salary.model} 200 - Get User Salary (General)
- */
-router.get('/:id', generalGetSalaryById);
-
-/**
- * Get a User Salaries (General)
- * @route GET /salaries
- * @group Salaries
- * @security JWT
- * @param {integer} page.query
- * @param {integer} limit.query
- * @param {String} companyId.query
- * @param {String} userId.query
- * @param {String} title.query
- * @param {String} city.query
- * @param {String} state.query
- * @param {String} company.query
- * @returns {Salary.model} 200 - Get User Salary
- */
-router.get('/', generalGetSalaries);
-
-/**
  * Get a User Salaries
  * @route GET /users/{id}/salaries
  * @group User Salaries

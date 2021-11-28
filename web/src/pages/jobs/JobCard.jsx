@@ -14,8 +14,6 @@ import MoneySVG from '../../components/svg/MoneySVG';
 import './css/JobCard.css';
 
 function JobCard({ job, selectedJobFlag }) {
-  console.log(selectedJobFlag);
-
   return (
     <Card
       variant="outlined"

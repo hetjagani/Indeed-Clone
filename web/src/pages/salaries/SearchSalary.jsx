@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
+import './css/Searchsalary.css';
 
 const SearchSalary = () => {
   const [salaries, setSalaries] = useState([]);
@@ -9,10 +10,10 @@ const SearchSalary = () => {
       <h1 className="searchheader">Browse top paying jobs by industry</h1>
       <div className="salary">
         <div className="salarydiv">
-          <h4 className="salaryheader">Front Desk Agent</h4>
+          <span className="salaryheader">Front Desk Agent</span>
           <div className="salaryAverage">
             <span className="salarytitle">Average Salary</span>
-            <h5 className="salaryamount">$37,516 per year</h5>
+            <span className="salaryamount">$37,516 per year</span>
           </div>
         </div>
         <div className="salaryskills">

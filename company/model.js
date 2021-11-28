@@ -6,7 +6,6 @@ const IndustrySchema = new mongoose.Schema({
 
 const MediumSchema = new mongoose.Schema({
   url: String,
-  altText: String,
 });
 
 const CompanySchema = new mongoose.Schema({
@@ -29,6 +28,7 @@ const CompanySchema = new mongoose.Schema({
   appreciationScore: Number,
   employers: [mongoose.Types.ObjectId],
   media: [MediumSchema],
+  logo: MediumSchema,
 });
 
 const EmployerSchema = new mongoose.Schema({
