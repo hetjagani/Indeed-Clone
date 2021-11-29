@@ -4,6 +4,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import './css/FindSalary.css';
 import searchSalary from '../../api/salary/searchSalary';
 import SearchSalary from './SearchSalary';
+import TopSalary from './TopSalary';
 
 const Findsalary = () => {
   const [location, setLocation] = useState('');
@@ -73,6 +74,7 @@ const Findsalary = () => {
         </div>
       </div>
       <SearchSalary salary={topSalaries} />
+      {searchFlag ? <></> : <TopSalary />}
     </div>
   );
 };
