@@ -22,8 +22,8 @@ const bodyValidators = () => [body('isFeatured').exists().isBoolean()];
  * @param {integer} page.query
  * @param {integer} limit.query
  * @param {string} compId.path
- * @param {string} sortBy.path
- * @param {string} sortOrder.path
+ * @param {string} sortBy.query
+ * @param {string} sortOrder.query
  * @group Reviews
  * @security JWT
  * @returns {Array.<ReviewBody>} 200 - List of jobs info
