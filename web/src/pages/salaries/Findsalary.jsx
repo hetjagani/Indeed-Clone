@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { Container } from 'react-bootstrap';
+
 import './css/FindSalary.css';
 import searchSalary from '../../api/salary/searchSalary';
-import SearchSalary from './SearchSalary';
+// import SearchSalary from './SearchSalary';
 
 const Findsalary = () => {
   const [location, setLocation] = useState('');
@@ -32,11 +34,23 @@ const Findsalary = () => {
     });
   };
   return (
-    <div>
-      <div className="findsalary">
-        <div>
+    <Container fluid>
+      <div
+        style={{
+          display: 'flex',
+          width: '97vw',
+          justifyContent: 'flex-start',
+          margin: '0 auto',
+          paddingLeft: '1rem',
+          backgroundColor: '#E8F3FC',
+          paddingRight: '1rem',
+          paddingBottom: '20px',
+          alignItems: 'flex-end',
+        }}
+      >
+        <div style={{ position: 'absolute', marginLeft: '220px', marginBottom: '30px' }}>
           <div className="findsalary_header">
-            <h1 className="headersalary1">Find career you&apos;ll love</h1>
+            <h1 className="headersalary1">Find a career you&apos;ll love</h1>
             <h2 className="headersalary2">
               Explore which careers have the highest job satisfaction, best
               salaries, and more
@@ -71,9 +85,20 @@ const Findsalary = () => {
             </form>
           </div>
         </div>
+        <img
+          src="https://d3hbwax96mbv6t.cloudfront.net/title-webapp/_next/static/images/salaries-8d20dc14bdeae8889387e0fb40e0d546.png"
+          alt="salary"
+          style={{
+            marginRight: 0,
+            marginLeft: 'auto',
+            height: '100%',
+            maxHeight: '326px',
+            width: '712px',
+          }}
+        />
+        {/* <SearchSalary salary={topSalaries} /> */}
       </div>
-      <SearchSalary salary={topSalaries} />
-    </div>
+    </Container>
   );
 };
 
