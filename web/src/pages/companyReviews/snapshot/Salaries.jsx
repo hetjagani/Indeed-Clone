@@ -14,7 +14,10 @@ function Salaries({ title, showButton = false, salaries }) {
   return (
     <>
       <AddSalaryModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
+      <div style={{
+        display: 'flex', width: '100%', justifyContent: 'space-between', marginTop: '15px',
+      }}
+      >
         <Typography style={{
           fontWeight: 'bold', fontSize: '1.75rem', lineHeight: '1.25', marginBottom: '0.5rem',
         }}
