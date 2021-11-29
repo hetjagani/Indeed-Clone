@@ -102,6 +102,7 @@ const CompanyNav = () => {
       <div
         className="fixed"
         style={{
+          zIndex: 10,
           backgroundColor: 'white',
           display: 'flex',
           flexDirection: 'row',
