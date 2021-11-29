@@ -2,9 +2,12 @@
 const { errors } = require('u-server-utils');
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
+const { User } = require('../model');
+const { Types } = require('mongoose');
 
 const getUserReviews = async (req, res) => {
   try {
+    console.log('entered');
     const { id } = req.params;
     const { page, limit, sortBy, sortOrder } = req.query;
 
@@ -13,6 +16,42 @@ const getUserReviews = async (req, res) => {
       headers: { Authorization: req.headers.authorization },
     });
 
+    const allUser = await User.find({
+      _id: Types.ObjectId(id),
+    });
+
+    const userMap = new Map();
+
+    allUser.forEach((ele) => {
+      userMap.set(String(ele._id), ele);
+    });
+
+    console.log(allUser);
+
+    result.data.nodes.forEach((ele) => {
+      ele.user = userMap.get(String(ele.userId));
+    });
+
+    console.log(result.data);
+    const allCompany = await axios.get(
+      `${global.gConfig.company_url}/companies`,
+      {
+        params: { all: 'true' },
+        headers: { Authorization: req.headers.authorization },
+      },
+    );
+
+    console.log(allCompany.data);   
+    const companyMap = new Map();
+
+    allCompany.data.forEach((ele) => {
+      companyMap.set(String(ele._id), ele);
+    });
+
+    result.data.nodes.forEach((ele) => {
+      ele.company = companyMap.get(String(ele.companyId));
+    });
+    
     res.status(200).json(result.data);
   } catch (err) {
     console.log(err);
@@ -32,6 +71,21 @@ const getUserReviewById = async (req, res) => {
       params: { userId: id },
       headers: { Authorization: req.headers.authorization },
     });
+
+    const oneUser = await User.findOne({
+      _id: Types.ObjectId(id),
+    });
+
+    result.data.user = oneUser;
+
+    const oneCompany = await axios.get(
+      `${global.gConfig.company_url}/companies/${result.data.companyId}`,
+      {
+        headers: { Authorization: req.headers.authorization },
+      },
+    );
+
+    result.data.company = oneCompany.data;
 
     res.status(200).json(result.data);
   } catch (err) {
