@@ -5,7 +5,8 @@ import { Container } from 'react-bootstrap';
 
 import './css/FindSalary.css';
 import searchSalary from '../../api/salary/searchSalary';
-// import SearchSalary from './SearchSalary';
+import SearchSalary from './SearchSalary';
+import TopSalary from './TopSalary';
 
 const Findsalary = () => {
   const [location, setLocation] = useState('');
@@ -98,6 +99,8 @@ const Findsalary = () => {
         />
         {/* <SearchSalary salary={topSalaries} /> */}
       </div>
+      <SearchSalary salary={topSalaries} />
+      {searchFlag ? <></> : <TopSalary />}
     </Container>
   );
 };
