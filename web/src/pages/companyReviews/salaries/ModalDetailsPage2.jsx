@@ -281,7 +281,7 @@ function ModalDetailsPage2() {
           ) : null}
 
           <hr style={{ marginTop: '35px' }} />
-          <div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button
               type="submit"
               style={{

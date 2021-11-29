@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable max-len */
 import React, { useState } from 'react';
 import { Typography } from '@mui/material';
@@ -41,11 +40,11 @@ function Salaries({ title, showButton = false, salaries }) {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-        {Object.keys(salaries).length > 0
+        {salaries ? Object.keys(salaries).length > 0
           ? Object.keys(salaries).map((key) => (
             <SalariesByIndustry industry={key} data={salaries[key]} />
           ))
-          : null}
+          : null : null}
       </div>
     </>
   );

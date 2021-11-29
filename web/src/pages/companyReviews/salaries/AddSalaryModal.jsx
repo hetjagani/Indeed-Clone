@@ -5,9 +5,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import { Typography } from '@mui/material';
+// import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import '../css/AddReviewModal.css';
 import ModalDetailsPage1 from './ModalDetailsPage1';
+import ModalDetailsPage2 from './ModalDetailsPage2';
 
 const style = {
   position: 'absolute',
@@ -49,11 +51,22 @@ export default function AddSalaryModal({ handleClose, isOpen }) {
                   marginBottom: '0.5rem',
                 }}
               >
-                <span style={{ fontWeight: 'bold' }}>1</span>
+                {!gotoNextFlag ? (
+                  <span style={{ fontWeight: 'bold' }}>1</span>
+                ) : (
+                  <span style={{ fontWeight: 'bold' }}>2</span>
+                )}
                 {' '}
                 of 2
               </Typography>
-              <ModalDetailsPage1 gotoNextFlag={gotoNextFlag} setGotoNextFlag={setGotoNextFlag} />
+              {!gotoNextFlag ? (
+                <ModalDetailsPage1
+                  gotoNextFlag={gotoNextFlag}
+                  setGotoNextFlag={setGotoNextFlag}
+                />
+              ) : (
+                <ModalDetailsPage2 />
+              )}
             </div>
           </Box>
         </Fade>

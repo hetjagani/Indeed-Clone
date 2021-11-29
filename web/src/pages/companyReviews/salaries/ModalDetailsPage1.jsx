@@ -15,7 +15,7 @@ const cities = [
   { title: 'Sunnyvale, California' },
 ];
 
-function ModalDetailsPage1() {
+function ModalDetailsPage1({ setGotoNextFlag }) {
   const [title, setTitle] = useState('');
   const [name, setName] = useState('');
   const [currentlyWorking, setCurrentlyWorking] = useState(true);
@@ -24,6 +24,8 @@ function ModalDetailsPage1() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // do form submit API call here
+    setGotoNextFlag(true);
   };
 
   return (
@@ -189,7 +191,7 @@ function ModalDetailsPage1() {
           />
 
           <hr style={{ marginTop: '35px' }} />
-          <div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button
               type="submit"
               style={{
@@ -204,7 +206,7 @@ function ModalDetailsPage1() {
                 fontSize: 'large',
               }}
             >
-              Submit
+              Next
             </button>
           </div>
         </form>
