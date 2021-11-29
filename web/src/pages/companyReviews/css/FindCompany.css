@@ -14,6 +14,7 @@
 .findCompany_form {
     display: flex;
     flex-direction:row;
+    justify-content: space-between;
 }
 
 .label {
@@ -31,10 +32,10 @@
 }
 .header1 {
     margin-bottom: 1rem;
-    margin-top: 0;
+    margin-top: 50px;
     margin-right: 0;
     margin-left: 0;
-    font-size: 2.75rem;
+    font-size: 2.4rem;
     line-height: 1.25;
     letter-spacing: -0.0625rem;
     font-weight: 700;
@@ -59,14 +60,12 @@
     flex-direction:row;
     width: 330px;
     height: 40px;
-    border-radius: 0.5rem;
-    border: 1px solid #949494;
+    border-radius: 8px;
     margin-right:10px;
 }
 
 .inputLabel:hover{
-    border-color: #2557a7;
-  border-bottom: 5px solid #2557a7;
+  border-bottom: 6px solid #2557a7;
 }
 
 .takeinput {
@@ -91,7 +90,7 @@
 }
 
 .findButton {
-    width:290px;
+    width:250px;
     height: 44px;
     border-radius: 0.5rem;
     background-color: #2557a7;
@@ -100,7 +99,7 @@
     border: 1px solid #2557a7;
     font-family: Noto Sans,Helvetica Neue,Helvetica,Arial,Liberation Sans,Roboto,Noto,sans-serif;
     font-size: 1rem;
-    margin-top: 43px;
+    margin-top: 54px;
 }
 
 .findButton:hover {
@@ -111,4 +110,13 @@
     margin-top: 25px;
     text-decoration: underline;
     color:#2557a7;
+}
+
+.reviewsSalary:hover {
+    cursor: pointer;
+}
+
+.findcompany-logo {
+    width: 50px;
+    height: 50px;
 }

@@ -3,7 +3,14 @@ import StarRatings from 'react-star-ratings';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const TopSalary = () => (
-  <div>
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    maxWidth: '1250px',
+    margin: '0 auto',
+  }}
+  >
     <h1
       style={{
         fontFamily:
@@ -22,7 +29,7 @@ const TopSalary = () => (
         display: 'flex',
         flexDirection: 'column',
         border: '1px solid #ECECEC',
-        margin: '3%',
+        margin: '1%',
         borderRadius: '8px',
         padding: '18px',
       }}
@@ -31,6 +38,7 @@ const TopSalary = () => (
         style={{
           display: 'flex',
           flexDirection: 'row',
+          alignItems: 'center',
         }}
       >
         <div style={{ width: '10%' }}>

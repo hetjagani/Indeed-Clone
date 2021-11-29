@@ -1,8 +1,10 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { Typography } from '@mui/material';
 import HappyEmojiSVG from '../../../components/svg/HappyEmojiSVG';
+import VeryHappyEmojiSVG from '../../../components/svg/VeryHappyEmojiSVG';
 import SadEmojiSVG from '../../../components/svg/SadEmojiSVG';
 import Button from '../../../components/Button';
 
@@ -56,8 +58,8 @@ function WorkHappiness(props) {
               {props
               && props.data
               && props.data.avgHappinessScore
-              && props.data.avgHappinessScore > 65 ? (
-                <HappyEmojiSVG />
+              && props.data.avgHappinessScore > 80 ? (
+                <VeryHappyEmojiSVG />
                 ) : <SadEmojiSVG />}
 
               <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
@@ -143,9 +145,9 @@ function WorkHappiness(props) {
               {props
               && props.data
               && props.data.appreciationScore
-              && props.data.appreciationScore > 65 ? (
-                <HappyEmojiSVG />
-                ) : <SadEmojiSVG />}
+              && props.data.appreciationScore > 85 ? (
+                <VeryHappyEmojiSVG />
+                ) : props.data.appreciationScore > 65 ? <HappyEmojiSVG /> : <SadEmojiSVG />}
               <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
                 <p style={{ fontWeight: '700' }}>Appreciation Score</p>
                 <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
