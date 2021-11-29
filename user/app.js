@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
 
 const userRouter = require('./routes/user.routes');
-const salaryRouter = require('./routes/salary.routes');
 const generalSalaryRouter = require('./routes/generalsalary.routes');
 const mediaRouter = require('./routes/media.routes');
 

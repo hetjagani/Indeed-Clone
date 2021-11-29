@@ -43,17 +43,24 @@ const createSalary = async (req, res) => {
   }
 
   if (req.body.companyId === null || req.body.companyId === undefined) {
-    return res.status(404).send({ status: 400, message: 'Company Id Not Found' });
+    return res
+      .status(404)
+      .send({ status: 400, message: 'Company Id Not Found' });
   }
 
   let company;
   try {
-    company = await axios.get(`${global.gConfig.company_url}/companies/${req.body.companyId}`, {
-      headers: { authorization: req.headers.authorization },
-    });
+    company = await axios.get(
+      `${global.gConfig.company_url}/companies/${req.body.companyId}`,
+      {
+        headers: { authorization: req.headers.authorization },
+      },
+    );
   } catch (err) {
     if (err.isAxiosError && err.response.status === 404) {
-      return res.status(404).send({ status: 400, message: 'Company Does not exist!' });
+      return res
+        .status(404)
+        .send({ status: 400, message: 'Company Does not exist!' });
     }
   }
 
@@ -93,9 +100,12 @@ const updateSalary = async (req, res) => {
   let company;
   if (req.body.companyId && req.body.companyId !== null) {
     try {
-      company = await axios.get(`${global.gConfig.company_url}/companies/${req.body.companyId}`, {
-        headers: { authorization: req.headers.authorization },
-      });
+      company = await axios.get(
+        `${global.gConfig.company_url}/companies/${req.body.companyId}`,
+        {
+          headers: { authorization: req.headers.authorization },
+        },
+      );
       console.log(company);
     } catch (err) {
       console.log(err);
@@ -124,7 +134,7 @@ const updateSalary = async (req, res) => {
         resp.company = company.data;
       }
       res.status(200).json(resp);
-    }
+    },
   );
 };
 
@@ -236,6 +246,7 @@ const generalGetSalaries = async (req, res) => {
       searchObj.title = { $regex: title };
     }
 
+    
     const salaryList = await Salary.aggregate([
       {
         $match: searchObj,
@@ -255,6 +266,7 @@ const generalGetSalaries = async (req, res) => {
       .skip(offset)
       .limit(limit);
 
+      console.log('salary', salaryList)
     const result = {
       total: salaryList.length,
     };
@@ -280,8 +292,8 @@ const generalGetSalaries = async (req, res) => {
       return;
     }
 
-    result.total = salaryListWithCompany.length;
     result.nodes = salaryListWithCompany.slice(offset, limit + offset);
+    console.log('results', result);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);
