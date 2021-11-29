@@ -6,7 +6,9 @@ import Button from '../../../components/Button';
 import AddSalaryModal from '../salaries/AddSalaryModal';
 import SalariesByIndustry from './SalariesByIndustry';
 
-function Salaries({ title, showButton = false, salaries }) {
+function Salaries({
+  title, showButton = false, salaries, flag,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -45,7 +47,7 @@ function Salaries({ title, showButton = false, salaries }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {salaries ? Object.keys(salaries).length > 0
           ? Object.keys(salaries).map((key) => (
-            <SalariesByIndustry industry={key} data={salaries[key]} />
+            <SalariesByIndustry industry={key} data={salaries[key]} flag={flag} />
           ))
           : null : null}
       </div>

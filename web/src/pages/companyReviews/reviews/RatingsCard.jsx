@@ -1,10 +1,11 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import StarRatings from 'react-star-ratings';
 import FlagIcon from '@mui/icons-material/Flag';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Button from '../../../components/Button';
 
-function RatingsCard() {
+function RatingsCard(props) {
   const [helpfulReview, setHelpfulReview] = useState(-1);
 
   return (
@@ -21,10 +22,10 @@ function RatingsCard() {
             fontWeight: 'bold', fontSize: '1.5rem', backgroundImage: 'linear-gradient(90deg,#949494,#949494 2px,transparent 0,transparent 4px)', backgroundSize: '4px 2px', backgroundPosition: '0 100%', backgroundRepeat: 'repeat-x',
           }}
           >
-            4.0
+            {(props && props.review ? props.review.overallRating : null) }
           </span>
           <StarRatings
-            rating={4}
+            rating={4.5}
             starRatedColor="#9D2B6B"
             numberOfStars={5}
             name="rating"
@@ -39,17 +40,10 @@ function RatingsCard() {
             display: 'flex', flexDirection: 'column', marginTop: '25px',
           }}
         >
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>overall good place</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{props && props.review ? props.review.review : null}</span>
           <span style={{ fontSize: '0.8rem', color: '#767676' }}>Customer service representative (Former Employee) - San Jose, CA - November 21, 2021</span>
           <span style={{ marginTop: '20px' }}>
-            overall good place to work leaned a lot the time I was there, unfortunately most of the
-            locations closed doors wish they are still hiring best company that I worked ever.
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industrys standard dummy text ever since the 1500s, when an unknown
-            and scrambled it to make a type specimen book. It has survived not only five
-            the leap into electronic typesetting, remaining essentially unchanged. It was the
-            1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-            desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            {props && props.review ? props.review.summary : null}
           </span>
 
           <span style={{

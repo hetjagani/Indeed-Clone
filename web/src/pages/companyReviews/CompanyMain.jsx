@@ -11,8 +11,8 @@ import CompanyNav from '../../components/CompanyNav';
 import './css/CompanyProfile.css';
 import Snapshot from './snapshot/Snapshot';
 import AboutCompany from './about/AboutCompany';
-import ReviewsMain from './reviews/ReviewsMain';
 import SalariesMain from './salaries/SalariesMain';
+import ReviewsMain from './reviews/ReviewsMain';
 
 function CompanyMain({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
@@ -166,8 +166,11 @@ function CompanyMain({ match }) {
             )}
           />
           <Route path={`${match.path}/about`} component={AboutCompany} />
-          <Route path={`${match.path}/reviews`} component={ReviewsMain} />
-          <Route path={`${match.path}/salaries`} component={SalariesMain} />
+          <Route
+            path={`${match.path}/reviews`}
+            component={() => <ReviewsMain reviews={reviews} />}
+          />
+          <Route path={`${match.path}/salaries`} component={() => <SalariesMain salaries={salaries} />} />
         </div>
       </div>
     </Container>

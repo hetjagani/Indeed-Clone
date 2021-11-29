@@ -106,7 +106,6 @@ const updateSalary = async (req, res) => {
           headers: { authorization: req.headers.authorization },
         },
       );
-      console.log(company);
     } catch (err) {
       console.log(err);
       if (err.isAxiosError && err.response.status === 404) {
@@ -158,7 +157,6 @@ const getSalaries = async (req, res) => {
 };
 
 const getSalaryById = async (req, res) => {
-  console.log('get slaary by id');
   const { user } = req.headers;
   if (user !== req.params.id) {
     res.status(400).json({
@@ -200,7 +198,6 @@ const deleteSalary = async (req, res) => {
 
 const generalGetSalaryById = async (req, res) => {
   try {
-    console.log('get salary b id');
     const { companyId, userId } = req.query;
 
     const searchObj = { _id: ObjectId(req.params.id) };
@@ -212,7 +209,6 @@ const generalGetSalaryById = async (req, res) => {
       searchObj.userId = userId;
     }
 
-    console.log(searchObj);
     const salary = await Salary.findOne(searchObj);
     return res.status(200).send(salary);
   } catch (err) {
@@ -266,7 +262,6 @@ const generalGetSalaries = async (req, res) => {
       .skip(offset)
       .limit(limit);
 
-      console.log('salary', salaryList)
     const result = {
       total: salaryList.length,
     };
@@ -293,7 +288,6 @@ const generalGetSalaries = async (req, res) => {
     }
 
     result.nodes = salaryListWithCompany.slice(offset, limit + offset);
-    console.log('results', result);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);

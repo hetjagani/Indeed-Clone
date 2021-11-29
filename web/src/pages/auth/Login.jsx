@@ -76,7 +76,6 @@ const Login = () => {
         }
         setCookie('token', response.data.token, { path: '/' });
         const user = jwt(response.data.token);
-        console.log('user', user);
         dispatch(loginSuccess({
           loggedIn: true,
           id: user.id,
