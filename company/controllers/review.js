@@ -4,11 +4,11 @@ const { errors } = require('u-server-utils');
 
 const getCompanyReviews = async (req, res) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, sortBy, sortOrder } = req.query;
     const { compId } = req.params;
 
     const reviewResp = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { page, limit, companyId: compId },
+      params: { page, limit, companyId: compId, sortBy, sortOrder },
       headers: { Authorization: req.headers.authorization },
     });
 
