@@ -1,31 +1,27 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 import React, { useState } from 'react';
 import {
-  Autocomplete,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   MenuItem,
   Select,
   TextField,
   Typography,
 } from '@mui/material';
 
-const cities = [
-  { title: 'Fremont, California' },
-  { title: 'Las Vegas, Nevada' },
-  { title: 'Los Angeles, California' },
-  { title: 'Oakland, California' },
-  { title: 'San Francisco, California' },
-  { title: 'Sacramento, California' },
-  { title: 'San Jose, California' },
-  { title: 'Santa Clara, California' },
-  { title: 'Sunnyvale, California' },
-];
-
 function ModalDetailsPage2() {
-  const [title, setTitle] = useState('');
-  const [name, setName] = useState('');
-  const [currentlyWorking, setCurrentlyWorking] = useState(true);
-  const [endDate, setEndDate] = useState(2021);
-  const [jobLocation, setJobLocation] = useState('');
+  const [experience, setExperience] = useState(2021);
+  const [salary, setSalary] = useState('');
+  const [benefits, setBenefits] = useState({
+    paidTimeOff: false,
+    healthInsurance: false,
+    lifeInsurance: false,
+    dentalInsurance: false,
+    retirement: false,
+    other: false,
+    otherBenefits: '',
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,7 +45,7 @@ function ModalDetailsPage2() {
             lineHeight: '1.25',
           }}
         >
-          Can you tell us about yourself?
+          Pay and benefits
         </Typography>
         <Typography
           style={{
@@ -60,137 +56,229 @@ function ModalDetailsPage2() {
             color: 'rgb(89, 89, 89)',
           }}
         >
-          Let’s start building your report with basics, like your job title,
-          location and company.
+          Your anonymous pay will help other job seekers.
         </Typography>
       </div>
       <hr style={{ marginTop: '15px' }} />
+
       <div>
         <form onSubmit={handleSubmit}>
-          <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>
-            What&apos;s your company name?
-            {' '}
-            <span style={{ color: '#db183f' }}>*</span>
-          </p>
-          <TextField
-            sx={{ width: '550px' }}
-            required
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-          <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>
-            Are you currently working at this company?
-          </p>
-          <div
-            style={{
-              borderRadius: '30px',
-              width: '300px',
-              overflow: 'visible',
-            }}
-          >
-            <button
-              onClick={() => setCurrentlyWorking(true)}
-              className={`ceoButtonHover ${
-                currentlyWorking ? 'ceoButtonOnSelect' : ''
-              }`}
-              type="button"
-              style={{
-                borderRadius: '15px',
-                width: '120px',
-                height: '50px',
-                fontWeight: 'bold',
-                fontSize: 'medium',
-              }}
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => setCurrentlyWorking(false)}
-              className={`ceoButtonHover ${
-                !currentlyWorking ? 'ceoButtonOnSelect' : ''
-              }`}
-              type="button"
-              style={{
-                borderTopRightRadius: '15px',
-                borderBottomRightRadius: '15px',
-                width: '100px',
-                height: '50px',
-                marginLeft: '-25px',
-                fontWeight: 'bold',
-                fontSize: 'medium',
-              }}
-            >
-              No
-            </button>
-          </div>
-
-          {!currentlyWorking ? (
-            <>
+          <div style={{ display: 'flex' }}>
+            <div>
               <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>
-                End date
+                What&apos;s your pay at XYZ?
+                {' '}
+                <span style={{ color: '#db183f' }}>*</span>
               </p>
+              <TextField
+                inputProps={{ style: { marginLeft: '20px' } }}
+                InputProps={{
+                  startAdornment: '$',
+                  style: { fontWeight: 'bold' },
+                }}
+                sx={{ width: '550px' }}
+                required
+                type="number"
+                onKeyDown={(evt) => evt.key === 'e' && evt.preventDefault()}
+                value={salary}
+                onChange={(event) => setSalary(event.target.value)}
+              />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+              }}
+            >
               <FormControl variant="standard">
                 <Select
+                  disabled
                   disableUnderline
                   sx={{
-                    width: '550px',
-                    height: '100%',
+                    width: '110%',
+                    height: '56px',
                     padding: '5px',
                     border: '1px solid #2557a7',
                     borderRadius: '10px',
                     borderBottom: '4px solid #2557a7',
                   }}
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  value="per year"
                 >
-                  {Array.range(1981, 2022).map((ele) => (
-                    <MenuItem value={ele}>{ele}</MenuItem>
-                  ))}
+                  <MenuItem value="per year">per year</MenuItem>
                 </Select>
               </FormControl>
-            </>
-          ) : null}
+            </div>
+          </div>
 
           <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>
-            What&apos;s your job title?
+            How many years of relevant experience do you have?
             {' '}
             <span style={{ color: '#db183f' }}>*</span>
           </p>
           <TextField
+            type="number"
+            onKeyDown={(evt) => evt.key === 'e' && evt.preventDefault()}
             sx={{ width: '550px' }}
             required
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            value={experience}
+            onChange={(event) => setExperience(event.target.value)}
           />
 
           <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>
-            What&apos;s your job location?
+            Which benefits did you receive at asd?
             {' '}
             <span style={{ color: '#db183f' }}>*</span>
           </p>
-          <Autocomplete
-            value={jobLocation}
-            onChange={(_, newValue) => {
-              setJobLocation(newValue);
+          <div
+            style={{
+              marginLeft: '10px',
+              display: 'flex',
+              flexDirection: 'column',
             }}
-            freeSolo
-            options={cities.map((option) => option.title)}
-            sx={{ width: '550px' }}
-            disableClearable
-            renderInput={(params) => (
+          >
+            <FormControlLabel
+              label="Paid time off"
+              sx={{ marginTop: '10px' }}
+              control={(
+                <Checkbox
+                  value={benefits.paidTimeOff}
+                  onChange={(event) => setBenefits({
+                    ...benefits,
+                    paidTimeOff: event.target.checked,
+                  })}
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                    '& .MuiSvgIcon-root': { fontSize: 28 },
+                    '&.Mui-checked': {
+                      color: '#2557a7',
+                    },
+                  }}
+                />
+                    )}
+            />
+            <FormControlLabel
+              label="Health insurance"
+              sx={{ marginTop: '10px' }}
+              control={(
+                <Checkbox
+                  value={benefits.healthInsurance}
+                  onChange={(event) => setBenefits({
+                    ...benefits,
+                    healthInsurance: event.target.checked,
+                  })}
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                    '& .MuiSvgIcon-root': { fontSize: 28 },
+                    '&.Mui-checked': {
+                      color: '#2557a7',
+                    },
+                  }}
+                />
+                    )}
+            />
+            <FormControlLabel
+              label="Life insurance"
+              sx={{ marginTop: '10px' }}
+              control={(
+                <Checkbox
+                  value={benefits.lifeInsurance}
+                  onChange={(event) => setBenefits({
+                    ...benefits,
+                    lifeInsurance: event.target.checked,
+                  })}
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                    '& .MuiSvgIcon-root': { fontSize: 28 },
+                    '&.Mui-checked': {
+                      color: '#2557a7',
+                    },
+                  }}
+                />
+                    )}
+            />
+            <FormControlLabel
+              label="Dental/vision insurance"
+              sx={{ marginTop: '10px' }}
+              control={(
+                <Checkbox
+                  value={benefits.dentalInsurance}
+                  onChange={(event) => setBenefits({
+                    ...benefits,
+                    dentalInsurance: event.target.checked,
+                  })}
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                    '& .MuiSvgIcon-root': { fontSize: 28 },
+                    '&.Mui-checked': {
+                      color: '#2557a7',
+                    },
+                  }}
+                />
+                    )}
+            />
+            <FormControlLabel
+              label="Retirement / 401(k)"
+              sx={{ marginTop: '10px' }}
+              control={(
+                <Checkbox
+                  value={benefits.retirement}
+                  onChange={(event) => setBenefits({
+                    ...benefits,
+                    retirement: event.target.checked,
+                  })}
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                    '& .MuiSvgIcon-root': { fontSize: 28 },
+                    '&.Mui-checked': {
+                      color: '#2557a7',
+                    },
+                  }}
+                />
+                    )}
+            />
+            <FormControlLabel
+              label="Other benefits"
+              sx={{ marginTop: '10px' }}
+              control={(
+                <Checkbox
+                  value={benefits.other}
+                  onChange={(event) => setBenefits({
+                    ...benefits,
+                    other: event.target.checked,
+                  })}
+                  sx={{
+                    padding: 0,
+                    marginRight: '10px',
+                    '& .MuiSvgIcon-root': { fontSize: 28 },
+                    '&.Mui-checked': {
+                      color: '#2557a7',
+                    },
+                  }}
+                />
+                    )}
+            />
+          </div>
+
+          {benefits.other ? (
+            <div>
               <TextField
-                onChange={(e) => setJobLocation(e.target.value)}
-                value={jobLocation}
-                {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  type: 'search',
-                }}
-                size="small"
-                placeholder="City, state, zip code or remote"
+                multiline
+                rows={3}
+                sx={{ width: '550px' }}
+                required
+                value={benefits.otherBenefits}
+                onChange={(event) => setBenefits({
+                  ...benefits, otherBenefits: event.target.value,
+                })}
               />
-            )}
-          />
+            </div>
+          ) : null}
 
           <hr style={{ marginTop: '35px' }} />
           <div>
