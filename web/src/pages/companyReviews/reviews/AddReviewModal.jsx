@@ -233,7 +233,7 @@ export default function AddReviewModal({ handleClose, isOpen }) {
                       className={`ceoButtonHover ${ceoApproval ? 'ceoButtonOnSelect' : ''}`}
                       type="button"
                       style={{
-                        borderRadius: '40px', width: '250px', height: '60px', fontWeight: 'bold', fontSize: 'large',
+                        borderRadius: '40px', width: '250px', height: '50px', fontWeight: 'bold', fontSize: 'large',
                       }}
                     >
                       Yes
@@ -243,7 +243,7 @@ export default function AddReviewModal({ handleClose, isOpen }) {
                       className={`ceoButtonHover ${!ceoApproval ? 'ceoButtonOnSelect' : ''}`}
                       type="button"
                       style={{
-                        borderTopRightRadius: '40px', borderBottomRightRadius: '40px', width: '245px', height: '60px', marginLeft: '-35px', fontWeight: 'bold', fontSize: 'large',
+                        borderTopRightRadius: '40px', borderBottomRightRadius: '40px', width: '245px', height: '50px', marginLeft: '-35px', fontWeight: 'bold', fontSize: 'large',
                       }}
                     >
                       No
