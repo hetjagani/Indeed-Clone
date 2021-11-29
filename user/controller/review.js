@@ -6,10 +6,10 @@ const { validationResult } = require('express-validator');
 const getUserReviews = async (req, res) => {
   try {
     const { id } = req.params;
-    const { page, limit } = req.query;
+    const { page, limit, sortBy, sortOrder } = req.query;
 
     const result = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { userId: id, page, limit },
+      params: { userId: id, page, limit, sortBy, sortOrder },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -67,6 +67,7 @@ const createUserReview = async (req, res) => {
     data.isFeatured = false;
     data.status = 'PENDING';
     data.userId = user;
+    data.helpful = 0;
 
     const response = await axios.post(`${global.gConfig.review_url}/reviews`, data, {
       headers: {
