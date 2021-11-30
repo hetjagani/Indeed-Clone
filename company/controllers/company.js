@@ -6,7 +6,7 @@ const { Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
 const getAllCompanies = async (req, res) => {
-  const { all } = req.query;
+  const { all, q } = req.query;
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
   if (all) {
@@ -15,9 +15,15 @@ const getAllCompanies = async (req, res) => {
     return;
   }
 
-  const companyCount = await Company.count();
+  const whereOpts = {};
+  if (q) {
+    whereOpts.name = { $regex: `(?i)${q}` };
+  }
+
+  const companyCount = await Company.count(whereOpts);
 
   const companyList = await Company.aggregate([
+    { $match: whereOpts },
     {
       $lookup: {
         from: 'employers',
