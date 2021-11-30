@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable react/jsx-no-comment-textnodes */
 import * as React from 'react';
@@ -18,6 +19,9 @@ import { styled } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+import { logout } from '../app/actions';
 
 const AntTabs = styled(Tabs)({
   borderBottom: '1px solid #e8e8e8',
@@ -68,6 +72,9 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
 );
 
 const NavLeft = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   const [value, setValue] = React.useState(0);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -181,6 +188,7 @@ const NavLeft = () => {
         </MenuItem>
         <Divider />
         <p
+          onClick={() => { dispatch(logout()); history.push('/login'); }}
           style={{
             textAlign: 'center', fontWeight: '700', color: '#2557a7', cursor: 'pointer',
           }}
