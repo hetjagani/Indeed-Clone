@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
 const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
@@ -89,6 +90,7 @@ const updateUser = async (req, res) => {
 
   makeRequest('user.update', userObj, (err, resp) => {
     if (err || !resp) {
+      console.log(err);
       res.status(500).json(errors.serverError);
       return;
     }
