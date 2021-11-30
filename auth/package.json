@@ -26,7 +26,8 @@
     "morgan": "^1.10.0",
     "mysql2": "^2.3.0",
     "password-validator": "^5.1.1",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "u-server-utils": "^1.0.17"
   },
   "devDependencies": {
     "eslint": "^7.2.0",

@@ -12,6 +12,7 @@ import FindCompany from './pages/companyReviews/FindCompany';
 import FindSalary from './pages/salaries/Findsalary';
 import Salary from './pages/salaries/Salary';
 import Employeedetails from './pages/employee/Employeedetails';
+
 // Config / other files
 import withAuth from './utils/withAuth';
 

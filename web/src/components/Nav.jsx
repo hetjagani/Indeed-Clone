@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import { useHistory, useLocation } from 'react-router';
 
 const AntTabs = styled(Tabs)({
   borderBottom: '1px solid #e8e8e8',
@@ -51,10 +52,33 @@ const AntTab = styled((props) => <Tab disableRipple {...props} />)(
   }),
 );
 const Nav = () => {
-  const [value, setValue] = React.useState(0);
+  const history = useHistory();
+  const location = useLocation();
+  const [value, setValue] = React.useState(1);
+
+  useEffect(() => {
+    const paths = location.pathname.split('/');
+    if (paths.length > 1) {
+      switch (paths[1]) {
+        case 'reviews': setValue(1);
+          break;
+        case 'salaries': setValue(2);
+          break;
+        default: setValue(0);
+          break;
+      }
+    }
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if (newValue === 0) {
+      history.push('/');
+    } else if (newValue === 1) {
+      history.push('/reviews');
+    } else if (newValue === 2) {
+      history.push('/salaries');
+    }
   };
   return (
     <div>

@@ -8,6 +8,7 @@ const ReviewSchema = new mongoose.Schema({
   management: Number,
   jobCulture: Number,
   summary: String,
+  helpful: Number,
   review: String,
   pros: String,
   cons: String,
