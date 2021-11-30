@@ -5,7 +5,6 @@ const { validationResult } = require('express-validator');
 const { ObjectId } = require('mongodb');
 const { Chat } = require('../model');
 const { Types } = require('mongoose');
-const { forEach } = require('lodash');
 
 const getAllChats = async (req, res) => {
   try {
