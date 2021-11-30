@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 
 import EmployeSVG from '../../components/svg/EmployeSVG';
 import './css/Employeedetails.css';
@@ -210,15 +211,25 @@ const Employeedetails = () => {
           marginTop: '2rem',
         }}
         >
-          <div style={{ width: '100%', paddingBottom: '1rem' }}>
+          <div style={{
+            width: '100%', paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
+          }}
+          >
             <span className="employeeLabel">Add Photo</span>
+            <span style={{ paddingTop: '0.5rem', color: 'rgb(89, 89, 89)', fontSize: '14px' }}>Give an inside look at working at your company by adding photos to your post</span>
           </div>
           <Stack direction="row" alignItems="center" spacing={2}>
             <label htmlFor="contained-button-file">
               <Input accept="image/*" id="contained-button-file" multiple type="file" />
-              <button className="employeeBack" style={{ width: '165px', height: '44px' }}>
-                Add photo
-              </button>
+              <Button
+                variant="contained"
+                component="span"
+                style={{
+                  width: '160px', height: '44px', color: '#2557a7', fontWeight: '700', backgroundColor: '#f2f2f2', border: '#949494',
+                }}
+              >
+                Add Photo
+              </Button>
             </label>
           </Stack>
         </div>
