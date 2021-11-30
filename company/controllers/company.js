@@ -160,7 +160,7 @@ const updateCompany = async (req, res) => {
         },
       ]);
 
-      res.status(201).json(companyList[0]);
+      res.status(200).json(companyList[0]);
     });
   } catch (err) {
     console.log(err);
