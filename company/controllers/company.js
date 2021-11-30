@@ -1,8 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-const { ResourceGroups } = require('aws-sdk');
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
-const { CURSOR_FLAGS } = require('mongodb');
 const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Company } = require('../model');
