@@ -173,7 +173,6 @@ describe('Review Testcases', () => {
       helpful: 2,
     };
 
-
     chai
       .request(app)
       .put(`/reviews/${createdReview}`)

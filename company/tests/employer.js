@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 /* eslint-disable global-require */
@@ -41,7 +42,7 @@ describe('Employer Testcases', () => {
           try {
             const employer = await Employer.create(msg_payload);
 
-            if (msg_payload.companyId && msg_payload.companyId != '') {
+            if (msg_payload.companyId && msg_payload.companyId !== '') {
               await Company.updateOne(
                 { _id: Types.ObjectId(msg_payload.companyId) },
                 { $push: { employers: employer._id } },
