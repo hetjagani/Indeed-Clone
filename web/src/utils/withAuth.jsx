@@ -5,8 +5,18 @@ import getLoginDetails from './getLoginDetails';
 
 const withAuth = (WrappedComponent, ar, withNav) => (props) => {
   const decoded = getLoginDetails();
-  if (!decoded) {
+  if (!decoded && ar !== 'any') {
     return <Redirect to="/login" />;
+  }
+  if (ar === 'any') {
+    return withNav ? (
+      <>
+        <Navbar />
+        <WrappedComponent {...props} />
+      </>
+    ) : (
+      <WrappedComponent {...props} />
+    );
   }
   if (decoded.role === 'employer' && ar === 'employer') {
     return withNav ? (
@@ -19,16 +29,6 @@ const withAuth = (WrappedComponent, ar, withNav) => (props) => {
     );
   }
   if (decoded.role === 'user' && ar === 'user') {
-    return withNav ? (
-      <>
-        <Navbar />
-        <WrappedComponent {...props} />
-      </>
-    ) : (
-      <WrappedComponent {...props} />
-    );
-  }
-  if (ar === 'any') {
     return withNav ? (
       <>
         <Navbar />

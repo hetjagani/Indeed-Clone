@@ -39,7 +39,7 @@ function JobFeed({ jobs }) {
                 </div>
               ))}
             </div>
-            <div style={{ marginLeft: '25px', width: '100%' }}>
+            <div style={{ marginLeft: '25px', width: '100%', maxWidth: '800px' }}>
               <JobDetails job={selectedJobDetails} />
             </div>
           </>

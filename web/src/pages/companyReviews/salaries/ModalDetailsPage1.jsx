@@ -185,7 +185,7 @@ function ModalDetailsPage1({ setGotoNextFlag }) {
                   type: 'search',
                 }}
                 size="small"
-                placeholder="City, state, zip code or remote"
+                placeholder="City, state"
               />
             )}
           />
