@@ -49,7 +49,7 @@ const bodyValidators = () => [
   body('tips').isString(),
   body('companyId').isString(),
   body('userId').isString(),
-  body('helpful').isNumeric(),
+  body('helpful').optional().isNumeric(),
   body('isFeatured').optional().isBoolean(),
   body('status').optional().isString().isIn(['APPROVED', 'REJECTED', 'PENDING']),
 ];
@@ -63,6 +63,7 @@ const bodyValidators = () => [
  * @param {string} userId.query
  * @param {string} sortBy.query
  * @param {string} sortOrder.query
+ * @param {boolean} all.query
  * @group Review
  * @security JWT
  * @returns {Array.<Review>} 200 - List of review info
