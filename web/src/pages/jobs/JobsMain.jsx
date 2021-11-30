@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
@@ -6,6 +7,8 @@ import Search from './Search';
 import Footer from '../../components/Footer';
 import JobFeed from './JobFeed';
 import getJobs from '../../api/jobs/get';
+
+import checkProperties from '../../utils/checkObjectProperties';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -22,10 +25,23 @@ function JobsMain() {
   const getPaginatedJobs = async () => {
     const queryParams = { page: 1, limit: 10 };
     const locFilter = query.getAll('location');
-    if (locFilter.length) {
-      // eslint-disable-next-line prefer-destructuring
-      queryParams.city = locFilter[0];
+    const qFilter = query.getAll('jobs');
+    const sinceFilter = query.getAll('since');
+    if (typeof (locFilter) === 'string') {
+      queryParams.city = locFilter;
+    } else if (locFilter.length) {
+      queryParams.city = locFilter[0].split(',')[0];
     }
+    if (qFilter.length) {
+      queryParams.q = qFilter[0];
+    }
+    if (sinceFilter.length) {
+      queryParams.since = sinceFilter[0];
+    }
+    if (queryParams.city === 'Any location') {
+      queryParams.city = null;
+    }
+    checkProperties(queryParams);
     const response = await getJobs(queryParams);
     if (!response) {
       return;
@@ -36,7 +52,8 @@ function JobsMain() {
   useEffect(() => {
     const jobFilter = query.getAll('jobs');
     const locFilter = query.getAll('location');
-    if (!jobFilter.length && !locFilter.length) {
+    const sinceFilter = query.getAll('since');
+    if (!jobFilter.length && !locFilter.length && !sinceFilter.length) {
       setSearchFilter(null);
       return;
     }

@@ -14,6 +14,10 @@ import MoneySVG from '../../components/svg/MoneySVG';
 import './css/JobCard.css';
 
 function JobCard({ job, selectedJobFlag }) {
+  const date1 = new Date(job.postedOn);
+  const date2 = new Date();
+  const diffTime = Math.abs(date2 - date1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return (
     <Card
       variant="outlined"
@@ -90,11 +94,11 @@ function JobCard({ job, selectedJobFlag }) {
         </div>
 
         <ul className="bulletList">
-          <li className="bullet" style={{ listStyleType: 'circle' }}>
-            Prepare project reports to summarize results and trends, address
-            issues, and recommend solutions for issues.
-          </li>
-          <li className="bullet" style={{ listStyleType: 'circle' }}>Help desk: 1 year (Preferred)</li>
+          {job ? job.summary ? job.summary.length > 0 ? job.summary.map((bullet) => (
+            <li className="bullet" style={{ listStyleType: 'circle' }}>
+              {bullet}
+            </li>
+          )) : null : null : null}
         </ul>
       </CardContent>
       <CardActions sx={{ marginTop: '-20px' }}>
@@ -103,7 +107,9 @@ function JobCard({ job, selectedJobFlag }) {
           color="text.secondary"
           gutterBottom
         >
-          16 days ago
+          {diffDays}
+          {' '}
+          days ago
         </Typography>
       </CardActions>
     </Card>
