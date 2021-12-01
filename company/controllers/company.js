@@ -104,7 +104,16 @@ const getAllCompanies = async (req, res) => {
 
     if (all) {
       const companies = await Company.find({});
-      res.status(200).json(companies);
+      const avgReviewMap = await getAvgReviewData(req.headers.authorization);
+      const avgSalaryMap = await getAvgSalaryData(req.headers.authorization);
+
+      const result = companies.map((c) => ({
+        ...avgReviewMap[c._id.toString()],
+        ...avgSalaryMap[c._id.toString()],
+        ...c._doc,
+      }));
+
+      res.status(200).json(result);
       return;
     }
 
