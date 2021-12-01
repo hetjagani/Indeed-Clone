@@ -48,7 +48,7 @@ const bodyValidators = () => [
   body('state').optional().isString(),
   body('country').optional().isString(),
   body('zip').optional().isString(),
-  body('jobPreferences').optional().isArray(),
+  body('jobPreferences').optional().isObject(),
 ];
 
 const [, ...updateValidators] = bodyValidators();

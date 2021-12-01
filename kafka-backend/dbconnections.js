@@ -114,14 +114,14 @@ const getUserConnection = () => {
     state: String,
     country: String,
     zip: String,
-    jobPreferences: {
+    jobPreferences: new mongoose.Schema({
       title: String,
     relocation: String,
     type: String,
     schedule: String,
     pay: String,
     remote: String,
-    },
+    }),
  
   });
 

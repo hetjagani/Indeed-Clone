@@ -11,14 +11,14 @@ const UserSchema = new Schema({
   state: String,
   country: String,
   zip: String,
-  jobPreferences: {
+  jobPreferences: new Schema({
     title: String,
   relocation: String,
   type: String,
   schedule: String,
   pay: String,
   remote: String,
-  }
+  }),
 });
 
 const SalarySchema = new Schema({

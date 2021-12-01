@@ -77,9 +77,9 @@ const JobPreferences = () => {
   const handleChangeReloc = (event) => {
     setJobPreferences({
       ...JobPreference,
-      relocation: event.target.checked,
+      relocation: event.target.value,
     });
-    console.log(event);
+    console.log(event.target.value);
   };
 
   const handleChangePay = (event) => {
@@ -98,52 +98,63 @@ const JobPreferences = () => {
 
   const getbody = () => {
     if (typee.Fulltime === true) {
-      setJobPreferences({ type: JobPreference.type.concat('Full-time, ') });
+      setJobPreferences({ type: 'Full-time' });
     }
     if (typee.Parttime === true) {
-      setJobPreferences({ type: JobPreference.type.concat('Part-time, ') });
+      setJobPreferences({ type: 'Part-time ' });
     }
     if (typee.Contract === true) {
-      setJobPreferences({ type: JobPreference.type.concat('Contract, ') });
+      setJobPreferences({ type: 'Contract ' });
     }
     if (typee.Temporary === true) {
-      setJobPreferences({ type: JobPreference.type.concat('Temporary, ') });
+      setJobPreferences({ type: 'Temporary ' });
     }
     if (typee.Internship === true) {
-      setJobPreferences({ type: JobPreference.type.concat('Internship, ') });
+      setJobPreferences({ type: 'Internship ' });
     }
 
     if (schedulee.hr8 === true) {
-      setJobPreferences({ schedule: JobPreference.schedule.concat('8 hour shift, ') });
+      setJobPreferences({ schedule: '8 hour shift' });
     }
     if (schedulee.hr10 === true) {
-      setJobPreferences({ schedule: JobPreference.schedule.concat('10 hour shift, ') });
+      setJobPreferences({ schedule: '10 hour shift ' });
     }
     if (schedulee.hr12 === true) {
-      setJobPreferences({ schedule: JobPreference.schedule.concat('12 hour shift, ') });
+      setJobPreferences({
+        schedule: '12 hour shift',
+      });
     }
     if (schedulee.Dayshift === true) {
-      setJobPreferences({ schedule: JobPreference.schedule.concat('Dayshift, ') });
+      setJobPreferences({
+        schedule: 'Dayshift ',
+      });
     }
     if (schedulee.Nightshift === true) {
-      setJobPreferences({ schedule: JobPreference.schedule.concat('Nightshift, ') });
+      setJobPreferences({
+        schedule: 'Nightshift ',
+      });
     }
 
     if (remotee.inperson === true) {
-      setJobPreferences({ remote: JobPreference.remote.concat('In person, ') });
+      setJobPreferences({ remote: 'In person ' });
     }
     if (remotee.remote === true) {
-      setJobPreferences({ remote: JobPreference.remote.concat('Remote, ') });
+      setJobPreferences({ remote: 'Remote ' });
     }
 
     if (remotee.hybrid === true) {
-      setJobPreferences({ remote: JobPreference.remote.concat('Hybrid remote, ') });
+      setJobPreferences({
+        remote: 'Hybrid remote ',
+      });
     }
     if (remotee.temp === true) {
-      setJobPreferences({ remote: JobPreference.remote.concat('Temporary remote, ') });
+      setJobPreferences({
+        remote: 'Temporary remote, ',
+      });
     }
   };
   const putUserDetails = async () => {
+    console.log('here');
     await getbody();
     const body = {
       name: user.userDetail.name,
@@ -154,7 +165,6 @@ const JobPreferences = () => {
     };
     console.log('body', body.jobPreferences);
     await putUser(body, user.user.id);
-    getUserDetails();
   };
 
   useEffect(() => {
@@ -353,7 +363,7 @@ const JobPreferences = () => {
               />
             </FormControl>
             <br />
-            <button
+            {/* <button
               className="reviewSubmitButton"
               type="submit"
               style={{
@@ -376,7 +386,7 @@ const JobPreferences = () => {
               }}
             >
               Save
-            </button>
+            </button> */}
             <Button
               type="submit"
               sstyle={{
@@ -472,7 +482,7 @@ const JobPreferences = () => {
               </RadioGroup>
             </FormControl>
             <br />
-            <button
+            {/* <button
               className="reviewSubmitButton"
               type="submit"
               style={{
@@ -489,10 +499,13 @@ const JobPreferences = () => {
                 paddingRight: '1.5rem',
                 textAlign: 'center',
               }}
-              onClick={relocationFunc}
+              onClick={() => {
+                relocationFunc();
+                putUserDetails();
+              }}
             >
               Save
-            </button>
+            </button> */}
             <Button
               className="reviewSubmitButton"
               type="submit"
@@ -674,7 +687,7 @@ const JobPreferences = () => {
                     </FormGroup>
                   </FormControl>
                   <br />
-                  <button
+                  {/* <button
                     className="reviewSubmitButton"
                     type="submit"
                     style={{
@@ -691,10 +704,13 @@ const JobPreferences = () => {
                       paddingRight: '1.5rem',
                       textAlign: 'center',
                     }}
-                    onClick={typeFunc}
+                    onClick={() => {
+                      typeFunc();
+                      putUserDetails();
+                    }}
                   >
                     Save
-                  </button>
+                  </button> */}
                   <Button
                     className="reviewSubmitButton"
                     type="submit"
@@ -795,7 +811,7 @@ const JobPreferences = () => {
                     </FormGroup>
                   </FormControl>
                   <br />
-                  <button
+                  {/* <button
                     className="reviewSubmitButton"
                     type="submit"
                     style={{
@@ -812,10 +828,13 @@ const JobPreferences = () => {
                       paddingRight: '1.5rem',
                       textAlign: 'center',
                     }}
-                    onClick={scheduleFunc}
+                    onClick={() => {
+                      scheduleFunc();
+                      putUserDetails();
+                    }}
                   >
                     Save
-                  </button>
+                  </button> */}
                   <Button
                     className="reviewSubmitButton"
                     type="submit"
@@ -871,7 +890,7 @@ const JobPreferences = () => {
                     />
                   </FormControl>
                   <br />
-                  <button
+                  {/* <button
                     className="reviewSubmitButton"
                     type="submit"
                     style={{
@@ -888,10 +907,13 @@ const JobPreferences = () => {
                       paddingRight: '1.5rem',
                       textAlign: 'center',
                     }}
-                    onClick={payFunc}
+                    onClick={() => {
+                      payFunc();
+                      putUserDetails();
+                    }}
                   >
                     Save
-                  </button>
+                  </button> */}
                   <Button
                     className="reviewSubmitButton"
                     type="submit"
@@ -953,7 +975,7 @@ const JobPreferences = () => {
                         control={(
                           <Checkbox
                             checked={remotee.hybrid}
-                            onChange={(event) => setRemotee({ checked: event.target.checked })}
+                            onChange={(event) => setRemotee({ hybrid: event.target.checked })}
                             name="Hybrid remote"
                           />
                         )}
@@ -963,7 +985,7 @@ const JobPreferences = () => {
                         control={(
                           <Checkbox
                             checked={remotee.inperson}
-                            onChange={(event) => setRemotee({ inperson: event.target.checke })}
+                            onChange={(event) => setRemotee({ inperson: event.target.checked })}
                             name="In person"
                           />
                         )}
@@ -982,7 +1004,7 @@ const JobPreferences = () => {
                     </FormGroup>
                   </FormControl>
                   <br />
-                  <button
+                  {/* <button
                     className="reviewSubmitButton"
                     type="submit"
                     style={{
@@ -999,10 +1021,13 @@ const JobPreferences = () => {
                       paddingRight: '1.5rem',
                       textAlign: 'center',
                     }}
-                    onClick={remoteFunc}
+                    onClick={() => {
+                      remoteFunc();
+                      putUserDetails();
+                    }}
                   >
                     Save
-                  </button>
+                  </button> */}
                   <Button
                     className="reviewSubmitButton"
                     type="submit"
@@ -1022,7 +1047,6 @@ const JobPreferences = () => {
                   </Button>
                   <br />
                   <br />
-                  <hr />
                   <br />
                 </div>
               )}
@@ -1058,28 +1082,6 @@ const JobPreferences = () => {
             </div>
           ) : (
             <div> </div>
-            // <div
-            //   style={{
-            //     position: 'absolute',
-            //     top: '117%',
-            //     left: '8%',
-            //     transform: 'translate(-50%, -50%)',
-            //     border: '1px solid rgb(177 99 0) ',
-            //     width: '35px',
-            //     height: '35px',
-            //     borderRadius: '65px',
-            //     borderColor: 'rgb(177 99 0)',
-            //     display: 'flex',
-            //     backgroundColor: 'rgb(177 99 0)',
-            //     alignItems: 'center',
-            //     textAlign: 'center',
-            //   }}
-            // >
-            //   <div style={{ marginLeft: '4px' }}>
-            //     {' '}
-            //     <ArrowDownwardIcon style={{ color: 'white' }} />
-            //   </div>
-            // </div>
           )}
           <div
             style={{
@@ -1108,7 +1110,29 @@ const JobPreferences = () => {
         >
           We’ll show you fewer jobs that include these details.
         </div>
-
+        <button
+          className="reviewSubmitButton"
+          type="submit"
+          style={{
+            marginTop: '15px',
+            borderRadius: '6.25rem',
+            width: '70px',
+            height: '40px',
+            fontWeight: 'bold',
+            fontColor: 'white',
+            backgroundColor: '#085ff7',
+            border: '#085ff7',
+            cursor: 'pointer',
+            paddingLeft: '1.5rem',
+            paddingRight: '1.5rem',
+            textAlign: 'center',
+          }}
+          onClick={() => {
+            putUserDetails();
+          }}
+        >
+          Save
+        </button>
         <div
           style={{
             height: '90px',
