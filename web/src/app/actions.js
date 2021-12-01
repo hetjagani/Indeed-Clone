@@ -23,3 +23,10 @@ export function logout() {
     type: 'LOGOUT',
   };
 }
+
+export function compamny(payload) {
+  return {
+    type: 'COMPANY',
+    payload,
+  };
+}

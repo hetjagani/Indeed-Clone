@@ -1,10 +1,16 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
+// import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import postCompany from '../../api/company/postCompanydetails';
 
 import CompanySVG from '../../components/svg/CompanySVG';
 import './css/Employeedetails.css';
+
+import { compamny } from '../../app/actions';
 
 const industries = [
   {
@@ -55,43 +61,92 @@ const industries = [
 
 const sizes = [
   {
-    value: '1 to 49',
+    value: 49,
     label: '1 to 49',
   },
   {
-    value: '50 to 249',
+    value: 249,
     label: '50 to 249',
   },
   {
-    value: '250 to 499',
+    value: 499,
     label: '250 to 499',
   },
   {
-    value: '500 to 749',
+    value: 749,
     label: '500 to 749',
   },
   {
-    value: '750 to 999',
+    value: 999,
     label: '750 to 999',
   },
   {
-    value: '1000+',
+    value: 2000,
     label: '1000+',
   },
 ];
 const Companydetails = () => {
   const history = useHistory();
+
+  const dispatch = useDispatch();
+  // const user = useSelector((state) => state.user);
   const [ceo, setCeo] = useState('');
-  const [industry, setIndustry] = useState('');
+  const [industry, setIndustry] = useState('Business Operations & Management');
   const [headquarters, setHeadquarters] = useState('');
   const [foundedOn, setFoundedOn] = useState('');
   const [revenue, setRevenue] = useState('');
-  const [size, setSize] = useState('');
+  const [size, setSize] = useState(49);
   const [website, setWebsite] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const saveDetails = () => {
-    history.push('/companyValues');
+
+  function changeDateFormat(inputDate) { // expects Y-m-d
+    const splitDate = inputDate.split('-');
+    if (splitDate.count === 0) {
+      return null;
+    }
+
+    const year = splitDate[0];
+    const month = splitDate[1];
+    const day = splitDate[2];
+
+    return `${month}/${day}/${year}`;
+  }
+
+  const saveDetails = async (e) => {
+    e.preventDefault();
+    const formattedDOB = String(changeDateFormat(foundedOn));
+    const body = {
+      name: companyName,
+      ceo: ceo,
+      headquarters: headquarters,
+      revenue: revenue,
+      website: website,
+      foundedOn: formattedDOB,
+      industry: { name: industry },
+      size: size,
+      description: {},
+      about: '',
+      workCulture: '',
+      mission: '',
+      values: '',
+    };
+
+    dispatch(compamny({
+      name: companyName,
+      ceo: ceo,
+      headquarters: headquarters,
+      revenue: revenue,
+      website: website,
+      foundedOn: formattedDOB,
+      industry: { name: industry },
+      size: size,
+    }));
+
+    console.log('body', body);
+    await postCompany(body);
+    history.push('/employee/companyValues');
   };
+
   return (
     <form>
       <div
@@ -226,6 +281,7 @@ const Companydetails = () => {
               <label className="employeeLabel">
                 Industry
               </label>
+              <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               <select
                 className="employeeInput"
                 select
@@ -248,6 +304,7 @@ const Companydetails = () => {
               <label className="employeeLabel">
                 Revenue
               </label>
+              <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               <input
                 type="Number"
                 value={revenue}
@@ -260,6 +317,7 @@ const Companydetails = () => {
               <label className="employeeLabel">
                 Size of company
               </label>
+              <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               <select
                 className="employeeInput"
                 select

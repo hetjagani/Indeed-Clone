@@ -1,11 +1,17 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import { styled } from '@mui/material/styles';
+
+import { useSelector } from 'react-redux';
 import Stack from '@mui/material/Stack';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
+import postEmployers from '../../api/company/postEmployeeDetails';
+// import getCompanyData from '../../api/company/getCompanyData';
+import getCompanies from '../../api/company/get';
 import EmployeSVG from '../../components/svg/EmployeSVG';
 import './css/Employeedetails.css';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
@@ -33,12 +39,78 @@ const roles = [
 ];
 
 const Employeedetails = () => {
+  const history = useHistory();
+  const user = useSelector((state) => state.user);
+
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [otherRole, setOtherRole] = useState('');
   const [address, setAddress] = useState('');
   const [dob, setDob] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [companies, setCompanies] = useState([]);
+
+  function changeDateFormat(inputDate) { // expects Y-m-d
+    const splitDate = inputDate.split('-');
+    if (splitDate.count === 0) {
+      return null;
+    }
+
+    const year = splitDate[0];
+    const month = splitDate[1];
+    const day = splitDate[2];
+
+    return `${month}/${day}/${year}`;
+  }
+
+  const saveDetails = async (e) => {
+    e.preventDefault();
+    const formattedDOB = String(changeDateFormat(dob));
+    if (companyName === '') {
+      const body = {
+        id: user.user.id,
+        name: name,
+        role: role,
+        address: address,
+        dateOfBirth: formattedDOB,
+      };
+      console.log('body', body);
+      await postEmployers(body);
+      history.push('/employee/company');
+    } else {
+      const queryParams = { page: 1, limit: 10 };
+      const response = await getCompanies(queryParams);
+      if (!response) {
+        return;
+      }
+      setCompanies('companies', response.data);
+      console.log(companies);
+      console.log('res', response);
+      let companyID = null;
+      // eslint-disable-next-line array-callback-return
+      response.data.nodes.map((company) => {
+        if (company.name === companyName) {
+          // eslint-disable-next-line no-underscore-dangle
+          companyID = company._id;
+        }
+      });
+      if (!companyID) {
+        return;
+      }
+      const body = {
+        id: user.user.id,
+        name: name,
+        role: role,
+        address: address,
+        dateOfBirth: formattedDOB,
+        companyId: companyID,
+      };
+      console.log('body', body);
+      await postEmployers(body);
+      history.push('/employee/companyValues');
+    }
+  };
+
   return (
     <form>
       <div
@@ -160,22 +232,21 @@ const Employeedetails = () => {
                   <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                     <ArrowDropDownIcon fontSize="10px" />
                   </div>
-            )}
+                )}
               />
             </div>
-            {role === 'Other'
-              ? (
-                <div className="employeeform">
-                  <input
-                    placeholder="Enter role"
-                    type="text"
-                    value={otherRole}
-                    onChange={(e) => setOtherRole(e.target.value)}
-                    required
-                    className="employeeInput"
-                  />
-                </div>
-              ) : null}
+            {role === 'Other' ? (
+              <div className="employeeform">
+                <input
+                  placeholder="Enter role"
+                  type="text"
+                  value={otherRole}
+                  onChange={(e) => setOtherRole(e.target.value)}
+                  required
+                  className="employeeInput"
+                />
+              </div>
+            ) : null}
             <div className="employeeform">
               <label className="employeeLabel">Your address</label>
               <input
@@ -202,14 +273,13 @@ const Employeedetails = () => {
             </div>
             <div className="employeeform">
               <label className="employeeLabel">
-                Your Company name
-                <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
+                Company name
               </label>
               <input
                 type="text"
                 value={companyName}
+                placeholder="Keep empty if company is not registered"
                 onChange={(e) => setCompanyName(e.target.value)}
-                required
                 className="employeeInput"
               />
             </div>
@@ -266,7 +336,11 @@ const Employeedetails = () => {
             </button>
           </div>
           <div>
-            <button type="submit" className="employeeButton">
+            <button
+              onClick={saveDetails}
+              type="submit"
+              className="employeeButton"
+            >
               Save Changes
             </button>
           </div>
