@@ -229,14 +229,11 @@ const generalGetSalaries = async (req, res) => {
     }
 
     if (title && title !== '') {
-      searchObj.title = { $regex: title };
+      searchObj.title = { $regex: `(?i)${title}` };
     }
 
     if (all && all == 'true') {
       const salaryList = await Salary.aggregate([
-        {
-          $match: searchObj,
-        },
         {
           $lookup: {
             from: 'users',
@@ -293,7 +290,6 @@ const generalGetSalaries = async (req, res) => {
       });
 
       result.nodes = filteredSalaries.slice(offset, limit + offset);
-
       result.nodes = result.nodes.sort((a, b) => b.salary - a.salary);
 
       res.status(200).json(result);
