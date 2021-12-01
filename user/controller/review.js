@@ -7,7 +7,6 @@ const { Types } = require('mongoose');
 
 const getUserReviews = async (req, res) => {
   try {
-    console.log('entered');
     const { id } = req.params;
     const { page, limit, sortBy, sortOrder, isFeatured } = req.query;
 
@@ -26,19 +25,16 @@ const getUserReviews = async (req, res) => {
       userMap.set(String(ele._id), ele);
     });
 
-    console.log(allUser);
 
     result.data.nodes.forEach((ele) => {
       ele.user = userMap.get(String(ele.userId));
     });
 
-    console.log(result.data);
     const allCompany = await axios.get(`${global.gConfig.company_url}/companies`, {
       params: { all: 'true' },
       headers: { Authorization: req.headers.authorization },
     });
 
-    console.log(allCompany.data);
     const companyMap = new Map();
 
     allCompany.data.forEach((ele) => {
