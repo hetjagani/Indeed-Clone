@@ -4,13 +4,16 @@ import React from 'react';
 function CustomAutocomplete({
   value,
   setValue,
+  className = '',
   options,
   endAdornmentIcon,
   placeholder = '',
   sx,
+  variant = 'filled',
 }) {
   return (
     <Autocomplete
+      className={className}
       value={value}
       onChange={(_, newValue) => {
         setValue(newValue);
@@ -28,9 +31,10 @@ function CustomAutocomplete({
       disableClearable
       renderInput={(params) => (
         <TextField
+          className={className}
           rows={1}
           multiline
-          variant="filled"
+          variant={variant}
           onChange={(e) => setValue(e.target.value)}
           sx={{ textAlign: 'center' }}
           {...params}

@@ -5,11 +5,13 @@ import { Container } from 'react-bootstrap';
 
 import './css/FindSalary.css';
 import searchSalary from '../../api/salary/searchSalary';
-// import SearchSalary from './SearchSalary';
+import SearchSalary from './SearchSalary';
+import TopSalary from './TopSalary';
 
 const Findsalary = () => {
   const [location, setLocation] = useState('');
   const [title, setTitle] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [salaryData, setSalaryData] = useState([]);
   const [searchFlag, setSearchFlag] = useState(true);
   const [topSalaries, setTopSalaries] = useState([]);
@@ -20,17 +22,13 @@ const Findsalary = () => {
   useEffect(() => {
     searchSalary(payload).then((response) => {
       setTopSalaries(response);
-      console.log(topSalaries);
     });
   }, [searchFlag]);
   const search = (event) => {
     event.preventDefault();
-    console.log('payload', payload);
     searchSalary(payload).then((response) => {
       setSearchFlag(false);
-      console.log('search salary', response);
       setSalaryData(response);
-      console.log(salaryData);
     });
   };
   return (
@@ -98,6 +96,8 @@ const Findsalary = () => {
         />
         {/* <SearchSalary salary={topSalaries} /> */}
       </div>
+      <SearchSalary salary={topSalaries} />
+      {searchFlag ? <></> : <TopSalary />}
     </Container>
   );
 };

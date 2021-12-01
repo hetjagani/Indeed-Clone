@@ -3,16 +3,15 @@ import axiosInstance from '../../config/axiosConfig';
 
 const token = getCookie('token');
 
-const searchSalary = (payload) => axiosInstance
-  .get('/salaries', {
+const addReview = (payload) => axiosInstance
+  .post('/reviews', payload, {
     headers: {
       Authorization: token,
     },
-    params: payload,
   })
-  .then((response) => response.data.nodes)
+  .then((response) => response)
   .catch((err) => {
-    console.log(err);
+    console.log('error', err);
   });
 
-export default searchSalary;
+export default addReview;

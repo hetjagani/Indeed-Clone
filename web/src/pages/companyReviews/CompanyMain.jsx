@@ -13,11 +13,13 @@ import Snapshot from './snapshot/Snapshot';
 import AboutCompany from './about/AboutCompany';
 import SalariesMain from './salaries/SalariesMain';
 import ReviewsMain from './reviews/ReviewsMain';
+import CompanyJobsMain from './companyJobs/CompanyJobsMain';
 
 function CompanyMain({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
   const [salaries, setSalaries] = useState({});
   const [reviews, setReviews] = useState([]);
+
   const getCompanyDetails = async () => {
     const companyData = await getCompanyData(match.params.id);
     if (!companyData) return;
@@ -168,9 +170,25 @@ function CompanyMain({ match }) {
           <Route path={`${match.path}/about`} component={AboutCompany} />
           <Route
             path={`${match.path}/reviews`}
-            component={() => <ReviewsMain reviews={reviews} />}
+            component={() => (
+              <ReviewsMain
+                reviews={reviews}
+                compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails && companyDetails.name ? companyDetails.name : null}
+                getCompanyReviews={getCompanyReviews}
+              />
+            )}
           />
-          <Route path={`${match.path}/salaries`} component={() => <SalariesMain salaries={salaries} />} />
+          <Route
+            path={`${match.path}/salaries`}
+            component={() => (
+              <SalariesMain
+                salaries={salaries}
+                compId={match && match.params && match.params.id ? match.params.id : null}
+              />
+            )}
+          />
+          <Route path={`${match.path}/jobs`} component={CompanyJobsMain} />
         </div>
       </div>
     </Container>

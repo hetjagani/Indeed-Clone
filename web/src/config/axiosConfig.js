@@ -14,23 +14,24 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    console.log(err);
     if (!err.response) {
       toast.error('Network error!');
     }
     if (err && err.response && err.response.status === 401) {
-      toast.error('Unauthorized! Please login and try again.');
-      return window.location.href = '/login';
+      toast.error('Unauthorized request!');
+      return;
     }
     if (err && err.response && err.response.status === 403) {
       toast.error(err.response.data.message);
-      return window.location.href = '/login';
+      return;
     }
     if (err && err.response && err.response.data && err.response.data.error) {
       toast.error(err.response.data.error);
       return;
     }
-    if (err && err.response) toast.error(err.response.data.message);
+    if (err && err.response && err.response.data && err.response.data.message) {
+      toast.error(err.response.data.message);
+    }
   },
 );
 

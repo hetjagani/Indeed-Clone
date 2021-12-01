@@ -12,11 +12,19 @@ function ReviewsMain(props) {
   const [reviewFilter, setReviewFilter] = useState(1);
   // const [reviewFilter, setReviewFilter] = useState(1);
   const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
-
+  const handleClose = () => {
+    props.getCompanyReviews();
+    setIsOpen(false);
+  };
   return (
     <>
-      <AddReviewModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} />
+      <AddReviewModal
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+        isOpen={isOpen}
+        compId={props && props.compId ? props.compId : null}
+        companyName={props && props.companyName ? props.companyName : null}
+      />
       <div
         style={{
           display: 'flex',
@@ -107,9 +115,14 @@ function ReviewsMain(props) {
         </div>
       </div>
 
-      <p style={{
-        fontSize: '.875rem', lineHeight: '1.5', color: '#595959', marginLeft: '5px', marginTop: '30px',
-      }}
+      <p
+        style={{
+          fontSize: '.875rem',
+          lineHeight: '1.5',
+          color: '#595959',
+          marginLeft: '5px',
+          marginTop: '30px',
+        }}
       >
         Found
         {' '}
@@ -117,12 +130,14 @@ function ReviewsMain(props) {
         {' '}
         reviews matching the search
       </p>
-      {(props && props.reviews && props.reviews.length > 0) ? props.reviews.map((review) => (
-        <div>
-          <RatingsCard review={review} />
-          <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
-        </div>
-      )) : null }
+      {props && props.reviews && props.reviews.length > 0
+        ? props.reviews.map((review) => (
+          <div>
+            <RatingsCard review={review} />
+            <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
+          </div>
+        ))
+        : null}
     </>
   );
 }
