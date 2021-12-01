@@ -4,9 +4,14 @@ import StarRatings from 'react-star-ratings';
 import FlagIcon from '@mui/icons-material/Flag';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Button from '../../../components/Button';
+import updateReview from '../../../api/review/updateReview';
 
 function RatingsCard(props) {
   const [helpfulReview, setHelpfulReview] = useState(-1);
+  const updateUserReview = async (reviewObj, flag) => {
+    await updateReview(reviewObj, flag);
+    await props.getCompanyReviews();
+  };
 
   return (
     <>
@@ -32,10 +37,10 @@ function RatingsCard(props) {
               backgroundRepeat: 'repeat-x',
             }}
           >
-            {props && props.review ? props.review.overallRating : null}
+            {props && props.review ? props.review.overallRating.toFixed(1) : null}
           </span>
           <StarRatings
-            rating={4.5}
+            rating={props && props.review ? props.review.overallRating : 0}
             starRatedColor="#9D2B6B"
             numberOfStars={5}
             name="rating"
@@ -53,16 +58,34 @@ function RatingsCard(props) {
             width: '100%',
           }}
         >
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+          <span style={{ fontSize: '1.1rem' }}>
             {props && props.review ? props.review.review : null}
           </span>
           <span style={{ fontSize: '0.8rem', color: '#767676' }}>
-            Customer service representative (Former Employee) - San Jose, CA - November 21, 2021
+            {props && props.review && props.review.user ? props.review.user.name : null}
+            {' '}
+            -
+            {' '}
+            {props && props.review && props.review.user ? props.review.user.city : null}
+            ,
+            {' '}
+            {props && props.review && props.review.user ? props.review.user.state : null}
+            -
+            {' '}
+            {props && props.review
+              ? new Date(props.review.reviewDate).toUTCString().slice(0, 16)
+              : null}
           </span>
           <span style={{ marginTop: '20px' }}>
             {props && props.review ? props.review.summary : null}
           </span>
-
+          <span style={{ marginTop: '20px' }}>
+            {props && props.review ? props.review.helpful : null}
+            {' '}
+            {' '}
+            {' '}
+            Users Found it userful
+          </span>
           <span
             style={{
               fontSize: '.875rem',
@@ -78,7 +101,7 @@ function RatingsCard(props) {
           <div style={{ display: 'flex', marginTop: '10px', justifyContent: 'space-between' }}>
             <div>
               <Button
-                onClick={() => setHelpfulReview(1)}
+                onClick={async () => { await updateUserReview(props.review, 'up'); setHelpfulReview(1); }}
                 label={`Yes ${helpfulReview === 1 ? '1' : ''}`}
                 style={{
                   width: '50px',
@@ -88,7 +111,7 @@ function RatingsCard(props) {
                 }}
               />
               <Button
-                onClick={() => setHelpfulReview(0)}
+                onClick={async () => { await updateUserReview(props.review, 'down'); setHelpfulReview(0); }}
                 label={`No ${helpfulReview === 0 ? '1' : ''}`}
                 style={{
                   marginLeft: '20px',

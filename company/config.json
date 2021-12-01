@@ -15,6 +15,14 @@
   "test": {
     "database_conn": "mongodb://indeedadmin:indeedadminpass@localhost:27017/company_test",
     "auth_url": "http://localhost:7000",
-    "kafka_host": "localhost:9092"
+    "review_url": "http://localhost:7004",
+    "user_url": "http://localhost:7002",
+    "application_url": "http://localhost:7003",
+    "photos_url": "http://localhost:7005",
+    "kafka_host": "kafka:9092",
+    "s3_access_key": "AKIAVEYWO6SSQC5AZUOE",
+    "s3_secret_key": "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",
+    "s3_region": "us-east-1",
+    "s3_bucket_name": "indeed-media"
   }
 }

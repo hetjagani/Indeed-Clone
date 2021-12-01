@@ -10,9 +10,6 @@ const searchSalary = (payload) => axiosInstance
     },
     params: payload,
   })
-  .then((response) => response.data.nodes)
-  .catch((err) => {
-    console.log(err);
-  });
+  .then((response) => response);
 
 export default searchSalary;

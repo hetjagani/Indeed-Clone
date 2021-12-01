@@ -27,7 +27,17 @@ const getAllReviews = async (req, res) => {
     }
 
     const sortObj = {};
-    sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    if(sortBy === 'reviewDate'){
+      sortObj[sortBy] = sortOrder === 'desc' ? 1 : -1;
+    }else{
+      sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    }
+
+    if (req.query.all == 'true') {
+      const allReviews = await Review.find(queryObj).sort(sortObj);
+      res.status(200).json(allReviews);
+      return;
+    }
 
     const reviewCount = await Review.count(queryObj);
 

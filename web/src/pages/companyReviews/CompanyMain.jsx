@@ -19,6 +19,7 @@ function CompanyMain({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
   const [salaries, setSalaries] = useState({});
   const [reviews, setReviews] = useState([]);
+  const [reviewFilter, setReviewFilter] = useState(2);
 
   const getCompanyDetails = async () => {
     const companyData = await getCompanyData(match.params.id);
@@ -44,8 +45,8 @@ function CompanyMain({ match }) {
     setSalaries(industrySalaryMap);
   };
 
-  const getCompanyReviews = async () => {
-    const companyReviews = await getReviewsOfCompany(match.params.id);
+  const getCompanyReviews = async (sortBy) => {
+    const companyReviews = await getReviewsOfCompany(match.params.id, sortBy);
     if (!companyReviews) return;
     setReviews(companyReviews);
   };
@@ -103,7 +104,9 @@ function CompanyMain({ match }) {
                 marginTop: '-20px',
               }}
             >
-              <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>61</p>
+              <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>
+                {companyDetails ? companyDetails.avgHappinessScore : 'NA'}
+              </p>
               {' '}
               <hr
                 style={{
@@ -125,10 +128,14 @@ function CompanyMain({ match }) {
                   marginRight: '10px',
                 }}
               >
-                4.2
+                {companyDetails && companyDetails.overallRating
+                  ? companyDetails.overallRating
+                  : null}
               </p>
               <StarRatings
-                rating={4.2}
+                rating={companyDetails && companyDetails.overallRating
+                  ? companyDetails.overallRating
+                  : null}
                 starRatedColor="#9D2B6B"
                 numberOfStars={5}
                 name="rating"
@@ -172,6 +179,8 @@ function CompanyMain({ match }) {
             path={`${match.path}/reviews`}
             component={() => (
               <ReviewsMain
+                reviewFilter={reviewFilter}
+                setReviewFilter={setReviewFilter}
                 reviews={reviews}
                 compId={match && match.params && match.params.id ? match.params.id : null}
                 companyName={companyDetails && companyDetails.name ? companyDetails.name : null}

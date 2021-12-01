@@ -84,7 +84,6 @@ const Login = () => {
       })
       .catch((err) => {
         dispatch(loginFailure(err));
-        console.log(err);
       });
   };
 

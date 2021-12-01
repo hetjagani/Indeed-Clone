@@ -9,7 +9,6 @@ import RatingsCard from './RatingsCard';
 
 function ReviewsMain(props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [reviewFilter, setReviewFilter] = useState(1);
   // const [reviewFilter, setReviewFilter] = useState(1);
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => {
@@ -65,11 +64,11 @@ function ReviewsMain(props) {
         }}
       >
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Filter by</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Sort by</span>
           <div style={{ display: 'flex', marginTop: '20px' }}>
             <button
-              onClick={() => setReviewFilter(1)}
-              className={`ceoButtonHover ${reviewFilter === 1 ? 'reviewFilterButtonSelected' : ''}`}
+              onClick={async () => { await props.getCompanyReviews('helpful'); props.setReviewFilter(1); }}
+              className={`ceoButtonHover ${props.reviewFilter === 1 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
                 borderRadius: '10px',
@@ -82,8 +81,8 @@ function ReviewsMain(props) {
               Helpfulness
             </button>
             <button
-              onClick={() => setReviewFilter(2)}
-              className={`ceoButtonHover ${reviewFilter === 2 ? 'reviewFilterButtonSelected' : ''}`}
+              onClick={() => { props.setReviewFilter(2); props.getCompanyReviews('overallRating'); }}
+              className={`ceoButtonHover ${props.reviewFilter === 2 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
                 width: '220px',
@@ -96,8 +95,8 @@ function ReviewsMain(props) {
               Rating
             </button>
             <button
-              onClick={() => setReviewFilter(3)}
-              className={`ceoButtonHover ${reviewFilter === 3 ? 'reviewFilterButtonSelected' : ''}`}
+              onClick={async () => { await props.getCompanyReviews('reviewDate'); props.setReviewFilter(3); }}
+              className={`ceoButtonHover ${props.reviewFilter === 3 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
                 borderTopRightRadius: '10px',
@@ -126,14 +125,14 @@ function ReviewsMain(props) {
       >
         Found
         {' '}
-        <span style={{ fontWeight: 'bold' }}>24,308</span>
+        <span style={{ fontWeight: 'bold' }}>{props && props.reviews ? props.reviews.length : null}</span>
         {' '}
         reviews matching the search
       </p>
       {props && props.reviews && props.reviews.length > 0
         ? props.reviews.map((review) => (
           <div>
-            <RatingsCard review={review} />
+            <RatingsCard review={review} getCompanyReviews={props.getCompanyReviews} />
             <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
           </div>
         ))

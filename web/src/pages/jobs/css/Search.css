@@ -32,6 +32,7 @@
   border-radius: 0.5rem;
 }
 .option:hover {
+  cursor: pointer;
   background-color: #d0ccc8;
 }
 .optionIcon {

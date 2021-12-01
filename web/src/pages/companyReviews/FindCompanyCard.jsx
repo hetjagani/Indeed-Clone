@@ -4,7 +4,7 @@ import StarRatings from 'react-star-ratings';
 function FindCompanyCard() {
   return (
     <div style={{
-      flex: '0 1 calc(33% - 1em)', display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '5px',
+      flex: '0 1 calc(33% - 1em)', display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '-20px',
     }}
     >
       <div style={{ display: 'flex', marginTop: '50px' }}>

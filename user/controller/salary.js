@@ -43,24 +43,17 @@ const createSalary = async (req, res) => {
   }
 
   if (req.body.companyId === null || req.body.companyId === undefined) {
-    return res
-      .status(404)
-      .send({ status: 400, message: 'Company Id Not Found' });
+    return res.status(404).send({ status: 400, message: 'Company Id Not Found' });
   }
 
   let company;
   try {
-    company = await axios.get(
-      `${global.gConfig.company_url}/companies/${req.body.companyId}`,
-      {
-        headers: { authorization: req.headers.authorization },
-      },
-    );
+    company = await axios.get(`${global.gConfig.company_url}/companies/${req.body.companyId}`, {
+      headers: { authorization: req.headers.authorization },
+    });
   } catch (err) {
     if (err.isAxiosError && err.response.status === 404) {
-      return res
-        .status(404)
-        .send({ status: 400, message: 'Company Does not exist!' });
+      return res.status(404).send({ status: 400, message: 'Company Does not exist!' });
     }
   }
 
@@ -100,12 +93,10 @@ const updateSalary = async (req, res) => {
   let company;
   if (req.body.companyId && req.body.companyId !== null) {
     try {
-      company = await axios.get(
-        `${global.gConfig.company_url}/companies/${req.body.companyId}`,
-        {
-          headers: { authorization: req.headers.authorization },
-        },
-      );
+      company = await axios.get(`${global.gConfig.company_url}/companies/${req.body.companyId}`, {
+        headers: { authorization: req.headers.authorization },
+      });
+      console.log(company);
     } catch (err) {
       console.log(err);
       if (err.isAxiosError && err.response.status === 404) {
@@ -219,7 +210,7 @@ const generalGetSalaryById = async (req, res) => {
 const generalGetSalaries = async (req, res) => {
   try {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
-    const { companyId, userId, city, state, company, title } = req.query;
+    const { companyId, userId, city, state, company, title, all } = req.query;
 
     const searchObj = {};
     if (companyId && companyId !== '') {
@@ -242,7 +233,27 @@ const generalGetSalaries = async (req, res) => {
       searchObj.title = { $regex: title };
     }
 
-    
+    if (all && all == 'true') {
+      const salaryList = await Salary.aggregate([
+        {
+          $match: searchObj,
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'user',
+          },
+        },
+        {
+          $unwind: '$user',
+        },
+      ]);
+      res.status(200).json(salaryList);
+      return;
+    }
+
     const salaryList = await Salary.aggregate([
       {
         $match: searchObj,

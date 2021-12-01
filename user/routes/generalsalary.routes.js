@@ -58,6 +58,7 @@ router.get('/:id', generalGetSalaryById);
  * @param {String} city.query
  * @param {String} state.query
  * @param {String} company.query
+ * @param {boolean} all.query
  * @returns {Salary.model} 200 - Get User Salary
  */
 router.get('/', generalGetSalaries);

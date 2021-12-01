@@ -21,14 +21,20 @@ const Findsalary = () => {
   };
   useEffect(() => {
     searchSalary(payload).then((response) => {
-      setTopSalaries(response);
+      if (!response) {
+        return;
+      }
+      setTopSalaries(response.data.nodes);
     });
   }, [searchFlag]);
   const search = (event) => {
     event.preventDefault();
     searchSalary(payload).then((response) => {
+      if (!response) {
+        return;
+      }
       setSearchFlag(false);
-      setSalaryData(response);
+      setSalaryData(response.data.nodes);
     });
   };
   return (
@@ -94,7 +100,6 @@ const Findsalary = () => {
             width: '712px',
           }}
         />
-        {/* <SearchSalary salary={topSalaries} /> */}
       </div>
       <SearchSalary salary={topSalaries} />
       {searchFlag ? <></> : <TopSalary />}

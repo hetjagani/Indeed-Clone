@@ -124,7 +124,6 @@ services:
     restart: unless-stopped
     networks:
       - indeed-net
-
   user:
     depends_on:
       - mongodb

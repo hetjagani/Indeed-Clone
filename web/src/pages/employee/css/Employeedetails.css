@@ -1,0 +1,60 @@
+.employeeLabel{
+    font-weight: 700;
+    color: rgb(45, 45, 45);
+    font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans, Roboto, Noto, sans-serif;
+    line-height: '1.5';
+    font-size: 1rem;
+}
+
+.employeeInput {
+   height: 40px;
+   border-radius: 0.5rem;
+   font-size: 16px;
+   margin-top: 10px;
+   font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans, Roboto, Noto, sans-serif;
+}
+
+.employeeInput:focus {
+    border-color: #2557a7;
+  border-bottom: 5px solid #2557a7;
+}
+.employeeform{
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: flex-start;
+    width: 100%;
+    padding-bottom: 2rem;
+}
+
+.employeeButton {
+    height:44px;
+    width:160px;
+    background-color: #2557a7;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans, Roboto, Noto, sans-serif;
+    border: 1px solid #2557a7;
+    border-radius: 0.5rem;
+    padding:10px;
+}
+
+.employeeButton:hover {
+    background-color: #1c417d;
+}
+
+.employeeBack {
+    height:44px;
+    width: 106px;
+    color: #2557a7;
+    border-radius: 0.5rem;
+    border: 1px solid #949494;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: Noto Sans, Helvetica Neue, Helvetica, Arial, Liberation Sans, Roboto, Noto, sans-serif;
+}
+
+.employeeBack:hover {
+    background-color: #d5e2f6;
+}

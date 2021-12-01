@@ -12,16 +12,17 @@ const whatFilter = [
 ];
 
 const whereFilter = [
-  { title: 'San Jose' },
-  { title: 'San Francisco' },
-  { title: 'Sunnyvale' },
-  { title: 'Santa Clara' },
-  { title: 'Sacramento' },
-  { title: 'California' },
-  { title: 'Fremont' },
-  { title: 'Los Angeles' },
-  { title: 'Oakland' },
-  { title: 'Las Vegas' },
+  { title: 'San Jose, CA' },
+  { title: 'San Francisco, CA' },
+  { title: 'Sunnyvale, CA' },
+  { title: 'Santa Clara, CA' },
+  { title: 'Sacramento, CA' },
+  { title: 'Fremont, CA' },
+  { title: 'Los Angeles, CA' },
+  { title: 'Oakland, CA' },
+  { title: 'Las Vegas, NV' },
+  { title: 'Reno, NV' },
+  { title: 'Any location' },
 ];
 
 const datePostedFilter = [
@@ -29,6 +30,7 @@ const datePostedFilter = [
   { title: 'Last 3 days' },
   { title: 'Last 7 days' },
   { title: 'Last 14 days' },
+  { title: 'Any date' },
 ];
 
 const jobTypeFilter = [

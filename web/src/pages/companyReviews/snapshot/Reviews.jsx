@@ -32,7 +32,20 @@ function Reviews(props) {
           }}
         >
           <span style={{ fontSize: '0.88rem', lineHeight: '1.5', color: '#595959' }}>
-            Retail Associate in San Jose, CA
+            {props.reviews && props.reviews.length > 0 && props.reviews[0].user
+              ? props.reviews[0].user.name
+              : null}
+            {' '}
+            in
+            {' '}
+            {props.reviews && props.reviews.length > 0 && props.reviews[0].user
+              ? props.reviews[0].user.city
+              : null}
+            ,
+            {' '}
+            {props.reviews && props.reviews.length > 0 && props.reviews[0].user
+              ? props.reviews[0].user.state
+              : null}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', marginTop: '1px' }}>
             <span style={{ fontWeight: 'bold', marginRight: '5px' }}>

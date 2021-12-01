@@ -466,7 +466,11 @@ export default function AddReviewModal({
                     What do you think of the CEO?
                   </Typography>
                   <p style={{ fontWeight: 'bold', color: '#666' }}>
-                    Do you approve of JCPenney&apos;s CEO?
+                    Do you approve of
+                    {' '}
+                    {companyName}
+                    {' '}
+                    &apos;s CEO?
                     {' '}
                   </p>
                   <div
