@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable react/jsx-no-duplicate-props */
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -306,6 +307,23 @@ function ModalDetailsPage2({ compId, handleClose }) {
           ) : null}
 
           <hr style={{ marginTop: '35px' }} />
+          {/* <button
+            type=""
+            onClick={()=>}
+            style={{
+              backgroundColor: '#2557a7',
+              border: 0,
+              color: 'white',
+              marginTop: '25px',
+              borderRadius: '10px',
+              width: '245px',
+              height: '60px',
+              fontWeight: 'bold',
+              fontSize: 'large',
+            }}
+          >
+            Next
+          </button> */}
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button
               type="submit"
