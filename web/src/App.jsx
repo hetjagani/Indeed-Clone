@@ -32,8 +32,8 @@ function App() {
           {/* <Route path="/cmp/:id" component={withAuth(CompanyProfile, 'any', true)} /> */}
           <Route path="/salary" component={withAuth(Salary, 'any', true)} />
           <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
-          <Route path="/company" component={withAuth(Companydetails, 'any', true)} />
-          <Route path="/companyValues" component={withAuth(CompanyValues, 'any', true)} />
+          <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
+          <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
         </Switch>
       </Router>
     </>
