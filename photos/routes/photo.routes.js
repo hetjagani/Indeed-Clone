@@ -46,10 +46,11 @@ router.get('/:id', getPhotoById);
  * Get Paginated results of Photos(page, limit, userId, companyId)
  * @route GET /photos/
  * @group Photo
- * @param {string} page.query.required
- * @param {string} limit.query.required
- * @param {string} userId.query.required
- * @param {string} companyId.query.required
+ * @param {string} page.query
+ * @param {string} limit.query
+ * @param {string} userId.query
+ * @param {string} companyId.query
+ * @param {boolean} isFeatured.query
  * @returns {array} 200 - [Array of Photo Objects based on Query Params]
  * @returns {Error} 500 - {error: Internal Server Error}
  */

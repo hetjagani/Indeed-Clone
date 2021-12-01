@@ -58,3 +58,14 @@
 .employeeBack:hover {
     background-color: #d5e2f6;
 }
+
+.companyradiodiv{
+  width: 250px;
+  height: 40px;
+  border-radius: 0.5rem;
+  border: 1px solid #909090;
+  background-color: #fff;
+  padding: 2px;
+  padding-left: 5px;
+  margin: 5px 0 5px 0;
+}

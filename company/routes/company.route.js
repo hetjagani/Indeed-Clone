@@ -66,6 +66,7 @@ const bodyValidators = () => [
  * @param {integer} page.query
  * @param {integer} limit.query
  * @param {string} q.query
+ * @param {string} city.query
  * @group Company
  * @security JWT
  * @returns {Array.<Company>} 200 - List of company info
