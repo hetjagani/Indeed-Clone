@@ -43,6 +43,29 @@ const JobPreferences = () => {
   const [pay, setPay] = useState(true);
   const [remote, setRemote] = useState(true);
 
+  const [typee, setTypee] = useState({
+    Fulltime: false,
+    Parttime: false,
+    Contract: false,
+    Temporary: false,
+    Internship: false,
+  });
+
+  const [schedulee, setSchedulee] = useState({
+    hr8: false,
+    hr10: false,
+    hr12: false,
+    Dayshift: false,
+    Nightshift: false,
+  });
+
+  const [remotee, setRemotee] = useState({
+    remote: false,
+    hybrid: false,
+    inperson: false,
+    temp: false,
+  });
+
   const handleChangetitle = (event) => {
     setJobPreferences({
       ...JobPreference,
@@ -564,7 +587,7 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.type}
+                            checked={typee.Fulltime}
                             onChange={handleChangeType}
                             name="Full-time"
                           />
