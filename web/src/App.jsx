@@ -13,6 +13,8 @@ import FindSalary from './pages/salaries/Findsalary';
 import Employeedetails from './pages/employee/Employeedetails';
 import Companydetails from './pages/employee/Companydetails';
 import CompanyValues from './pages/employee/CompanyValues';
+import Jobpost from './pages/employee/Jobpost';
+import Jobdescription from './pages/employee/Jobdescription';
 import EmployersMain from './pages/employers/EmployersMain';
 
 // Config / other files
@@ -30,6 +32,8 @@ function App() {
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
           <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
+          <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
+          <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
           <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
