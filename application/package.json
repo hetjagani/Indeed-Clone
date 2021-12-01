@@ -29,7 +29,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^2.3.0",
     "password-validator": "^5.1.1",
-    "u-server-utils": "^1.0.17"
+    "u-server-utils": "^1.0.21"
   },
   "devDependencies": {
     "eslint": "^7.2.0",

@@ -5,7 +5,6 @@ const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
-
 const getAvgReviewData = async (auth) => {
   const resp = await axios.get(`${global.gConfig.review_url}/reviews`, {
     headers: {

@@ -1,15 +1,17 @@
 {
-    "development": {
-        "database_host": "mysqldb",
-        "database_user": "indeedadmin",
-        "database_password": "indeedadminpass",
-        "database_name": "photos",
-        "auth_url": "http://auth:3000"
-    },
-    "test": {
-        "database_host": "localhost",
-        "database_user": "indeedadmin",
-        "database_password": "indeedadminpass",
-        "database_name": "photos_test"
-    }
+  "development": {
+    "database_host": "mysqldb",
+    "database_user": "indeedadmin",
+    "database_password": "indeedadminpass",
+    "database_name": "photos",
+    "auth_url": "http://auth:3000",
+    "redis_host": "redis",
+    "redis_pass": "indeedredispass"
+  },
+  "test": {
+    "database_host": "localhost",
+    "database_user": "indeedadmin",
+    "database_password": "indeedadminpass",
+    "database_name": "photos_test"
+  }
 }
