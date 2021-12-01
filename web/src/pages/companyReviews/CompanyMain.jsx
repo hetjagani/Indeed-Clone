@@ -166,7 +166,7 @@ function CompanyMain({ match }) {
               <Snapshot data={companyDetails} salaries={salaries} reviews={reviews} />
             )}
           />
-          <Route path={`${match.path}/about`} component={AboutCompany} />
+          <Route path={`${match.path}/about`} component={() => <AboutCompany data={companyDetails} />} />
           <Route path={`${match.path}/reviews`} component={ReviewsMain} />
           <Route path={`${match.path}/salaries`} component={SalariesMain} />
           <Route path={`${match.path}/jobs`} component={CompanyJobsMain} />
