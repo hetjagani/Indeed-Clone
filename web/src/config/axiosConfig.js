@@ -14,7 +14,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err) => {
-    console.log(err);
     if (!err.response) {
       toast.error('Network error!');
     }

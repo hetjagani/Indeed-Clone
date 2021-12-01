@@ -11,6 +11,7 @@ import TopSalary from './TopSalary';
 const Findsalary = () => {
   const [location, setLocation] = useState('');
   const [title, setTitle] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [salaryData, setSalaryData] = useState([]);
   const [searchFlag, setSearchFlag] = useState(true);
   const [topSalaries, setTopSalaries] = useState([]);
@@ -32,7 +33,6 @@ const Findsalary = () => {
       if (!response) {
         return;
       }
-      console.log(salaryData);
       setSearchFlag(false);
       setSalaryData(response.data.nodes);
     });

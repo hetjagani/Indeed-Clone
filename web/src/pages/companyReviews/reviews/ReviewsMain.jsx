@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import { Typography } from '@mui/material';
 
@@ -6,23 +7,39 @@ import AddReviewModal from './AddReviewModal';
 import '../css/ReviewsMain.css';
 import RatingsCard from './RatingsCard';
 
-function ReviewsMain() {
+function ReviewsMain(props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [reviewFilter, setReviewFilter] = useState(1);
-  const [sortFilter, setSortFilter] = useState(4);
+  // const [reviewFilter, setReviewFilter] = useState(1);
   const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
-
+  const handleClose = () => {
+    props.getCompanyReviews();
+    setIsOpen(false);
+  };
   return (
     <>
-      <AddReviewModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} />
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%',
-      }}
-      >
-        <Typography style={{
-          marginTop: '15px', fontWeight: 'bold', fontSize: '1.75rem', lineHeight: '1.25', marginBottom: '0.5rem',
+      <AddReviewModal
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+        isOpen={isOpen}
+        compId={props && props.compId ? props.compId : null}
+        companyName={props && props.companyName ? props.companyName : null}
+      />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
         }}
+      >
+        <Typography
+          style={{
+            marginTop: '15px',
+            fontWeight: 'bold',
+            fontSize: '1.75rem',
+            lineHeight: '1.25',
+            marginBottom: '0.5rem',
+          }}
         >
           Work happiness
         </Typography>
@@ -30,94 +47,96 @@ function ReviewsMain() {
           onClick={handleOpen}
           label="Review this company"
           style={{
-            width: '200px', backgroundColor: 'white', color: '#2557a7', border: '1px solid #d4d2d0',
+            width: '200px',
+            backgroundColor: 'white',
+            color: '#2557a7',
+            border: '1px solid #d4d2d0',
           }}
         />
       </div>
-      <div style={{
-        width: '100%', backgroundColor: '#F3F2F1', height: '250px', borderRadius: '20px', marginTop: '30px',
-      }}
+      <div
+        style={{
+          width: '100%',
+          backgroundColor: '#F3F2F1',
+          height: '150px',
+          borderRadius: '20px',
+          marginTop: '30px',
+        }}
       >
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Filter by</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Sort by</span>
           <div style={{ display: 'flex', marginTop: '20px' }}>
             <button
-              onClick={() => setReviewFilter(1)}
-              className={`ceoButtonHover ${reviewFilter === 1 ? 'reviewFilterButtonSelected' : ''}`}
+              onClick={async () => { await props.getCompanyReviews('helpful'); props.setReviewFilter(1); }}
+              className={`ceoButtonHover ${props.reviewFilter === 1 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
-                borderRadius: '10px', width: '175px', height: '40px', fontSize: 'medium', color: '#2453d3',
+                borderRadius: '10px',
+                width: '220px',
+                height: '40px',
+                fontSize: 'medium',
+                color: '#2453d3',
               }}
             >
               Helpfulness
             </button>
             <button
-              onClick={() => setReviewFilter(2)}
-              className={`ceoButtonHover ${reviewFilter === 2 ? 'reviewFilterButtonSelected' : ''}`}
+              onClick={() => { props.setReviewFilter(2); props.getCompanyReviews('overallRating'); }}
+              className={`ceoButtonHover ${props.reviewFilter === 2 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
-                width: '180px', height: '40px', fontSize: 'medium', marginLeft: '-15px', color: '#2453d3',
+                width: '220px',
+                height: '40px',
+                fontSize: 'medium',
+                marginLeft: '-15px',
+                color: '#2453d3',
               }}
             >
               Rating
             </button>
             <button
-              onClick={() => setReviewFilter(3)}
-              className={`ceoButtonHover ${reviewFilter === 3 ? 'reviewFilterButtonSelected' : ''}`}
+              onClick={async () => { await props.getCompanyReviews('reviewDate'); props.setReviewFilter(3); }}
+              className={`ceoButtonHover ${props.reviewFilter === 3 ? 'reviewFilterButtonSelected' : ''}`}
               type="button"
               style={{
-                borderTopRightRadius: '10px', borderBottomRightRadius: '10px', width: '160px', height: '40px', marginLeft: '-15px', fontSize: 'medium', color: '#2453d3',
+                borderTopRightRadius: '10px',
+                borderBottomRightRadius: '10px',
+                width: '195px',
+                height: '40px',
+                marginLeft: '-15px',
+                fontSize: 'medium',
+                color: '#2453d3',
               }}
             >
               Date
             </button>
           </div>
         </div>
-
-        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontWeight: 'bold', fontSize: '1rem' }}>Sort by</span>
-          <div style={{ display: 'flex', marginTop: '20px' }}>
-            <button
-              onClick={() => setSortFilter(4)}
-              className={`ceoButtonHover ${sortFilter === 4 ? 'reviewFilterButtonSelected' : ''}`}
-              type="button"
-              style={{
-                borderRadius: '10px', width: '175px', height: '40px', fontSize: 'medium', color: '#2453d3',
-              }}
-            >
-              Helpfulness
-            </button>
-            <button
-              onClick={() => setSortFilter(5)}
-              className={`ceoButtonHover ${sortFilter === 5 ? 'reviewFilterButtonSelected' : ''}`}
-              type="button"
-              style={{
-                borderTopRightRadius: '10px', borderBottomRightRadius: '10px', width: '160px', height: '40px', marginLeft: '-15px', fontSize: 'medium', color: '#2453d3',
-              }}
-            >
-              Rating
-            </button>
-          </div>
-        </div>
       </div>
 
-      <p style={{
-        fontSize: '.875rem', lineHeight: '1.5', color: '#595959', marginLeft: '5px', marginTop: '30px',
-      }}
+      <p
+        style={{
+          fontSize: '.875rem',
+          lineHeight: '1.5',
+          color: '#595959',
+          marginLeft: '5px',
+          marginTop: '30px',
+        }}
       >
         Found
         {' '}
-        <span style={{ fontWeight: 'bold' }}>24,308</span>
+        <span style={{ fontWeight: 'bold' }}>{props && props.reviews ? props.reviews.length : null}</span>
         {' '}
         reviews matching the search
       </p>
-
-      <RatingsCard />
-      <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
-      <RatingsCard />
-      <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
-      <RatingsCard />
-
+      {props && props.reviews && props.reviews.length > 0
+        ? props.reviews.map((review) => (
+          <div>
+            <RatingsCard review={review} getCompanyReviews={props.getCompanyReviews} />
+            <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
+          </div>
+        ))
+        : null}
     </>
   );
 }
