@@ -1,4 +1,4 @@
-const { Schema, Types, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema({
   name: String,
@@ -11,7 +11,7 @@ const UserSchema = new Schema({
   state: String,
   country: String,
   zip: String,
-  jobPreferences:{} ,
+  jobPreferences: Schema.Types.Mixed,
 });
 
 const SalarySchema = new Schema({

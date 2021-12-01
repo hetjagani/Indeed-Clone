@@ -1,14 +1,7 @@
-import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const token = getCookie('token');
-
 const postUser = (payload) => axiosInstance
-  .post('/users', payload, {
-    headers: {
-      Authorization: token,
-    },
-  })
+  .post('/users', payload, {})
   .then((response) => response)
   .catch((err) => {
     console.log(err);

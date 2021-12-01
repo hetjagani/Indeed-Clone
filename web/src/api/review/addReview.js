@@ -1,14 +1,7 @@
-import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const token = getCookie('token');
-
 const addReview = (payload) => axiosInstance
-  .post('/reviews', payload, {
-    headers: {
-      Authorization: token,
-    },
-  })
+  .post('/reviews', payload, {})
   .then((response) => response)
   .catch((err) => {
     console.log('error', err);
