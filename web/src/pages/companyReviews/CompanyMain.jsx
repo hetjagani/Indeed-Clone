@@ -132,16 +132,17 @@ function CompanyMain({ match }) {
                   ? companyDetails.overallRating
                   : null}
               </p>
-              <StarRatings
-                rating={companyDetails && companyDetails.overallRating
-                  ? companyDetails.overallRating
-                  : null}
-                starRatedColor="#9D2B6B"
-                numberOfStars={5}
-                name="rating"
-                starDimension="17px"
-                starSpacing="2px"
-              />
+              {companyDetails && companyDetails.overallRating ? (
+                <StarRatings
+                  rating={companyDetails.overallRating}
+                  starRatedColor="#9D2B6B"
+                  numberOfStars={5}
+                  name="rating"
+                  starDimension="17px"
+                  starSpacing="2px"
+                />
+              )
+                : null}
             </div>
           </div>
         </div>
