@@ -1,6 +1,7 @@
 /* eslint-disable */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import getUser from '../../api/user/getUser';
 import postUser from '../../api/user/postUser';
@@ -17,7 +18,6 @@ function Jobapplication({ setGotoNextFlag }) {
 
   useEffect(() => {
     getUser(user.user.id).then((response) => {
-      console.log('response application', response);
       if(response){
         setEmail(response.data.emails[0]);
         setName(response.data.name);
@@ -34,7 +34,7 @@ function Jobapplication({ setGotoNextFlag }) {
     emails.push(email);
     e.preventDefault();
     if(toPostFlag){
-      const payload = {
+      const payload = { 
         id: user.user.id,
         emails,
         name,
@@ -43,7 +43,10 @@ function Jobapplication({ setGotoNextFlag }) {
       };
       console.log(payload);
       postUser(payload).then((response) => {
-        console.log(response);
+        if(!response) {
+          toast.error('Cannot add user details');
+          return;
+        }
       });
     }
     setGotoNextFlag(true);

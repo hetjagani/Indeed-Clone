@@ -105,7 +105,7 @@ const createUserApplication = async (req, res) => {
   } catch (err) {
     console.log(err);
     if (err.isAxiosError) {
-      res.status(err.response.status).json(err.response.data);
+      res.status(err?.response?.status).json(err.response.data);
       return;
     }
     res.status(500).json(errors.serverError);

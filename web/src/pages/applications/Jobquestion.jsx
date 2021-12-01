@@ -29,6 +29,9 @@ function Jobquestion({ compId, _id, setOpen }) {
       id: _id,
     };
     question(comanyId).then((response) => {
+      if (!response) {
+        return;
+      }
       setQuestions(response.data.questions);
     });
   }, []);
@@ -37,12 +40,20 @@ function Jobquestion({ compId, _id, setOpen }) {
     event.preventDefault();
     const fil = event.target.files[0];
     const result = await postImages({ image: fil });
+    if (!result) {
+      toast.error('Could not upload file!');
+      return;
+    }
     setResume(result.data.url);
   };
   const uploadCover = async (event) => {
     event.preventDefault();
     const fil = event.target.files[0];
     const result = await postImages({ image: fil });
+    if (!result) {
+      toast.error('Could not upload file!');
+      return;
+    }
     setCover(result.data.url);
   };
   const apply = (e) => {
@@ -54,6 +65,9 @@ function Jobquestion({ compId, _id, setOpen }) {
       answers,
     };
     postApplication(payload, user.user.id).then((response) => {
+      if (!response) {
+        return;
+      }
       if (response.status === 201) {
         toast.success('Application Submitted');
         setOpen(false);
@@ -92,7 +106,7 @@ function Jobquestion({ compId, _id, setOpen }) {
               fontSize: '1.5rem',
             }}
           >
-            Questions from Road Runner Delivery
+            Additional information
           </span>
         </div>
         <div>
