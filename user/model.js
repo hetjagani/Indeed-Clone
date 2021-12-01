@@ -11,7 +11,7 @@ const UserSchema = new Schema({
   state: String,
   country: String,
   zip: String,
-  jobPreferences: [String],
+  jobPreferences: ,
 });
 
 const SalarySchema = new Schema({
