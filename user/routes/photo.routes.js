@@ -36,6 +36,7 @@ const updateValidators = () => [body('isFeatured').exists().isBoolean()];
  * @security JWT
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {boolean} isFeatured.query
  * @param {String} id.path.require
  * @returns {Photo.model} 200 - Get User Photos
  */

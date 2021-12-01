@@ -4,11 +4,11 @@ const { errors } = require('u-server-utils');
 
 const getCompanyPhotos = async (req, res) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, isFeatured } = req.query;
     const { compId } = req.params;
 
     const photoResp = await axios.get(`${global.gConfig.photos_url}/photos`, {
-      params: { page, limit, companyId: compId },
+      params: { page, limit, companyId: compId, isFeatured },
       headers: { Authorization: req.headers.authorization },
     });
 

@@ -25,6 +25,11 @@ const getAllReviews = async (req, res) => {
     if (req.query.sortOrder && req.query.sortOrder !== '') {
       sortOrder = req.query.sortOrder;
     }
+    if (req.query.isFeatured && req.query.isFeatured == 'true') {
+      queryObj.isFeatured = true;
+    } else if (req.query.isFeatured == 'false') {
+      queryObj.isFeatured = false;
+    }
 
     const sortObj = {};
     sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
@@ -36,7 +41,6 @@ const getAllReviews = async (req, res) => {
     }
 
     const reviewCount = await Review.count(queryObj);
-
     const reviewList = await Review.aggregate([
       {
         $match: queryObj,
@@ -45,6 +49,13 @@ const getAllReviews = async (req, res) => {
       .sort(sortObj)
       .skip(offset)
       .limit(limit);
+
+    if (req.query.isFeatured == 'true' && reviewList.length > 5) {
+      const sortedList = reviewList.sort((a, b) => b.overallRating - a.overallRating);
+      const result = [...sortedList.slice(0, 4), ...sortedList.slice(-1)];
+      res.status(200).json({ total: reviewCount, nodes: result });
+      return;
+    }
 
     res.status(200).json({ total: reviewCount, nodes: reviewList });
   } catch (err) {

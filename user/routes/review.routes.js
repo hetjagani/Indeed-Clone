@@ -78,6 +78,7 @@ const bodyValidators = () => [
  * @param {integer} limit.query
  * @param {string} sortBy.query
  * @param {string} sortOrder.query
+ * @param {boolean} isFeatured.query
  * @param {string} id.path.require
  * @returns {ReviewResponse.model} 200 - Get User Reviews
  */
