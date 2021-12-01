@@ -10,7 +10,12 @@ const getUserPhotos = async (req, res) => {
     const { id } = req.params;
 
     const result = await axios.get(`${global.gConfig.photos_url}/photos`, {
-      params: { userId: id, page: req.query.page, limit: req.query.limit },
+      params: {
+        userId: id,
+        page: req.query.page,
+        limit: req.query.limit,
+        isFeatured: req.query.isFeatured,
+      },
       headers: { Authorization: req.headers.authorization },
     });
 

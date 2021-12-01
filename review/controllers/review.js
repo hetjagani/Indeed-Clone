@@ -25,6 +25,11 @@ const getAllReviews = async (req, res) => {
     if (req.query.sortOrder && req.query.sortOrder !== '') {
       sortOrder = req.query.sortOrder;
     }
+    if (req.query.isFeatured && req.query.isFeatured == 'true') {
+      queryObj.isFeatured = true;
+    } else if (req.query.isFeatured == 'false') {
+      queryObj.isFeatured = false;
+    }
 
     const sortObj = {};
     sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;

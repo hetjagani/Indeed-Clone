@@ -6,11 +6,11 @@ const { Types } = require('mongoose');
 
 const getCompanyReviews = async (req, res) => {
   try {
-    const { page, limit, sortBy, sortOrder } = req.query;
+    const { page, limit, sortBy, sortOrder, isFeatured } = req.query;
     const { compId } = req.params;
 
     const reviewResp = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { page, limit, companyId: compId, sortBy, sortOrder },
+      params: { page, limit, companyId: compId, sortBy, sortOrder, isFeatured },
       headers: { Authorization: req.headers.authorization },
     });
 

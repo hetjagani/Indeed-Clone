@@ -9,10 +9,10 @@ const getUserReviews = async (req, res) => {
   try {
     console.log('entered');
     const { id } = req.params;
-    const { page, limit, sortBy, sortOrder } = req.query;
+    const { page, limit, sortBy, sortOrder, isFeatured } = req.query;
 
     const result = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { userId: id, page, limit, sortBy, sortOrder },
+      params: { userId: id, page, limit, sortBy, sortOrder, isFeatured },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -33,15 +33,12 @@ const getUserReviews = async (req, res) => {
     });
 
     console.log(result.data);
-    const allCompany = await axios.get(
-      `${global.gConfig.company_url}/companies`,
-      {
-        params: { all: 'true' },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const allCompany = await axios.get(`${global.gConfig.company_url}/companies`, {
+      params: { all: 'true' },
+      headers: { Authorization: req.headers.authorization },
+    });
 
-    console.log(allCompany.data);   
+    console.log(allCompany.data);
     const companyMap = new Map();
 
     allCompany.data.forEach((ele) => {
@@ -51,7 +48,7 @@ const getUserReviews = async (req, res) => {
     result.data.nodes.forEach((ele) => {
       ele.company = companyMap.get(String(ele.companyId));
     });
-    
+
     res.status(200).json(result.data);
   } catch (err) {
     console.log(err);
