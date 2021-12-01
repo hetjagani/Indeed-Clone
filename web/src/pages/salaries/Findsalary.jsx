@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Container } from 'react-bootstrap';
 
-import './css/FindSalary.css';
+import './css/Findsalary.css';
 import searchSalary from '../../api/salary/searchSalary';
 import SearchSalary from './SearchSalary';
 import TopSalary from './TopSalary';

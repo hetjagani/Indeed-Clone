@@ -1,21 +1,23 @@
+/* eslint-disable no-undef */
 /* eslint-disable max-len */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
 import {
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
-import Button from '@mui/material/Button';
 import { useHistory } from 'react-router';
 import ValuesSVG from '../../components/svg/ValuesSVG';
+import companyUpload from '../../api/media/companyUpload';
 import './css/Employeedetails.css';
 
-const Input = styled('input')({
-  display: 'none',
-});
+async function postImages({ image }) {
+  const formData = new FormData();
+  formData.append('imageData', image);
+  const response = await companyUpload(formData);
+  return response;
+}
 
 const CompanyValues = () => {
   const history = useHistory();
@@ -42,8 +44,19 @@ const CompanyValues = () => {
   const [description, setDescription] = useState('');
   const [mission, setMission] = useState('');
   const [about, setAbout] = useState('');
+  const [photo, setPhoto] = useState('');
   const backtoprofile = () => {
     history.push('/company');
+  };
+  const uploadPhoto = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setPhoto({ url: result.data });
+    console.log(photo);
   };
   console.log(value, workCulture);
   return (
@@ -416,23 +429,22 @@ const CompanyValues = () => {
             width: '100%', paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
           }}
           >
-            <span className="employeeLabel">Add Photo</span>
-            <span style={{ paddingTop: '0.5rem', color: 'rgb(89, 89, 89)', fontSize: '14px' }}>Give an inside look at working at your company by adding photos to your post</span>
-          </div>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <label htmlFor="contained-button-file">
-              <Input accept="image/*" id="contained-button-file" multiple type="file" />
-              <Button
-                variant="contained"
-                component="span"
-                style={{
-                  width: '160px', height: '44px', color: '#2557a7', fontWeight: '700', backgroundColor: '#f2f2f2', border: '#949494',
-                }}
-              >
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label className="employeeLabel">
                 Add Photo
-              </Button>
-            </label>
-          </Stack>
+                <span style={{ paddingTop: '0.5rem', color: 'rgb(89, 89, 89)', fontSize: '14px' }}>Give an inside look at working at your company by adding photos to your post</span>
+                <div>
+                  <input
+                    onChange={uploadPhoto}
+                    type="file"
+                    accept="image/*"
+                    style={{ paddingTop: '10px' }}
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
+
         </div>
         <div
           style={{

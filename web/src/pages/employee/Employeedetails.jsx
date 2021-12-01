@@ -1,18 +1,18 @@
+/* eslint-disable no-undef */
+/* eslint-disable object-shorthand */
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
+import { useHistory } from 'react-router';
+
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import EmployeSVG from '../../components/svg/EmployeSVG';
+
 import './css/Employeedetails.css';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
-
-const Input = styled('input')({
-  display: 'none',
-});
+import companyUpload from '../../api/media/companyUpload';
 
 const roles = [
   {
@@ -31,14 +31,95 @@ const roles = [
     title: 'Other',
   },
 ];
+async function postImages({ image }) {
+  const formData = new FormData();
+  formData.append('imageData', image);
+  const response = await companyUpload(formData);
+  return response;
+}
 
 const Employeedetails = () => {
+  const history = useHistory();
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [otherRole, setOtherRole] = useState('');
   const [address, setAddress] = useState('');
   const [dob, setDob] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [companies, setCompanies] = useState([]);
+  const [photo, setPhoto] = useState({});
+
+  function changeDateFormat(inputDate) { // expects Y-m-d
+    const splitDate = inputDate.split('-');
+    if (splitDate.count === 0) {
+      return null;
+    }
+
+    const year = splitDate[0];
+    const month = splitDate[1];
+    const day = splitDate[2];
+
+    return `${month}/${day}/${year}`;
+  }
+
+  const saveDetails = async (e) => {
+    e.preventDefault();
+    const formattedDOB = String(changeDateFormat(dob));
+    if (companyName === '') {
+      const body = {
+        id: user.user.id,
+        name: name,
+        role: role,
+        address: address,
+        dateOfBirth: formattedDOB,
+        medium: photo,
+      };
+      console.log('body', body);
+      await postEmployers(body);
+      history.push('/employee/company');
+    } else {
+      const queryParams = { page: 1, limit: 10 };
+      const response = await getCompanies(queryParams);
+      if (!response) {
+        return;
+      }
+      setCompanies('companies', response.data);
+      console.log(companies);
+      console.log('res', response);
+      let companyID = null;
+      // eslint-disable-next-line array-callback-return
+      response.data.nodes.map((company) => {
+        if (company.name === companyName) {
+          // eslint-disable-next-line no-underscore-dangle
+          companyID = company._id;
+        }
+      });
+      if (!companyID) {
+        return;
+      }
+      const body = {
+        id: user.user.id,
+        name: name,
+        role: role,
+        address: address,
+        dateOfBirth: formattedDOB,
+        companyId: companyID,
+      };
+      console.log('body', body);
+      await postEmployers(body);
+      history.push('/employee/companyValues');
+    }
+  };
+  const uploadPhoto = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setPhoto({ url: result.data });
+  };
+
   return (
     <form>
       <div
@@ -228,25 +309,19 @@ const Employeedetails = () => {
             marginTop: '2rem',
           }}
         >
-          <div style={{ width: '100%', paddingBottom: '1rem' }}>
-            <span className="employeeLabel">Add Photo</span>
-          </div>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <label htmlFor="contained-button-file">
-              <Input
-                accept="image/*"
-                id="contained-button-file"
-                multiple
-                type="file"
-              />
-              <button
-                className="employeeBack"
-                style={{ width: '165px', height: '44px' }}
-              >
-                Add photo
-              </button>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label className="employeeLabel">
+              Add photo
+              <div>
+                <input
+                  onChange={uploadPhoto}
+                  type="file"
+                  accept="image/*"
+                  style={{ paddingTop: '10px' }}
+                />
+              </div>
             </label>
-          </Stack>
+          </div>
         </div>
         <div
           style={{
@@ -266,7 +341,7 @@ const Employeedetails = () => {
             </button>
           </div>
           <div>
-            <button type="submit" className="employeeButton">
+            <button type="submit" className="employeeButton" onClick={saveDetails}>
               Save Changes
             </button>
           </div>
