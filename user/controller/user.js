@@ -4,6 +4,7 @@ const { errors, getPagination } = require('u-server-utils');
 const { User } = require('../model');
 const mongoose = require('mongoose');
 const { response } = require('express');
+const { concat } = require('lodash');
 
 const createUser = async (req, res) => {
   const { user } = req.headers;
@@ -80,6 +81,7 @@ const updateUser = async (req, res) => {
 
   const valErr = validationResult(req);
   if (!valErr.isEmpty()) {
+    console.log('-----', req.body);
     res.status(400).json({ status: 400, message: valErr.array() });
     return;
   }

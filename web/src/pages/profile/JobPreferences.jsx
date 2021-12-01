@@ -24,17 +24,9 @@ import putUser from '../../api/users/putDetails';
 import getUserByID from '../../api/users/getUser';
 
 const JobPreferences = () => {
-  const [JobPreference, setJobPreferences] = useState({
-    title: 'Software Engineer intern',
-    relocation: 'Yes, I am willing to relocate',
-    type: 'Full-time',
-    schedule: '8 hour shift',
-    pay: 0,
-    remote: null,
-  });
-
   const history = useHistory();
   const user = useSelector((state) => state.user);
+  // const [userDetail, setUserDetail] = useState({});
   const [title, setTitle] = useState(true);
   const [relocation, setRelocation] = useState(true);
   const [showMe, setShowMe] = useState(true);
@@ -66,6 +58,15 @@ const JobPreferences = () => {
     temp: false,
   });
 
+  const [JobPreference, setJobPreferences] = useState({
+    title: 'Software Engineer intern',
+    relocation: 'Yes, I am willing to relocate',
+    type: '',
+    schedule: '',
+    pay: '0',
+    remote: '',
+  });
+
   const handleChangetitle = (event) => {
     setJobPreferences({
       ...JobPreference,
@@ -78,18 +79,7 @@ const JobPreferences = () => {
       ...JobPreference,
       relocation: event.target.checked,
     });
-  };
-  const handleChangeType = (event) => {
-    setJobPreferences({
-      ...JobPreference,
-      type: event.target.checked,
-    });
-  };
-  const handleChangeSche = (event) => {
-    setJobPreferences({
-      ...JobPreference,
-      schedule: event.target.checked,
-    });
+    console.log(event);
   };
 
   const handleChangePay = (event) => {
@@ -99,22 +89,70 @@ const JobPreferences = () => {
     });
   };
 
-  const handleChangeRemote = (event) => {
-    setJobPreferences({
-      ...JobPreference,
-      remote: event.target.checked,
-    });
-  };
   const getUserDetails = async () => {
     console.log('user', user.user);
     const userDetails = await getUserByID(user.user.id);
-    console.log('details', userDetails);
+    console.log('details', userDetails.data);
+    // setUserDetail(userDetails.data);
   };
 
+  const getbody = () => {
+    if (typee.Fulltime === true) {
+      setJobPreferences({ type: JobPreference.type.concat('Full-time, ') });
+    }
+    if (typee.Parttime === true) {
+      setJobPreferences({ type: JobPreference.type.concat('Part-time, ') });
+    }
+    if (typee.Contract === true) {
+      setJobPreferences({ type: JobPreference.type.concat('Contract, ') });
+    }
+    if (typee.Temporary === true) {
+      setJobPreferences({ type: JobPreference.type.concat('Temporary, ') });
+    }
+    if (typee.Internship === true) {
+      setJobPreferences({ type: JobPreference.type.concat('Internship, ') });
+    }
+
+    if (schedulee.hr8 === true) {
+      setJobPreferences({ schedule: JobPreference.schedule.concat('8 hour shift, ') });
+    }
+    if (schedulee.hr10 === true) {
+      setJobPreferences({ schedule: JobPreference.schedule.concat('10 hour shift, ') });
+    }
+    if (schedulee.hr12 === true) {
+      setJobPreferences({ schedule: JobPreference.schedule.concat('12 hour shift, ') });
+    }
+    if (schedulee.Dayshift === true) {
+      setJobPreferences({ schedule: JobPreference.schedule.concat('Dayshift, ') });
+    }
+    if (schedulee.Nightshift === true) {
+      setJobPreferences({ schedule: JobPreference.schedule.concat('Nightshift, ') });
+    }
+
+    if (remotee.inperson === true) {
+      setJobPreferences({ remote: JobPreference.remote.concat('In person, ') });
+    }
+    if (remotee.remote === true) {
+      setJobPreferences({ remote: JobPreference.remote.concat('Remote, ') });
+    }
+
+    if (remotee.hybrid === true) {
+      setJobPreferences({ remote: JobPreference.remote.concat('Hybrid remote, ') });
+    }
+    if (remotee.temp === true) {
+      setJobPreferences({ remote: JobPreference.remote.concat('Temporary remote, ') });
+    }
+  };
   const putUserDetails = async () => {
+    await getbody();
     const body = {
-      preferences: JobPreference,
+      name: user.userDetail.name,
+      contactNo: user.userDetail.contactNo,
+      city: user.userDetail.city,
+      zip: user.userDetail.zip,
+      jobPreferences: JobPreference,
     };
+    console.log('body', body.jobPreferences);
     await putUser(body, user.user.id);
     getUserDetails();
   };
@@ -124,7 +162,6 @@ const JobPreferences = () => {
   }, []);
 
   const titleFunc = () => {
-    console.log('here', title);
     setTitle(!title);
   };
 
@@ -419,18 +456,18 @@ const JobPreferences = () => {
               <RadioGroup
                 defaultValue="Yes, I,m willing to relocate"
                 name="radio-buttons-group"
-                onChange={handleChangeReloc}
-                value={JobPreference.relocation}
+                onChange={(event) => handleChangeReloc(event)}
+                // value={JobPreference.relocation}
               >
                 <FormControlLabel
-                  value="Yes, I,m willing to relocate"
+                  value="Yes, I am willing to relocate"
                   control={<Radio />}
-                  label="Yes, I,m willing to relocate"
+                  label="Yes, I am willing to relocate"
                 />
                 <FormControlLabel
-                  value="No, I,m not willing to relocate"
+                  value="No, I am not willing to relocate"
                   control={<Radio />}
-                  label="No, I,m not willing to relocate"
+                  label="No, I am not willing to relocate"
                 />
               </RadioGroup>
             </FormControl>
@@ -588,7 +625,7 @@ const JobPreferences = () => {
                         control={(
                           <Checkbox
                             checked={typee.Fulltime}
-                            onChange={handleChangeType}
+                            onChange={(event) => setTypee({ Fulltime: event.target.checked })}
                             name="Full-time"
                           />
                         )}
@@ -597,8 +634,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.type}
-                            onChange={handleChangeType}
+                            checked={typee.Parttime}
+                            onChange={(event) => setTypee({ Parttime: event.target.checked })}
                             name="Part-time "
                           />
                         )}
@@ -607,8 +644,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.type}
-                            onChange={handleChangeType}
+                            checked={typee.Contract}
+                            onChange={(event) => setTypee({ Contract: event.target.checked })}
                             name="Contract"
                           />
                         )}
@@ -617,8 +654,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.type}
-                            onChange={handleChangeType}
+                            checked={typee.Temporary}
+                            onChange={(event) => setTypee({ Temporary: event.target.checked })}
                             name="Temporary"
                           />
                         )}
@@ -627,8 +664,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.type}
-                            onChange={handleChangeType}
+                            checked={typee.Internship}
+                            onChange={(event) => setTypee({ Internship: event.target.checked })}
                             name="Internship"
                           />
                         )}
@@ -708,8 +745,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.schedule}
-                            onChange={handleChangeSche}
+                            checked={schedulee.hr8}
+                            onChange={(event) => setSchedulee({ hr8: event.target.checked })}
                             name="8 hour shift"
                           />
                         )}
@@ -718,8 +755,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.schedule}
-                            onChange={handleChangeSche}
+                            checked={schedulee.hr10}
+                            onChange={(event) => setSchedulee({ hr10: event.target.checked })}
                             name="10 hour shift"
                           />
                         )}
@@ -728,8 +765,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.schedule}
-                            onChange={handleChangeSche}
+                            checked={schedulee.hr12}
+                            onChange={(event) => setSchedulee({ hr12: event.target.checked })}
                             name="12 hour shift"
                           />
                         )}
@@ -738,8 +775,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.schedule}
-                            onChange={handleChangeSche}
+                            checked={schedulee.Dayshift}
+                            onChange={(event) => setSchedulee({ Dayshift: event.target.checked })}
                             name="Day shift"
                           />
                         )}
@@ -748,8 +785,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.schedule}
-                            onChange={handleChangeSche}
+                            checked={schedulee.Nightshift}
+                            onChange={(event) => setSchedulee({ Nightshift: event.target.checked })}
                             name="Night shift"
                           />
                         )}
@@ -905,8 +942,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.remote}
-                            onChange={handleChangeRemote}
+                            checked={remotee.remote}
+                            onChange={(event) => setRemotee({ remote: event.target.checked })}
                             name="Remote"
                           />
                         )}
@@ -915,8 +952,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.remote}
-                            onChange={handleChangeRemote}
+                            checked={remotee.hybrid}
+                            onChange={(event) => setRemotee({ checked: event.target.checked })}
                             name="Hybrid remote"
                           />
                         )}
@@ -925,8 +962,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.remote}
-                            onChange={handleChangeRemote}
+                            checked={remotee.inperson}
+                            onChange={(event) => setRemotee({ inperson: event.target.checke })}
                             name="In person"
                           />
                         )}
@@ -935,8 +972,8 @@ const JobPreferences = () => {
                       <FormControlLabel
                         control={(
                           <Checkbox
-                            checked={JobPreference.remote}
-                            onChange={handleChangeRemote}
+                            checked={remotee.temp}
+                            onChange={(event) => setRemotee({ temp: event.target.checked })}
                             name="Temporarily remote (COVID-19)"
                           />
                         )}

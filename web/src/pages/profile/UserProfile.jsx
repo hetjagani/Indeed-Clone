@@ -14,13 +14,16 @@ import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import putUser from '../../api/users/putDetails';
 import ResumeModal from './ResumeModal';
 import getUserByID from '../../api/users/getUser';
 
+import { userDets } from '../../app/actions';
+
 function UserProfile() {
   const history = useHistory();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [userDetail, setUserDetail] = useState({});
 
@@ -108,6 +111,12 @@ function UserProfile() {
       city: city,
       zip: zipcode,
     };
+    dispatch(userDets({
+      name: firstName.concat(' ', lastName),
+      contactNo: mobile,
+      city: city,
+      zip: zipcode,
+    }));
     await putUser(body, user.user.id);
     getUserDetails();
   };
