@@ -22,9 +22,16 @@ function WorkHappiness(props) {
       >
         Work happiness
       </Typography>
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         <p style={{ fontSize: '.875rem', lineHeight: '1.5', color: '#595959' }}>
-          Scores based on about customer responses to Indeed&apos;s survey on work happiness
+          Scores based on about customer responses to Indeed&apos;s survey on
+          work happiness
         </p>
         <Button
           label="About work happiness"
@@ -37,11 +44,29 @@ function WorkHappiness(props) {
         />
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
         {/* Average happiness score */}
-        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+              }}
+            >
               <div
                 style={{
                   backgroundColor: '#f3f2f1',
@@ -53,18 +78,42 @@ function WorkHappiness(props) {
                   padding: '.25rem .75rem',
                 }}
               >
-                {props && props.data ? props.data.avgHappinessScore : 'NA'}
+                {props && props.data ? (
+                  props.data.avgHappinessScore ? (
+                    props.data.avgHappinessScore
+                  ) : (
+                    <span style={{ fontSize: '0.7rem' }}>NA</span>
+                  )
+                ) : (
+                  <span style={{ fontSize: '0.7rem' }}>NA</span>
+                )}
               </div>
               {props
               && props.data
               && props.data.avgHappinessScore
               && props.data.avgHappinessScore > 80 ? (
                 <VeryHappyEmojiSVG />
-                ) : <SadEmojiSVG />}
+                ) : (
+                  <SadEmojiSVG />
+                )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginLeft: '15px',
+                }}
+              >
                 <p style={{ fontWeight: '700' }}>Work Happiness Score</p>
-                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
+                <p
+                  style={{
+                    fontSize: '.875rem',
+                    color: '#595959',
+                    marginTop: '-12px',
+                  }}
+                >
+                  Average
+                </p>
               </div>
             </div>
             <div
@@ -83,9 +132,21 @@ function WorkHappiness(props) {
           </div>
         </div>
         {/* Learning score */}
-        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+              }}
+            >
               <div
                 style={{
                   backgroundColor: '#f3f2f1',
@@ -97,17 +158,41 @@ function WorkHappiness(props) {
                   padding: '.25rem .75rem',
                 }}
               >
-                {props && props.data ? props.data.learningScore : 'NA'}
+                {props && props.data ? (
+                  props.data.learningScore ? (
+                    props.data.learningScore
+                  ) : (
+                    <span style={{ fontSize: '0.7rem' }}>NA</span>
+                  )
+                ) : (
+                  <span style={{ fontSize: '0.7rem' }}>NA</span>
+                )}
               </div>
               {props
               && props.data
               && props.data.avgHappinessScore
               && props.data.avgHappinessScore > 65 ? (
                 <HappyEmojiSVG />
-                ) : <SadEmojiSVG />}
-              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
+                ) : (
+                  <SadEmojiSVG />
+                )}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginLeft: '15px',
+                }}
+              >
                 <p style={{ fontWeight: '700' }}>Learning Score</p>
-                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
+                <p
+                  style={{
+                    fontSize: '.875rem',
+                    color: '#595959',
+                    marginTop: '-12px',
+                  }}
+                >
+                  Average
+                </p>
               </div>
             </div>
             <div
@@ -126,9 +211,21 @@ function WorkHappiness(props) {
           </div>
         </div>
         {/* Appreciation score */}
-        <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+              }}
+            >
               <div
                 style={{
                   backgroundColor: '#f3f2f1',
@@ -140,17 +237,43 @@ function WorkHappiness(props) {
                   padding: '.25rem .75rem',
                 }}
               >
-                {props && props.data ? props.data.appreciationScore : 'NA'}
+                {props && props.data ? (
+                  props.data.appreciationScore ? (
+                    props.data.appreciationScore
+                  ) : (
+                    <span style={{ fontSize: '0.7rem' }}>NA</span>
+                  )
+                ) : (
+                  <span style={{ fontSize: '0.7rem' }}>NA</span>
+                )}
               </div>
               {props
               && props.data
               && props.data.appreciationScore
               && props.data.appreciationScore > 85 ? (
                 <VeryHappyEmojiSVG />
-                ) : props.data.appreciationScore > 65 ? <HappyEmojiSVG /> : <SadEmojiSVG />}
-              <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '15px' }}>
+                ) : props.data.appreciationScore > 65 ? (
+                  <HappyEmojiSVG />
+                ) : (
+                  <SadEmojiSVG />
+                )}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginLeft: '15px',
+                }}
+              >
                 <p style={{ fontWeight: '700' }}>Appreciation Score</p>
-                <p style={{ fontSize: '.875rem', color: '#595959', marginTop: '-12px' }}>Average</p>
+                <p
+                  style={{
+                    fontSize: '.875rem',
+                    color: '#595959',
+                    marginTop: '-12px',
+                  }}
+                >
+                  Average
+                </p>
               </div>
             </div>
             <div

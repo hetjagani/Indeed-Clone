@@ -16,7 +16,7 @@ function Snapshot(props) {
       </p>
       <WorkHappiness data={props.data} />
       <CompanyAbout data={props.data} />
-      <Salaries salaries={props.salaries} />
+      <Salaries salaries={props.salaries} flag={false} />
       <Reviews reviews={props.reviews} />
     </>
   );

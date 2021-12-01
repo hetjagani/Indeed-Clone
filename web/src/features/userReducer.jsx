@@ -1,3 +1,5 @@
+import { setCookie } from 'react-use-cookie';
+
 const initialState = {
   user: {},
   token: '',
@@ -16,7 +18,8 @@ const reducer = (state = initialState, action) => {
     case 'LOGIN_FAILURE':
       return { ...state, errMsg: action.payload };
     case 'LOGOUT':
-      return { ...state, user: null };
+      setCookie('token', '', { path: '/' });
+      return { ...state, user: null, token: '' };
     case 'REMOVE_TOKEN':
       return { ...state, token: '' };
     case 'USER_DETAIL':

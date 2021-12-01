@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
 const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
@@ -52,15 +53,20 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const user = await User.findById(id);
-  if (!user) {
-    res.status(404).json(errors.notFound);
-    return;
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
   }
-
-  res.status(200).json(user);
 };
 
 const updateUser = async (req, res) => {
@@ -86,8 +92,14 @@ const updateUser = async (req, res) => {
     return;
   }
 
-  const userObj = req.body;
-  userObj._id = id;
+    const { user } = req.headers;
+    if (user != id) {
+      res.status(400).json({
+        ...errors.badRequest,
+        message: 'id should be same as logged in user',
+      });
+      return;
+    }
 
   makeRequest('user.update', userObj, (err, resp) => {
     if (err || !resp) {
@@ -95,8 +107,22 @@ const updateUser = async (req, res) => {
       res.status(500).json(errors.serverError);
       return;
     }
-    res.status(200).json(resp);
-  });
+
+    const userObj = req.body;
+    userObj._id = id;
+
+    makeRequest('user.update', userObj, (err, resp) => {
+      if (err || !resp) {
+        console.log(err);
+        res.status(500).json(errors.serverError);
+        return;
+      }
+      res.status(200).json(resp);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const deleteUser = async (req, res) => {

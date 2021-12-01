@@ -11,6 +11,7 @@ import TopSalary from './TopSalary';
 const Findsalary = () => {
   const [location, setLocation] = useState('');
   const [title, setTitle] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [salaryData, setSalaryData] = useState([]);
   const [searchFlag, setSearchFlag] = useState(true);
   const [topSalaries, setTopSalaries] = useState([]);
@@ -20,18 +21,20 @@ const Findsalary = () => {
   };
   useEffect(() => {
     searchSalary(payload).then((response) => {
-      setTopSalaries(response);
-      console.log(topSalaries);
+      if (!response) {
+        return;
+      }
+      setTopSalaries(response.data.nodes);
     });
   }, [searchFlag]);
   const search = (event) => {
     event.preventDefault();
-    console.log('payload', payload);
     searchSalary(payload).then((response) => {
+      if (!response) {
+        return;
+      }
       setSearchFlag(false);
-      console.log('search salary', response);
-      setSalaryData(response);
-      console.log(salaryData);
+      setSalaryData(response.data.nodes);
     });
   };
   return (
@@ -97,7 +100,6 @@ const Findsalary = () => {
             width: '712px',
           }}
         />
-        {/* <SearchSalary salary={topSalaries} /> */}
       </div>
       <SearchSalary salary={topSalaries} />
       {searchFlag ? <></> : <TopSalary />}

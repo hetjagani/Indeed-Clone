@@ -8,7 +8,9 @@ import JobDetails from './JobDetails';
 
 import './css/JobDetails.css';
 
-function JobFeed({ jobs }) {
+function JobFeed({
+  jobs, totalNumberOfJobs, totalPages, currentPage,
+}) {
   const [selectedJobDetails, setSelectedJobDetails] = useState(null);
 
   useEffect(() => {
@@ -33,13 +35,34 @@ function JobFeed({ jobs }) {
         ? (
           <>
             <div style={{ width: '75%' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '10px' }}>
+                <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+                  Showing
+                  {' '}
+                  {jobs.length}
+                  {' '}
+                  results of
+                  {' '}
+                  {totalNumberOfJobs}
+                </p>
+                <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+                  Page
+                  {' '}
+                  <span style={{ fontWeight: 'bold' }}>{currentPage}</span>
+                  {' '}
+                  of
+                  {' '}
+                  {totalPages}
+                </p>
+              </div>
+
               {jobs.map((job, index) => (
                 <div id={index} onClick={() => setSelectedJobDetails(job)} style={{ marginTop: '15px' }}>
                   <JobCard job={job} selectedJobFlag={selectedJobDetails === job} />
                 </div>
               ))}
             </div>
-            <div style={{ marginLeft: '25px', width: '100%' }}>
+            <div style={{ marginLeft: '25px', width: '100%', maxWidth: '800px' }}>
               <JobDetails job={selectedJobDetails} />
             </div>
           </>

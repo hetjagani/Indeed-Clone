@@ -1,4 +1,4 @@
-const { Schema, Types, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema({
   name: String,
@@ -19,6 +19,7 @@ const UserSchema = new Schema({
   pay: String,
   remote: String,
   }),
+
 });
 
 const SalarySchema = new Schema({

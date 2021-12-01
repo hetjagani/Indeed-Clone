@@ -122,7 +122,7 @@ const getUserConnection = () => {
     pay: String,
     remote: String,
     }),
- 
+
   });
 
   const SalarySchema = new mongoose.Schema({
@@ -157,6 +157,7 @@ const getReviewConnection = () => {
     compensation: Number,
     jobSecurity: Number,
     management: Number,
+    helpful: Number,
     jobCulture: Number,
     summary: String,
     review: String,
