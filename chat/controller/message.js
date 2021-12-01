@@ -122,8 +122,6 @@ const getMessageById = async (req, res) => {
 
 const createMessage = async (req, res) => {
   try {
-    console.log('createMessage');
-
     const { role, user } = req.headers;
     const { id } = req.params;
 

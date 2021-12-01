@@ -30,6 +30,7 @@ const router = express.Router();
  * @property {boolean} isFeatured.required
  * @property {string} status.required
  * @property {string} reviewDate.required
+ * @property {integer} helpful.required
  */
 
 const bodyValidators = () => [
@@ -48,6 +49,7 @@ const bodyValidators = () => [
   body('tips').isString(),
   body('companyId').isString(),
   body('userId').isString(),
+  body('helpful').optional().isNumeric(),
   body('isFeatured').optional().isBoolean(),
   body('status').optional().isString().isIn(['APPROVED', 'REJECTED', 'PENDING']),
 ];
@@ -59,6 +61,10 @@ const bodyValidators = () => [
  * @param {integer} limit.query
  * @param {string} companyId.query
  * @param {string} userId.query
+ * @param {string} sortBy.query
+ * @param {string} sortOrder.query
+ * @param {boolean} all.query
+ * @param {boolean} isFeatured.query
  * @group Review
  * @security JWT
  * @returns {Array.<Review>} 200 - List of review info

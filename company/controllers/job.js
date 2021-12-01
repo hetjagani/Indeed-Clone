@@ -222,11 +222,11 @@ const getJobsList = async (req, res) => {
     }
 
     if (q && q !== '') {
-      whereOpts.push({ $or: [{ title: { $regex: q } }, { 'company.name': { $regex: q } }] });
+      whereOpts.push({ $or: [{ title: { $regex: `(?i)${q}` } }, { 'company.name': { $regex: `(?i)${q}` } }] });
     }
 
     if (since && since !== '') {
-      whereOpts.push({ postedOn: { $lte: new Date(since) } });
+      whereOpts.push({ postedOn: { $gte: new Date(since) } });
     }
 
     let query = {};

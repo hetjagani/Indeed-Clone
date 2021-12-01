@@ -39,8 +39,8 @@ router.use('/:compId/photos', photoRouter);
  * @property {string} revenue.required
  * @property {integer} size.required
  * @property {string} website.required
- * @property {Array.<Object>} media
- * @property {Object} logo
+ * @property {Array.<object>} media
+ * @property {object} logo
  */
 
 const bodyValidators = () => [
@@ -65,6 +65,8 @@ const bodyValidators = () => [
  * @route GET /companies
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {string} q.query
+ * @param {string} city.query
  * @group Company
  * @security JWT
  * @returns {Array.<Company>} 200 - List of company info

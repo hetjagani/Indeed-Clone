@@ -26,6 +26,7 @@ const router = express.Router({ mergeParams: true });
  * @property {string} tips.required
  * @property {string} companyId.required
  * @property {string} reviewDate.required
+ * @property {integer} helpful.required
  */
 
 /**
@@ -47,6 +48,7 @@ const router = express.Router({ mergeParams: true });
  * @property {boolean} isFeatured.required
  * @property {string} status.required
  * @property {string} reviewDate.required
+ * @property {integer} helpful.required
  */
 
 const bodyValidators = () => [
@@ -64,6 +66,7 @@ const bodyValidators = () => [
   body('reviewDate').exists().isString().isDate({ format: 'mm/dd/yyyy' }),
   body('tips').isString(),
   body('companyId').isString(),
+  body('helpful').isNumeric(),
 ];
 
 /**
@@ -73,7 +76,10 @@ const bodyValidators = () => [
  * @security JWT
  * @param {integer} page.query
  * @param {integer} limit.query
- * @param {String} id.path.require
+ * @param {string} sortBy.query
+ * @param {string} sortOrder.query
+ * @param {boolean} isFeatured.query
+ * @param {string} id.path.require
  * @returns {ReviewResponse.model} 200 - Get User Reviews
  */
 router.get('/', getUserReviews);

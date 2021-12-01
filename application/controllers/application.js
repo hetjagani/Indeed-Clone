@@ -50,7 +50,6 @@ const getApplications = async (req, res) => {
         .map((i) => {
           if (i.trim() !== '') return Types.ObjectId(i.trim());
         });
-      console.log(jobIdList);
       whereOpts.jobId = { $in: jobIdList };
     }
 
@@ -92,7 +91,6 @@ const getApplicationById = async (req, res) => {
         .map((i) => {
           if (i.trim() !== '') return Types.ObjectId(i.trim());
         });
-      console.log(jobIdList);
       whereOpts.jobId = { $in: jobIdList };
     }
 

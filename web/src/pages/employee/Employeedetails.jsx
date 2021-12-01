@@ -5,9 +5,11 @@ import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import EmployeSVG from '../../components/svg/EmployeSVG';
 import './css/Employeedetails.css';
+import CustomAutocomplete from '../../components/CustomAutocomplete';
 
 const Input = styled('input')({
   display: 'none',
@@ -15,30 +17,26 @@ const Input = styled('input')({
 
 const roles = [
   {
-    value: 'Human Resoures Generalist',
-    label: 'Human Resoures Generalist',
+    title: 'Human Resoures Generalist',
   },
   {
-    value: 'Assistan or Office Manager',
-    label: 'Assistan or Office Manager',
+    title: 'Assistan or Office Manager',
   },
   {
-    value: 'Owner or CEO',
-    label: 'Owner or CEO',
+    title: 'Owner or CEO',
   },
   {
-    value: 'Recruiter',
-    label: 'Recruiter',
+    title: 'Recruiter',
   },
   {
-    value: 'Other',
-    label: 'Other',
+    title: 'Other',
   },
 ];
 
 const Employeedetails = () => {
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
+  const [otherRole, setOtherRole] = useState('');
   const [address, setAddress] = useState('');
   const [dob, setDob] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -67,7 +65,14 @@ const Employeedetails = () => {
             maxWidth: '50%',
           }}
         >
-          <div style={{ minWidth: '0px', width: '100%', paddingLeft: '40px' }}>
+          <div
+            style={{
+              minWidth: '0px',
+              width: '100%',
+              paddingRight: '3.8rem',
+              paddingLeft: '3.8rem',
+            }}
+          >
             <span
               style={{
                 fontWeight: '700',
@@ -81,7 +86,9 @@ const Employeedetails = () => {
               Create an employer account
             </span>
           </div>
-          <div style={{ width: '350px', height: '180px', paddingBottom: '20px' }}>
+          <div
+            style={{ width: '350px', height: '180px', paddingBottom: '20px' }}
+          >
             <EmployeSVG style={{ width: '350px', height: '180px' }} />
           </div>
         </div>
@@ -141,26 +148,35 @@ const Employeedetails = () => {
               <label className="employeeLabel">
                 Your role in hiring process
               </label>
-              <select
-                className="employeeInput"
-                select
+              <CustomAutocomplete
+                sx={{
+                  width: '100%',
+                  marginTop: '10px',
+                }}
+                placeholder="Select an option"
                 value={role}
-                onChange={(e) => setRole(e.target.value)}
-                style={{
-                  height: '48px',
-                  border: '1px solid blacl',
-                }}
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                {roles.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+                setValue={setRole}
+                options={roles}
+                endAdornmentIcon={(
+                  <div style={{ marginRight: '15px', marginTop: '-10px' }}>
+                    <ArrowDropDownIcon fontSize="10px" />
+                  </div>
+            )}
+              />
             </div>
+            {role === 'Other'
+              ? (
+                <div className="employeeform">
+                  <input
+                    placeholder="Enter role"
+                    type="text"
+                    value={otherRole}
+                    onChange={(e) => setOtherRole(e.target.value)}
+                    required
+                    className="employeeInput"
+                  />
+                </div>
+              ) : null}
             <div className="employeeform">
               <label className="employeeLabel">Your address</label>
               <input
@@ -177,6 +193,7 @@ const Employeedetails = () => {
                 <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               </label>
               <input
+                style={{ paddingLeft: '10px', paddingRight: '10px' }}
                 type="date"
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
@@ -199,17 +216,18 @@ const Employeedetails = () => {
             </div>
           </div>
         </div>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'left',
-          backgroundColor: 'white',
-          borderRadius: '1rem',
-          width: '43%',
-          padding: '3rem',
-          marginTop: '2rem',
-        }}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'left',
+            backgroundColor: 'white',
+            borderRadius: '1rem',
+            width: '43%',
+            padding: '3.75rem',
+            marginTop: '2rem',
+          }}
         >
           <div style={{
             width: '100%', paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
@@ -220,16 +238,18 @@ const Employeedetails = () => {
           </div>
           <Stack direction="row" alignItems="center" spacing={2}>
             <label htmlFor="contained-button-file">
-              <Input accept="image/*" id="contained-button-file" multiple type="file" />
-              <Button
-                variant="contained"
-                component="span"
-                style={{
-                  width: '160px', height: '44px', color: '#2557a7', fontWeight: '700', backgroundColor: '#f2f2f2', border: '#949494',
-                }}
+              <Input
+                accept="image/*"
+                id="contained-button-file"
+                multiple
+                type="file"
+              />
+              <button
+                className="employeeBack"
+                style={{ width: '165px', height: '44px' }}
               >
-                Add Photo
-              </Button>
+                Add photo
+              </button>
             </label>
           </Stack>
         </div>
@@ -241,12 +261,14 @@ const Employeedetails = () => {
             backgroundColor: 'white',
             borderRadius: '1rem',
             width: '43%',
-            padding: '3rem',
+            padding: '3.75rem',
             marginTop: '2rem',
           }}
         >
           <div>
-            <button disabled className="employeeBack">back</button>
+            <button disabled className="employeeBack">
+              back
+            </button>
           </div>
           <div>
             <button type="submit" className="employeeButton">

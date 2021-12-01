@@ -150,6 +150,7 @@ const getReviewConnection = () => {
     compensation: Number,
     jobSecurity: Number,
     management: Number,
+    helpful: Number,
     jobCulture: Number,
     summary: String,
     review: String,

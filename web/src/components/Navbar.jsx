@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
@@ -32,11 +33,11 @@ const Navbar = () => {
           width: '100%',
         }}
       >
-        <div style={{ marginLeft: '20px', width: '65%' }}>
+        <div style={{ marginLeft: '20px', width: '95%' }}>
           <Nav />
         </div>
         <div style={{ width: '35%' }}>
-          {decoded ? <NavLeft /> : <Beforelogin />}
+          {decoded ? decoded.id ? <NavLeft /> : <Beforelogin /> : <Beforelogin />}
         </div>
       </div>
     </div>

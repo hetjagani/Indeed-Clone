@@ -93,7 +93,8 @@ const createEmployer = async (req, res) => {
     }
 
     makeRequest('employer.create', employer, async (err, resp) => {
-      if (err || !resp) {
+      console.log('IN CREATE EMPLOYER');
+      if (err) {
         console.log(err);
         res.status(500).json(errors.serverError);
         return;
