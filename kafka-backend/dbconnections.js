@@ -114,7 +114,14 @@ const getUserConnection = () => {
     state: String,
     country: String,
     zip: String,
-    jobPreferences: [String],
+    jobPreferences: {
+      title: String,
+    relocation: String,
+    type: String,
+    schedule: String,
+    pay: String,
+    remote: String,
+    },
  
   });
 

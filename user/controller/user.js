@@ -89,6 +89,7 @@ const updateUser = async (req, res) => {
 
   makeRequest('user.update', userObj, (err, resp) => {
     if (err || !resp) {
+      console.log(err);
       res.status(500).json(errors.serverError);
       return;
     }
