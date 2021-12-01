@@ -85,12 +85,12 @@ const Register = () => {
     if (!response) {
       return;
     }
-    console.log('here1', payload.role);
     setUserToken(response.data.token);
     const user = jwt(response.data.token);
     dispatch(loginSuccess({
       loggedIn: true,
       id: user.id,
+      email,
     }));
     history.push('/');
   };
