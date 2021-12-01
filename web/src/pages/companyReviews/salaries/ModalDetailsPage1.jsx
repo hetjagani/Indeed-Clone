@@ -2,6 +2,8 @@ import {
   Autocomplete, FormControl, MenuItem, Select, TextField, Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addSalary } from '../../../app/actions';
 
 const cities = [
   { title: 'Fremont, California' },
@@ -16,16 +18,27 @@ const cities = [
 ];
 
 function ModalDetailsPage1({ setGotoNextFlag }) {
+  const dispatch = useDispatch();
   const [title, setTitle] = useState('');
   const [name, setName] = useState('');
   const [currentlyWorking, setCurrentlyWorking] = useState(true);
   const [endDate, setEndDate] = useState(2021);
   const [jobLocation, setJobLocation] = useState('');
+  const [industry, setIndustry] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // do form submit API call here
     setGotoNextFlag(true);
+    const date = `01/01/${endDate}`;
+    dispatch(addSalary({
+      title,
+      name,
+      currentlyWorking,
+      endDate: date,
+      jobLocation,
+      industry,
+    }));
   };
 
   return (
@@ -159,6 +172,17 @@ function ModalDetailsPage1({ setGotoNextFlag }) {
             required
             value={title}
             onChange={(event) => setTitle(event.target.value)}
+          />
+          <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>
+            What&apos;s your job Industry?
+            {' '}
+            <span style={{ color: '#db183f' }}>*</span>
+          </p>
+          <TextField
+            sx={{ width: '550px' }}
+            required
+            value={industry}
+            onChange={(event) => setIndustry(event.target.value)}
           />
 
           <p style={{ fontWeight: 'bold', color: 'rgb(45, 45, 45)' }}>

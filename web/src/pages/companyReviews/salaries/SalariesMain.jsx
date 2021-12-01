@@ -4,11 +4,22 @@ import Salaries from '../snapshot/Salaries';
 
 function SalariesMain(props) {
   return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%',
-    }}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        width: '100%',
+      }}
     >
-      <Salaries title="Average Salaries at JCPenny" showButton salaries={props.salaries} flag />
+      <Salaries
+        companyName={props.companyName}
+        showButton
+        salaries={props.salaries}
+        flag
+        compId={props.compId}
+        getSalaryDetails={props.getSalaryDetails}
+      />
     </div>
   );
 }

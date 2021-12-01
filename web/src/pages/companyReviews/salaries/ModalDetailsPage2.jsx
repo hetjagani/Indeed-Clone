@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Checkbox,
   FormControl,
@@ -9,8 +10,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import addNewSalary from '../../../api/salary/addNewSalary';
 
-function ModalDetailsPage2() {
+function ModalDetailsPage2({ compId, handleClose }) {
+  const user = useSelector((state) => state.user);
   const [experience, setExperience] = useState(2021);
   const [salary, setSalary] = useState('');
   const [benefits, setBenefits] = useState({
@@ -23,8 +26,29 @@ function ModalDetailsPage2() {
     otherBenefits: '',
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const benefit = [];
+    Object.entries(benefits).map(([key, value]) => (value === true ? benefit.push(key) : null));
+    const industry = {};
+    industry.name = user.salary.industry;
+
+    const sendData = {
+      title: user.salary.title,
+      name: user.salary.name,
+      currentlyWorking: user.salary.currentlyWorking,
+      endDate: user.salary.endDate,
+      jobLocation: user.salary.jobLocation,
+      experience: experience.toString(),
+      salary,
+      benefits: benefit,
+      industry,
+      companyId: compId,
+    };
+
+    await addNewSalary(sendData, user.user.id);
+    handleClose();
   };
 
   return (
@@ -156,7 +180,7 @@ function ModalDetailsPage2() {
                     },
                   }}
                 />
-                    )}
+              )}
             />
             <FormControlLabel
               label="Health insurance"
@@ -177,7 +201,7 @@ function ModalDetailsPage2() {
                     },
                   }}
                 />
-                    )}
+              )}
             />
             <FormControlLabel
               label="Life insurance"
@@ -198,7 +222,7 @@ function ModalDetailsPage2() {
                     },
                   }}
                 />
-                    )}
+              )}
             />
             <FormControlLabel
               label="Dental/vision insurance"
@@ -219,7 +243,7 @@ function ModalDetailsPage2() {
                     },
                   }}
                 />
-                    )}
+              )}
             />
             <FormControlLabel
               label="Retirement / 401(k)"
@@ -240,7 +264,7 @@ function ModalDetailsPage2() {
                     },
                   }}
                 />
-                    )}
+              )}
             />
             <FormControlLabel
               label="Other benefits"
@@ -261,7 +285,7 @@ function ModalDetailsPage2() {
                     },
                   }}
                 />
-                    )}
+              )}
             />
           </div>
 
@@ -274,7 +298,8 @@ function ModalDetailsPage2() {
                 required
                 value={benefits.otherBenefits}
                 onChange={(event) => setBenefits({
-                  ...benefits, otherBenefits: event.target.value,
+                  ...benefits,
+                  otherBenefits: event.target.value,
                 })}
               />
             </div>

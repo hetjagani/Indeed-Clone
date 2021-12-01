@@ -133,9 +133,11 @@ function CompanyMain({ match }) {
                   : null}
               </p>
               <StarRatings
-                rating={companyDetails && companyDetails.overallRating
-                  ? companyDetails.overallRating
-                  : null}
+                rating={
+                  companyDetails && companyDetails.overallRating
+                    ? companyDetails.overallRating
+                    : 0
+                }
                 starRatedColor="#9D2B6B"
                 numberOfStars={5}
                 name="rating"
@@ -194,6 +196,8 @@ function CompanyMain({ match }) {
               <SalariesMain
                 salaries={salaries}
                 compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails.name}
+                getSalaryDetails={getSalaryDetails}
               />
             )}
           />

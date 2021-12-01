@@ -11,6 +11,7 @@ const updateReview = async (payload, flag) => {
   } else if (payload.helpful > 0) {
     payload.helpful -= 1;
   }
+
   await axiosInstance
     .put(`/reviews/${payload._id}`, payload, {
       headers: {
@@ -21,7 +22,7 @@ const updateReview = async (payload, flag) => {
         companyId: payload.companyId,
       },
     })
-    .then((response) => { console.log(response); })
+    .then((response) => response)
     .catch((err) => {
       console.log('error', err);
     });
