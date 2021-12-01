@@ -6,12 +6,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import FeedIcon from '@mui/icons-material/Feed';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ReviewsIcon from '@mui/icons-material/Reviews';
-import EmailIcon from '@mui/icons-material/Email';
-import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
-import HelpIcon from '@mui/icons-material/Help';
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -93,7 +88,7 @@ const NavLeft = () => {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 0,
             width: 350,
-            height: 470,
+            height: 180,
             '& .MuiMenuItem-root': {
               height: 42,
               mt: 1,
@@ -117,41 +112,15 @@ const NavLeft = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>emailAddress</MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => history.push('/profile')}>
           <FeedIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>Profile</p>
         </MenuItem>
         <MenuItem>
-          <FavoriteIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>My jobs</p>
-        </MenuItem>
-        <MenuItem>
           <ReviewsIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>My reviews</p>
-        </MenuItem>
-        <MenuItem>
-          <EmailIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Email preferences</p>
-        </MenuItem>
-        <MenuItem>
-          <SearchIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Search preferences</p>
-        </MenuItem>
-        <MenuItem>
-          <SettingsIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Settings</p>
-        </MenuItem>
-        <MenuItem>
-          <HelpIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Help Center</p>
         </MenuItem>
         <Divider />
         <p

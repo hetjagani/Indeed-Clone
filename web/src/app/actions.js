@@ -23,3 +23,9 @@ export function logout() {
     type: 'LOGOUT',
   };
 }
+export function userDets(payload) {
+  return {
+    type: 'USER_DETAIL',
+    payload,
+  };
+}

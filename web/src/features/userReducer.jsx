@@ -4,6 +4,7 @@ const initialState = {
   user: {},
   token: '',
   errMsg: '',
+  userDetail: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -21,6 +22,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, user: null, token: '' };
     case 'REMOVE_TOKEN':
       return { ...state, token: '' };
+    case 'USER_DETAIL':
+      return { ...state, userDetail: action.payload };
     default:
       return state;
   }
