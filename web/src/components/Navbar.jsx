@@ -33,7 +33,7 @@ const Navbar = () => {
           width: '100%',
         }}
       >
-        <div style={{ marginLeft: '20px', width: '65%' }}>
+        <div style={{ marginLeft: '20px', width: '95%' }}>
           <Nav />
         </div>
         <div style={{ width: '35%' }}>

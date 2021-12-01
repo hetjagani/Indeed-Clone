@@ -9,7 +9,6 @@ import SadEmojiSVG from '../../../components/svg/SadEmojiSVG';
 import Button from '../../../components/Button';
 
 function WorkHappiness(props) {
-  console.log(props);
   return (
     <>
       <Typography
