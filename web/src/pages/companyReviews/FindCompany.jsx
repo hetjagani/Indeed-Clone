@@ -180,7 +180,7 @@ const FindCompany = () => {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             width: '69%',
             flexWrap: 'wrap',
             marginLeft: '30px',

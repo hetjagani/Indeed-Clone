@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable react/jsx-no-comment-textnodes */
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import React, { useEffect } from 'react';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
@@ -15,78 +13,47 @@ import SearchIcon from '@mui/icons-material/Search';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { logout } from '../app/actions';
 
-const AntTabs = styled(Tabs)({
-  borderBottom: '1px solid #e8e8e8',
-  height: 82,
-  '& .MuiTabs-indicator': {
-    backgroundColor: '#2557a7',
-  },
-  '& .MuiTabs-indicator:hover': {
-    backgroundColor: '#2557a7',
-  },
-});
-
-const AntTab = styled((props) => <Tab disableRipple {...props} />)(
-  ({ theme }) => ({
-    textTransform: 'none',
-    minWidth: 0,
-    marginTop: 25,
-    marginLeft: 20,
-    [theme.breakpoints.up('sm')]: {
-      minWidth: 0,
-    },
-    fontWeight: theme.typography.fontWeightRegular,
-    marginRight: theme.spacing(1),
-    color: 'rgba(0, 0, 0, 0.85)',
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '& .MuiTabs-indicator:hover': {
-      backgroundColor: '#2557a7',
-    },
-    '&.Mui-selected': {
-      color: 'black',
-      fontWeight: theme.typography.fontWeightMedium,
-    },
-    '&.Mui-focusVisible': {
-      backgroundColor: 'black',
-    },
-  }),
-);
+import { AntTab, AntTabs } from './AntTabs';
 
 const NavLeft = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(1);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const location = useLocation();
+
+  useEffect(() => {
+    const paths = location.pathname.split('/');
+    if (paths.length > 1) {
+      if (paths[1] === 'hire') {
+        setValue(4);
+      } else {
+        setValue(-1);
+      }
+    }
+  }, []);
+
   const handleChange = (event, newValue) => {
     if (newValue === 2) {
       setAnchorEl(event.currentTarget);
     }
     setValue(newValue);
+    if (newValue === 4) {
+      history.push('/hire');
+    }
   };
   const handleClose = () => {
     setAnchorEl(null);
-    setValue(0);
+    setValue(2);
   };
   return (
     <div>
