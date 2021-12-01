@@ -1,36 +1,147 @@
 /* eslint-disable no-underscore-dangle */
+const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
-const getAllCompanies = async (req, res) => {
-  const { all } = req.query;
-  const { limit, offset } = getPagination(req.query.page, req.query.limit);
+const getAvgReviewData = async (auth) => {
+  const resp = await axios.get(`${global.gConfig.review_url}/reviews`, {
+    headers: {
+      Authorization: auth,
+    },
+    params: {
+      all: true,
+    },
+  });
 
-  if (all) {
-    const companies = await Company.find({});
-    res.status(200).json(companies);
-    return;
+  if (!resp) {
+    throw Error('no response from reviews service');
   }
 
-  const companyCount = await Company.count();
+  const avgReviewMap = {};
+  resp.data.forEach((r) => {
+    const { companyId } = r;
 
-  const companyList = await Company.aggregate([
-    {
-      $lookup: {
-        from: 'employers',
-        localField: 'employers',
-        foreignField: '_id',
-        as: 'employers',
-      },
+    if (avgReviewMap[companyId]) {
+      const {
+        totalReviews,
+        overallRating,
+        workLifeBalance,
+        compensation,
+        jobSecurity,
+        management,
+        jobCulture,
+      } = avgReviewMap[companyId];
+      // avgReviewMap[companyId].totalReviews += 1;
+      avgReviewMap[companyId].overallRating =
+        (overallRating * totalReviews + r.overallRating) / (totalReviews + 1);
+      avgReviewMap[companyId].workLifeBalance =
+        (workLifeBalance * totalReviews + r.workLifeBalance) / (totalReviews + 1);
+      avgReviewMap[companyId].compensation =
+        (compensation * totalReviews + r.compensation) / (totalReviews + 1);
+      avgReviewMap[companyId].jobSecurity =
+        (jobSecurity * totalReviews + r.jobSecurity) / (totalReviews + 1);
+      avgReviewMap[companyId].management =
+        (management * totalReviews + r.management) / (totalReviews + 1);
+      avgReviewMap[companyId].jobCulture =
+        (jobCulture * totalReviews + r.jobCulture) / (totalReviews + 1);
+
+      avgReviewMap[companyId].totalReviews += 1;
+    } else {
+      avgReviewMap[companyId] = {
+        overallRating: r.overallRating,
+        workLifeBalance: r.workLifeBalance,
+        compensation: r.compensation,
+        jobSecurity: r.jobSecurity,
+        management: r.management,
+        jobCulture: r.jobCulture,
+        totalReviews: 1,
+      };
+    }
+  });
+
+  return avgReviewMap;
+};
+
+const getAvgSalaryData = async (auth) => {
+  const resp = await axios.get(`${global.gConfig.user_url}/salaries`, {
+    headers: {
+      Authorization: auth,
     },
-  ])
-    .skip(offset)
-    .limit(limit);
+    params: {
+      all: true,
+    },
+  });
 
-  res.status(200).json({ total: companyCount, nodes: companyList });
+  if (!resp) {
+    throw Error('no response from user service');
+  }
+
+  const avgSalaryMap = {};
+  resp.data.forEach((s) => {
+    const { companyId } = s;
+
+    if (avgSalaryMap[companyId]) {
+      const { totalSalaries, salary } = avgSalaryMap[companyId];
+      avgSalaryMap[companyId].salary = (salary * totalSalaries + s.salary) / (totalSalaries + 1);
+      avgSalaryMap[companyId].totalSalaries += 1;
+    } else {
+      avgSalaryMap[companyId] = {
+        salary: s.salary,
+        totalSalaries: 1,
+      };
+    }
+  });
+  return avgSalaryMap;
+};
+
+const getAllCompanies = async (req, res) => {
+  try {
+    const { all, q } = req.query;
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+
+    if (all) {
+      const companies = await Company.find({});
+      res.status(200).json(companies);
+      return;
+    }
+
+    const whereOpts = {};
+    if (q) {
+      whereOpts.name = { $regex: `(?i)${q}` };
+    }
+
+    const companyCount = await Company.count(whereOpts);
+    const companyList = await Company.aggregate([
+      { $match: whereOpts },
+      {
+        $lookup: {
+          from: 'employers',
+          localField: 'employers',
+          foreignField: '_id',
+          as: 'employers',
+        },
+      },
+    ])
+      .skip(offset)
+      .limit(limit);
+
+    const avgReviewMap = await getAvgReviewData(req.headers.authorization);
+    const avgSalaryMap = await getAvgSalaryData(req.headers.authorization);
+
+    const result = companyList.map((c) => ({
+      ...avgReviewMap[c._id.toString()],
+      ...avgSalaryMap[c._id.toString()],
+      ...c,
+    }));
+
+    res.status(200).json({ total: companyCount, nodes: result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const getCompanyById = async (req, res) => {
@@ -49,13 +160,21 @@ const getCompanyById = async (req, res) => {
       },
     ]);
 
+    const avgReviewMap = await getAvgReviewData(req.headers.authorization);
+    const avgSalaryMap = await getAvgSalaryData(req.headers.authorization);
+
     if (companyList.length === 0) {
       res.status(404).json(errors.notFound);
       return;
     }
 
-    res.status(200).json(companyList[0]);
+    res.status(200).json({
+      ...companyList[0],
+      ...avgReviewMap[companyList[0]._id.toString()],
+      ...avgSalaryMap[companyList[0]._id.toString()],
+    });
   } catch (err) {
+    console.log(err);
     res.status(500).json(errors.serverError);
   }
 };
@@ -154,7 +273,7 @@ const updateCompany = async (req, res) => {
         },
       ]);
 
-      res.status(201).json(companyList[0]);
+      res.status(200).json(companyList[0]);
     });
   } catch (err) {
     console.log(err);

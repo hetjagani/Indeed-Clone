@@ -125,7 +125,6 @@ services:
     networks:
       - indeed-net
 
-  user:
     depends_on:
       - mongodb
       - kafka-backend

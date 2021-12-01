@@ -10,8 +10,12 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Button from '../../components/Button';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
 import getCompanies from '../../api/company/get';
+import getJobs from '../../api/jobs/get';
+import {
+  datePostedFilter, whereFilter,
+} from '../../utils/staticData';
 
-const whatFilter = [
+let whatFilter = [
   { title: 'work from home' },
   { title: 'part time' },
   { title: 'hiring immediately' },
@@ -22,46 +26,6 @@ const whatFilter = [
   { title: 'amazon' },
   { title: 'receptionist' },
   { title: 'walmart' },
-];
-
-const whereFilter = [
-  { title: 'San Jose' },
-  { title: 'San Francisco' },
-  { title: 'Sunnyvale' },
-  { title: 'Santa Clara' },
-  { title: 'Sacramento' },
-  { title: 'California' },
-  { title: 'Fremont' },
-  { title: 'Los Angeles' },
-  { title: 'Oakland' },
-  { title: 'Las Vegas' },
-];
-
-const datePostedFilter = [
-  { title: 'Last 24 hours' },
-  { title: 'Last 3 days' },
-  { title: 'Last 7 days' },
-  { title: 'Last 14 days' },
-];
-
-const jobTypeFilter = [
-  { title: 'Full Time' },
-  { title: 'Internship' },
-  { title: 'Contract' },
-];
-
-const industryFilter = [
-  { title: 'Business Operations & Management' },
-  { title: 'Construction' },
-  { title: 'Education' },
-  { title: 'Finance & Accounting' },
-  { title: 'Food & Beverage' },
-  { title: 'Healthcare' },
-  { title: 'Manufacturing & Utilities' },
-  { title: 'Marketing, Advertising & Public Relations' },
-  { title: 'Sales & Retail' },
-  { title: 'Technology' },
-  { title: 'Transportation' },
 ];
 
 function useQuery() {
@@ -81,10 +45,89 @@ function Search({ advancedSearch }) {
   const [locationFilter, setLocationFilter] = useState('');
 
   // Query - Other Search inputs
-  const [datePosted, setDatePosted] = useState('');
+  const [datePosted, setDatePosted] = useState('Any date');
   const [companyName, setCompanyName] = useState('');
-  const [jobType, setJobType] = useState('');
-  const [industry, setIndustry] = useState('');
+  // const [jobType, setJobType] = useState('');
+  // const [industry, setIndustry] = useState('');
+
+  useEffect(() => {
+    const jobFilterFromURL = query.getAll('jobs');
+    if (!jobFilterFromURL.length) {
+      return;
+    }
+    setJobFilter(jobFilterFromURL[0]);
+  }, [history.location]);
+
+  const getSuggestions = async () => {
+    const res = await getJobs({ q: jobFilter });
+    if (!res) {
+      return;
+    }
+    if (res.data.nodes.length > 0) {
+      const set = new Set();
+      res.data.nodes.forEach((job) => {
+        set.add(job.title);
+      });
+      const temp = Array.from(set);
+      const suggestions = [];
+      temp.forEach((title) => {
+        suggestions.push({ title });
+      });
+      whatFilter = suggestions;
+    }
+  };
+
+  useEffect(() => {
+    if (jobFilter.length > 1) {
+      getSuggestions();
+    }
+  }, [jobFilter]);
+
+  useEffect(() => {
+    let date = new Date();
+    switch (datePosted) {
+      case 'Last 24 hours': date.setDate(date.getDate() - 1);
+        break;
+      case 'Last 3 days': date.setDate(date.getDate() - 3);
+        break;
+      case 'Last 7 days': date.setDate(date.getDate() - 7);
+        break;
+      case 'Last 14 days': date.setDate(date.getDate() - 14);
+        break;
+      default:
+        date = null;
+    }
+    if (date != null) {
+      const params = new URLSearchParams({
+        jobs: jobFilter || null,
+        location: locationFilter || null,
+        since: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+      });
+      history.push({ pathname: '/', search: `${params.toString()}` });
+      return;
+    }
+    const params = new URLSearchParams({
+      jobs: jobFilter || null,
+      location: locationFilter || null,
+      since: null,
+    });
+    history.push({ pathname: '/', search: `${params.toString()}` });
+  }, [datePosted]);
+
+  useEffect(() => {
+    if (companyName && companyName.length) {
+      setJobFilter(companyName);
+      const params = new URLSearchParams({
+        jobs: companyName || null,
+        location: locationFilter || null,
+      });
+      history.push({ pathname: '/', search: `${params.toString()}` });
+    }
+  }, [companyName]);
+
+  useEffect(() => {
+    if (jobFilter === 'null') { setJobFilter(''); }
+  }, [jobFilter]);
 
   const handleSearchSubmit = () => {
     if (!jobFilter && !locationFilter) {
@@ -239,7 +282,7 @@ function Search({ advancedSearch }) {
               }}
               size="small"
               variant="outlined"
-              placeholder="City, state, zip code or remote"
+              placeholder="City, state"
             />
           )}
         />
@@ -268,17 +311,17 @@ function Search({ advancedSearch }) {
       ) : (
         <div
           style={{
-            marginTop: '10px',
             display: 'flex',
             width: '100%',
             maxWidth: advancedSearch ? '1400px' : '900px',
-            justifyContent: 'space-between',
-            margin: '10px auto',
+            justifyContent: 'center',
+            marginTop: '20px',
+            marginRight: '118px',
           }}
         >
           <CustomAutocomplete
             sx={{
-              width: '100%',
+              width: '300px',
               marginLeft: '5px',
               marginTop: '10px',
             }}
@@ -294,7 +337,7 @@ function Search({ advancedSearch }) {
           />
           <CustomAutocomplete
             sx={{
-              width: '100%',
+              width: '300px',
               marginLeft: '50px',
               marginTop: '10px',
             }}
@@ -302,38 +345,6 @@ function Search({ advancedSearch }) {
             value={companyName}
             setValue={setCompanyName}
             options={companyNameOptions}
-            endAdornmentIcon={(
-              <div style={{ marginRight: '15px', marginTop: '-10px' }}>
-                <ArrowDropDownIcon fontSize="10px" />
-              </div>
-            )}
-          />
-          <CustomAutocomplete
-            sx={{
-              width: '100%',
-              marginLeft: '50px',
-              marginTop: '10px',
-            }}
-            placeholder="Job Type"
-            value={jobType}
-            setValue={setJobType}
-            options={jobTypeFilter}
-            endAdornmentIcon={(
-              <div style={{ marginRight: '15px', marginTop: '-10px' }}>
-                <ArrowDropDownIcon fontSize="10px" />
-              </div>
-            )}
-          />
-          <CustomAutocomplete
-            sx={{
-              width: '100%',
-              marginLeft: '50px',
-              marginTop: '10px',
-            }}
-            placeholder="Industry"
-            value={industry}
-            setValue={setIndustry}
-            options={industryFilter}
             endAdornmentIcon={(
               <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                 <ArrowDropDownIcon fontSize="10px" />

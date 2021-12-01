@@ -8,8 +8,6 @@ const {
   getSalaries,
   deleteSalary,
   getSalaryById,
-  generalGetSalaryById,
-  generalGetSalaries,
 } = require('../controller/salary');
 
 /**
@@ -17,7 +15,7 @@ const {
  * @property {string} companyId
  * @property {boolean} currentlyWorking
  * @property {string} endDate
- * @property {string} salary
+ * @property {integer} salary
  * @property {string} title
  * @property {string} city
  * @property {string} state
@@ -32,7 +30,7 @@ const salaryBodyValidators = () => [
   body('companyId').exists().isString(),
   body('currentlyWorking').optional().isBoolean(),
   body('endDate').optional().isString(),
-  body('salary').optional().isString(),
+  body('salary').optional().isNumeric(),
   body('title').optional().isString(),
   body('city').optional().isString(),
   body('state').optional().isString(),

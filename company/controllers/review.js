@@ -1,15 +1,43 @@
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { errors } = require('u-server-utils');
+const { Company } = require('../model');
+const { Types } = require('mongoose');
 
 const getCompanyReviews = async (req, res) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, sortBy, sortOrder } = req.query;
     const { compId } = req.params;
 
     const reviewResp = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { page, limit, companyId: compId },
+      params: { page, limit, companyId: compId, sortBy, sortOrder },
       headers: { Authorization: req.headers.authorization },
+    });
+
+    const allCompany = await Company.find({});
+    const companyMap = new Map();
+
+    allCompany.forEach((ele) => {
+      companyMap.set(String(ele._id), ele);
+    });
+
+    reviewResp.data.nodes.forEach((ele) => {
+      ele.company = companyMap.get(String(ele.companyId));
+    });
+
+    const allUsers = await axios.get(`${global.gConfig.user_url}/users`, {
+      params: { all: 'true' },
+      headers: { Authorization: req.headers.authorization },
+    });
+
+    const userMap = new Map();
+
+    allUsers.data.nodes.forEach((ele) => {
+      userMap.set(String(ele._id), ele);
+    });
+
+    reviewResp.data.nodes.forEach((ele) => {
+      ele.user = userMap.get(String(ele.userId));
     });
 
     res.status(200).json(reviewResp.data);
@@ -27,11 +55,29 @@ const getCompanyReviewById = async (req, res) => {
   try {
     const { compId, reviewId } = req.params;
 
-    const reviewResp = await axios.get(`${global.gConfig.review_url}/reviews/${reviewId}`, {
-      params: { companyId: compId },
-      headers: { Authorization: req.headers.authorization },
+    const reviewResp = await axios.get(
+      `${global.gConfig.review_url}/reviews/${reviewId}`,
+      {
+        params: { companyId: compId },
+        headers: { Authorization: req.headers.authorization },
+      },
+    );
+
+    const oneCompany = await Company.findOne({
+      _id: Types.ObjectId(compId),
     });
 
+    reviewResp.data.company = oneCompany;
+    console.log(reviewResp.data);
+
+    const oneUser = await axios.get(
+      `${global.gConfig.user_url}/users/${reviewResp.data.userId}`,
+      {
+        headers: { Authorization: req.headers.authorization },
+      },
+    );
+
+    reviewResp.data.user = oneUser.data;
     res.status(200).json(reviewResp.data);
   } catch (err) {
     console.log(err);

@@ -3,6 +3,7 @@ const emailValidator = require('email-validator');
 const { ObjectId } = require('mongodb');
 const { User } = require('../model');
 const { getPasswordHash, validatePassword, validatePassHash } = require('../util/passwords');
+const { errors } = require('u-server-utils');
 
 const JWT_SECRET = 'myubereatessuperdupersecret';
 
@@ -10,19 +11,19 @@ const getToken = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(400).send('Bad Request');
+    res.status(400).json(errors.badRequest);
     return;
   }
 
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    res.status(401).send('Unauthorized');
+    res.status(401).json({ ...errors.unauthorized, message: 'user does not exists' });
     return;
   }
 
   if (!(await validatePassHash(password, user.password))) {
-    res.status(401).send('Unauthorized');
+    res.status(401).json({ ...errors.unauthorized, message: 'invalid password' });
     return;
   }
 
@@ -43,17 +44,18 @@ const signUp = async (req, res) => {
 
   // validate email and password
   if (!email || !password || !role) {
-    res.status(400).send('Bad Request');
+    res.status(400).json(errors.badRequest);
     return;
   }
   if (
-    !emailValidator.validate(email)
-    || !validatePassword(password)
-    || !(role === 'user' || role === 'employer')
+    !emailValidator.validate(email) ||
+    !validatePassword(password) ||
+    !(role === 'user' || role === 'employer')
   ) {
     res.status(400).json({
+      ...errors.badRequest,
       error: 'invalid email or password',
-      requirement:
+      message:
         'Email should be valid email. Password should have 8-100 length and should contain atleast one uppercase, lowercase and a digit. Role should be either user/employer.',
     });
     return;
@@ -61,7 +63,9 @@ const signUp = async (req, res) => {
 
   const findUser = await User.findOne({ where: { email } });
   if (findUser) {
-    res.status(304).json({ message: 'User already exist. Please try login.' });
+    res
+      .status(400)
+      .json({ ...errors.badRequest, message: 'User already exist. Please try login.' });
     return;
   }
 
@@ -74,7 +78,7 @@ const signUp = async (req, res) => {
   });
 
   if (!user) {
-    res.status(500).send('Internal Server Error');
+    res.status(500).json(errors.serverError);
     return;
   }
 
@@ -92,7 +96,7 @@ const signUp = async (req, res) => {
 
 const validateToken = async (req, res) => {
   if (!req.query.token) {
-    res.status(400).send('please provide token query parameter.');
+    res.status(400).json(errors.badRequest);
     return;
   }
 
@@ -100,14 +104,14 @@ const validateToken = async (req, res) => {
 
   jwt.verify(token, JWT_SECRET, async (err, data) => {
     if (err) {
-      res.status(401).send({ valid: false });
+      res.status(401).json({ valid: false });
       return;
     }
 
     const user = await User.findOne({ where: { id: data.id } });
 
     if (!user) {
-      res.status(401).send('Unauthorized');
+      res.status(401).json(errors.unauthorized);
       return;
     }
 

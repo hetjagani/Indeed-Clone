@@ -9,12 +9,30 @@ const getAllReviews = async (req, res) => {
   try {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
+    let sortBy = 'reviewDate';
+    let sortOrder = 'desc';
+
     const queryObj = {};
     if (req.query.userId) {
       queryObj.userId = Types.ObjectId(req.query.userId);
     }
     if (req.query.companyId) {
       queryObj.companyId = Types.ObjectId(req.query.companyId);
+    }
+    if (req.query.sortBy && req.query.sortBy !== '') {
+      sortBy = req.query.sortBy;
+    }
+    if (req.query.sortOrder && req.query.sortOrder !== '') {
+      sortOrder = req.query.sortOrder;
+    }
+
+    const sortObj = {};
+    sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+    if (req.query.all == 'true') {
+      const allReviews = await Review.find(queryObj).sort(sortObj);
+      res.status(200).json(allReviews);
+      return;
     }
 
     const reviewCount = await Review.count(queryObj);
@@ -24,6 +42,7 @@ const getAllReviews = async (req, res) => {
         $match: queryObj,
       },
     ])
+      .sort(sortObj)
       .skip(offset)
       .limit(limit);
 
@@ -124,7 +143,7 @@ const updateReview = async (req, res) => {
       return;
     }
 
-    makeRequest('review.update', { id: id, data: review }, async (err, resp) => {
+    makeRequest('review.update', { id, data: review }, async (err, resp) => {
       if (err) {
         res.status(500).json(errors.serverError);
         return;
@@ -159,7 +178,7 @@ const deleteReview = async (req, res) => {
       return;
     }
 
-    makeRequest('review.delete', { id: id }, async (err, resp) => {
+    makeRequest('review.delete', { id }, async (err, resp) => {
       if (err) {
         res.status(500).json(errors.serverError);
         return;

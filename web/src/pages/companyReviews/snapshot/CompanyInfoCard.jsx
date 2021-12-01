@@ -4,12 +4,13 @@ function CompanyInfoCard({ title, subtitle }) {
   return (
     <div
       style={{
-        height: '100px',
+        // height: '100px',
         width: '125px',
         backgroundColor: 'white',
         border: '1px solid rgb(212, 210, 208)',
         fontSize: '0.875rem',
         borderRadius: '0.5rem',
+        maxHeight: '300px',
       }}
     >
       <div style={{
