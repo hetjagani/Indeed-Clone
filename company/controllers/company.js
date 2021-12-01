@@ -99,7 +99,7 @@ const getAvgSalaryData = async (auth) => {
 
 const getAllCompanies = async (req, res) => {
   try {
-    const { all, q } = req.query;
+    const { all, q, city } = req.query;
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
     if (all) {
@@ -111,6 +111,10 @@ const getAllCompanies = async (req, res) => {
     const whereOpts = {};
     if (q) {
       whereOpts.name = { $regex: `(?i)${q}` };
+    }
+
+    if (city && city !== '') {
+      whereOpts.headquarters = { $regex: `(?i)${city}` };
     }
 
     const companyCount = await Company.count(whereOpts);

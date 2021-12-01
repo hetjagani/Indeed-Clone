@@ -293,11 +293,15 @@ const generalGetSalaries = async (req, res) => {
       });
 
       result.nodes = filteredSalaries.slice(offset, limit + offset);
+
+      result.nodes = result.nodes.sort((a, b) => b.salary - a.salary);
+
       res.status(200).json(result);
       return;
     }
 
     result.nodes = salaryListWithCompany.slice(offset, limit + offset);
+    result.nodes = result.nodes.sort((a, b) => b.salary - a.salary);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);

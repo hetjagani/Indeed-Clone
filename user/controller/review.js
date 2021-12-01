@@ -30,10 +30,13 @@ const getUserReviews = async (req, res) => {
       ele.user = userMap.get(String(ele.userId));
     });
 
-    const allCompany = await axios.get(`${global.gConfig.company_url}/companies`, {
-      params: { all: 'true' },
-      headers: { Authorization: req.headers.authorization },
-    });
+    const allCompany = await axios.get(
+      `${global.gConfig.company_url}/companies`,
+      {
+        params: { all: 'true' },
+        headers: { Authorization: req.headers.authorization },
+      },
+    );
 
     const companyMap = new Map();
 

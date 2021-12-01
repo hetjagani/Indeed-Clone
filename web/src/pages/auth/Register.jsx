@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-wrap-multilines */
 // Import packages
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
@@ -78,12 +79,13 @@ const Register = () => {
     const payload = {
       email,
       password,
-      role: role.employer === true ? 'employeer' : 'user',
+      role: role.employer === true ? 'employer' : 'user',
     };
     const response = await register(payload);
     if (!response) {
       return;
     }
+    console.log('here1', payload.role);
     setUserToken(response.data.token);
     const user = jwt(response.data.token);
     dispatch(loginSuccess({
@@ -255,14 +257,14 @@ const Register = () => {
               </RadioGroup>
 
               <FormControlLabel
-                control={(
+                control={
                   <Checkbox
                     size="medium"
                     sx={{
                       color: '#2557a7',
                     }}
                   />
-                )}
+                }
                 label="Keep me signed in on this device."
               />
               <div style={{ marginTop: '20px', marginBottom: '30px' }}>

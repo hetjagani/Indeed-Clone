@@ -3,16 +3,25 @@ import {
   Card, CardActions, CardContent, Typography,
 } from '@mui/material';
 
-function CompanyJobCard() {
+function CompanyJobCard({ job, selectedJobFlag }) {
+  const date1 = new Date(job.postedOn);
+  const date2 = new Date();
+  const diffTime = Math.abs(date2 - date1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return (
     <Card
-      sx={{ width: '400px', height: '180px' }}
+      sx={{ width: '400px', height: '180px', borderColor: selectedJobFlag ? '#2557A6' : '' }}
       variant="outlined"
       className="jobCardHover"
     >
       <CardContent>
-        <p style={{ fontWeight: 'bold' }}>Customer Service Representative</p>
-        <p style={{ fontSize: '13px', marginTop: '-10px', color: '#525252' }}>Dallas, TX</p>
+        <p style={{ fontWeight: 'bold' }}>{job ? job.title : ''}</p>
+        <p style={{ fontSize: '13px', marginTop: '-10px', color: '#525252' }}>
+          {job ? job.city : ''}
+          ,
+          {' '}
+          {job ? job.state : ''}
+        </p>
         <div
           style={{
             display: 'flex',
@@ -29,7 +38,9 @@ function CompanyJobCard() {
             marginLeft: '5px', fontWeight: 'bold', backgroundColor: '#CCCCCC', padding: '5px',
           }}
           >
-            $ 10000
+            $
+            {' '}
+            {job ? job.salary.toLocaleString() : ''}
             {' '}
             a year
           </span>
@@ -43,7 +54,9 @@ function CompanyJobCard() {
           color="text.secondary"
           gutterBottom
         >
-          16 days ago
+          {diffDays}
+          {' '}
+          days ago
         </Typography>
       </CardActions>
     </Card>

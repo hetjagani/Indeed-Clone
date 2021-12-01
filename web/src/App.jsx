@@ -13,6 +13,7 @@ import FindSalary from './pages/salaries/Findsalary';
 import Employeedetails from './pages/employee/Employeedetails';
 import Companydetails from './pages/employee/Companydetails';
 import CompanyValues from './pages/employee/CompanyValues';
+import EmployersMain from './pages/employers/EmployersMain';
 
 // Config / other files
 import withAuth from './utils/withAuth';
@@ -31,6 +32,7 @@ function App() {
           <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
           <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
+          <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>
       </Router>
