@@ -12,7 +12,9 @@ import {
 import { validate as validateEmail } from 'email-validator';
 // import toast from 'react-hot-toast';
 import useCookie from 'react-use-cookie';
-
+import { useDispatch } from 'react-redux';
+import jwt from 'jwt-decode';
+import { loginSuccess } from '../../app/actions';
 // Import files
 import './css/Login.css';
 import Input from '../../components/Input';
@@ -21,7 +23,7 @@ import Button from '../../components/Button';
 
 const Register = () => {
   const history = useHistory();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [emailIsVisited, setEmailIsVisited] = useState(false);
   const [emailHasError, setEmailHasError] = useState(false);
@@ -83,6 +85,11 @@ const Register = () => {
       return;
     }
     setUserToken(response.data.token);
+    const user = jwt(response.data.token);
+    dispatch(loginSuccess({
+      loggedIn: true,
+      id: user.id,
+    }));
     history.push('/');
   };
 
