@@ -48,7 +48,7 @@ function JobFeed({
                 <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
                   Page
                   {' '}
-                  {currentPage}
+                  <span style={{ fontWeight: 'bold' }}>{currentPage}</span>
                   {' '}
                   of
                   {' '}
