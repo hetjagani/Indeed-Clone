@@ -7,22 +7,18 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import LockIcon from '@mui/icons-material/Lock';
-import { styled } from '@mui/material/styles';
-import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import putUser from '../../api/users/putDetails';
 import ResumeModal from './ResumeModal';
 import getUserByID from '../../api/users/getUser';
 
 import { userDets } from '../../app/actions';
+import PdfSVG from '../../components/svg/PdfSVG';
 
 function UserProfile() {
-  const history = useHistory();
+  // const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [userDetail, setUserDetail] = useState({});
@@ -48,60 +44,21 @@ function UserProfile() {
   };
 
   const style = {
-    position: 'absolute',
-    top: '57%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: 'relative',
     width: 500,
     height: '90%',
-    overflowY: 'scroll',
     overflowX: 'hidden',
     bgcolor: 'background.paper',
     p: 4,
   };
 
-  const Android12Switch = styled(Switch)(({ theme }) => ({
-    padding: 8,
-    '& .MuiSwitch-track': {
-      borderRadius: 22 / 2,
-      '&:before, &:after': {
-        content: '""',
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: 16,
-        height: 16,
-      },
-      '&:before': {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-          theme.palette.getContrastText(theme.palette.primary.main),
-        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
-        left: 12,
-      },
-      '&:after': {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-          theme.palette.getContrastText(theme.palette.primary.main),
-        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
-        right: 12,
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      boxShadow: 'none',
-      width: 16,
-      height: 16,
-      margin: 2,
-    },
-  }));
-
   const getUserDetails = async () => {
-    console.log('user', user.user);
     const userDetails = await getUserByID(user.user.id);
     setUserDetail(userDetails.data);
     setFirstName(userDetails.data.name.split(' ').slice(0, -1).join(' '));
     setLastName(userDetails.data.name.split(' ').slice(-1).join(' '));
     setmobile(userDetails.data.contactNo);
     setCity(userDetails.data.city);
-    console.log('details', userDetails);
   };
 
   const putUserDetails = async () => {
@@ -126,15 +83,12 @@ function UserProfile() {
   }, []);
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
       <Box sx={style}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div
             style={{
-              position: 'absolute',
-              top: '12%',
-              left: '13%',
-              transform: 'translate(-50%, -50%)',
+              position: 'relative',
               border: '3px solid rgb(8 95 247)',
               width: '65px',
               height: '65px',
@@ -143,6 +97,7 @@ function UserProfile() {
               display: 'flex',
               alignItems: 'center',
               textAlign: 'center',
+              marginLeft: '10px',
             }}
           >
             <div
@@ -161,8 +116,7 @@ function UserProfile() {
           </div>
           <div
             style={{
-              marginLeft: '90px',
-              marginTop: ' 30px',
+              marginLeft: '10px',
               fontSize: '1.5rem',
               fontFamily:
                 'Helvetica Neue,Helvetica,Avenir Next,Arial,Roboto,Noto,sans-serif',
@@ -229,51 +183,52 @@ function UserProfile() {
             <div
               style={{
                 display: 'flex',
+                justifyContent: 'space-between',
                 marginLeft: ' 20px',
-                marginTop: ' 8px',
+                marginTop: ' 20px',
                 marginBottom: '1rem',
+                width: '100%',
               }}
             >
-              <img
-                src="https://img.icons8.com/external-flatart-icons-lineal-color-flatarticons/50/000000/external-pdf-file-online-learning-flatart-icons-lineal-color-flatarticons.png"
-                alt="pdf"
-              />
-              <div style={{ marginLeft: ' 20px', marginTop: ' 8px' }}>
-                FileName.pdf
-                <div
-                  style={{
-                    marginLeft: '0px',
-                    marginTop: ' 12px',
-                    fontSize: '0.8rem',
-                    fontWeight: '400',
-                    lineHeight: '0.8em',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: '#444444',
-                  }}
-                >
-                  Added 10/09/2021
-                </div>
-                <div
-                  style={{
-                    marginLeft: '0px',
-                    marginTop: ' 12px',
-                    fontSize: '0.8rem',
-                    fontWeight: '400',
-                    lineHeight: '0.8em',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: '#444444',
-                  }}
-                >
-                  <VisibilityIcon
-                    style={{ color: 'grey', marginRight: '4px' }}
-                  />
-                  Public
+              <div style={{ display: 'flex' }}>
+                <PdfSVG />
+                <div style={{ marginLeft: ' 20px', marginTop: ' 8px' }}>
+                  {user ? user.resume ? user.resume[0] : 'Please upload resume' : 'Please upload resume'}
+                  <div
+                    style={{
+                      marginLeft: '0px',
+                      marginTop: ' 12px',
+                      fontSize: '0.8rem',
+                      fontWeight: '400',
+                      lineHeight: '0.8em',
+                      // display: 'flex',
+                      // alignItems: 'center',
+                      color: '#444444',
+                    }}
+                  >
+                    Added 10/09/2021
+                  </div>
+                  <div
+                    style={{
+                      marginLeft: '0px',
+                      marginTop: ' 12px',
+                      fontSize: '0.8rem',
+                      fontWeight: '400',
+                      lineHeight: '0.8em',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: '#444444',
+                    }}
+                  >
+                    <VisibilityIcon
+                      style={{ color: 'grey', marginRight: '4px' }}
+                    />
+                    Public
+                  </div>
                 </div>
               </div>
               <MoreVertIcon
-                style={{ marginLeft: '230px' }}
+                style={{ marginRight: '30px', marginTop: '-20px' }}
                 onClick={handleOpen}
               />
             </div>
@@ -302,11 +257,12 @@ function UserProfile() {
                   marginTop: ' 8px',
                   fontWeight: '700',
                   display: 'flex',
+                  justifyContent: 'space-between',
                 }}
               >
                 <div>Contact Information</div>
                 <EditIcon
-                  style={{ marginLeft: '260px' }}
+                  style={{ marginRight: '10px' }}
                   onClick={contactInfo}
                 />
               </div>
@@ -385,10 +341,6 @@ function UserProfile() {
                   }}
                 >
                   {userDetail.city ? userDetail.city : ''}
-                  {', '}
-                  {userDetail.state ? userDetail.state : ''}
-                  {', '}
-                  {userDetail.country ? userDetail.country : ''}
                 </div>
               </div>
             </div>
@@ -511,7 +463,6 @@ function UserProfile() {
                     >
                       gunjal1gupta@gmail.com
                     </div>
-                    <Button> edit </Button>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -558,10 +509,6 @@ function UserProfile() {
                     onChange={(event) => setmobile(event.target.value)}
                   />
 
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Call and send me text messages at this phone number"
-                  />
                   <div
                     style={{
                       marginLeft: '0px',
@@ -680,121 +627,6 @@ function UserProfile() {
               </div>
             </div>
           )}
-
-          <div
-            style={{
-              borderColor: 'd4d2d0',
-              borderRadius: '8px',
-              border: '1px #afafaf solid',
-              marginBottom: '1rem',
-              marginTop: ' 8px',
-              marginLeft: '8px',
-              width: '100%',
-              boxShadow: '0 5px 1px -5px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flexStart',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <div
-              style={{
-                marginLeft: ' 20px',
-                marginTop: ' 8px',
-                fontWeight: '700',
-                display: 'flex',
-              }}
-            >
-              <div>Ready to work</div>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                marginLeft: ' 20px',
-                marginTop: ' 8px',
-                marginBottom: '1.5rem',
-              }}
-            >
-              <div
-                style={{
-                  marginLeft: '0px',
-                  marginTop: ' 12px',
-                  fontSize: '0.8rem',
-                  fontWeight: '400',
-                  lineHeight: '1.5em',
-                }}
-              >
-                I am available to start immediately
-              </div>
-              <div
-                style={{
-                  marginLeft: '200px',
-                  marginTop: ' 0px',
-                  fontSize: '0.8rem',
-                  fontWeight: '400',
-                  lineHeight: '1.5em',
-                }}
-              >
-                <Android12Switch defaultChecked />
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              borderColor: 'd4d2d0',
-              borderRadius: '8px',
-              border: '1px #afafaf solid',
-              marginBottom: '1rem',
-              marginTop: ' 8px',
-              marginLeft: '8px',
-              width: '100%',
-              boxShadow: '0 5px 1px -5px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flexStart',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <div
-              style={{
-                marginLeft: ' 20px',
-                marginTop: ' 8px',
-                fontWeight: '700',
-                display: 'flex',
-              }}
-            >
-              <div>Job preferences</div>
-              <EditIcon
-                style={{ marginLeft: '287px' }}
-                onClick={() => {
-                  history.push('./JobPreferences');
-                }}
-              />
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginLeft: ' 20px',
-                marginTop: ' 8px',
-                marginBottom: '1.6rem',
-              }}
-            >
-              <div
-                style={{
-                  marginLeft: '0px',
-                  marginTop: ' 12px',
-                  fontSize: '0.8rem',
-                  fontWeight: '400',
-                  lineHeight: '1.5em',
-                  color: '#444444',
-                }}
-              >
-                Save specific details like desired pay and schedule that help us
-                match you with better jobs
-              </div>
-            </div>
-          </div>
         </div>
       </Box>
     </div>

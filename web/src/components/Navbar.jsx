@@ -22,6 +22,7 @@ const Navbar = () => {
           height: '30px',
           marginTop: '30px',
           marginLeft: '10px',
+          cursor: 'pointer',
         }}
         alt="indeed"
       />
