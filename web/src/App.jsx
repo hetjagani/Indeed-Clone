@@ -11,6 +11,8 @@ import CompanyMain from './pages/companyReviews/CompanyMain';
 import FindCompany from './pages/companyReviews/FindCompany';
 import FindSalary from './pages/salaries/Findsalary';
 import Employeedetails from './pages/employee/Employeedetails';
+import Companydetails from './pages/employee/Companydetails';
+import CompanyValues from './pages/employee/CompanyValues';
 
 // Config / other files
 import withAuth from './utils/withAuth';
@@ -26,7 +28,9 @@ function App() {
           <Route path="/cmp/:id" component={withAuth(CompanyMain, 'any', true)} />
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
-          <Route path="/employee" component={withAuth(Employeedetails, 'employer', true)} />
+          <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
+          <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
+          <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>
       </Router>

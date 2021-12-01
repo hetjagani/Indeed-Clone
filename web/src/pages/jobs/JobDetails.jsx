@@ -27,7 +27,7 @@ function JobDetails({ job }) {
     try {
       html = edjsParser.parse(job.description);
     } catch (err) {
-      console.log(err);
+      // console.log('');
       html = null;
     }
   }
