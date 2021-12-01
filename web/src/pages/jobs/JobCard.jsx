@@ -93,7 +93,7 @@ function JobCard({ job, selectedJobFlag }) {
           <p style={{ marginLeft: '10px' }}>Apply with your indeed resume</p>
         </div>
 
-        <ul className="bulletList">
+        <ul className="bulletList" style={{ maxHeight: '20px' }}>
           {job ? job.summary ? job.summary.length > 0 ? job.summary.map((bullet) => (
             <li className="bullet" style={{ listStyleType: 'circle' }}>
               {bullet}
@@ -101,16 +101,23 @@ function JobCard({ job, selectedJobFlag }) {
           )) : null : null : null}
         </ul>
       </CardContent>
-      <CardActions sx={{ marginTop: '-20px' }}>
-        <Typography
-          sx={{ fontSize: 12, color: '#6f6f6f', marginLeft: '10px' }}
-          color="text.secondary"
-          gutterBottom
+      <CardActions sx={{ marginTop: '2px', padding: '0 0 0 0', backgroundColor: 'white' }}>
+        <div style={{
+          width: '100%', backgroundColor: 'white', zIndex: 99, margin: 0, padding: '12px',
+        }}
         >
-          {diffDays}
-          {' '}
-          days ago
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: 12, color: '#6f6f6f', marginLeft: '10px',
+            }}
+            color="text.secondary"
+            gutterBottom
+          >
+            {diffDays}
+            {' '}
+            days ago
+          </Typography>
+        </div>
       </CardActions>
     </Card>
   );
