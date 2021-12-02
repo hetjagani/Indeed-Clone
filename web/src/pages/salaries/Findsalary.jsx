@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -7,6 +8,8 @@ import './css/Findsalary.css';
 import searchSalary from '../../api/salary/searchSalary';
 import SearchSalary from './SearchSalary';
 import TopSalary from './TopSalary';
+import CustomAutocomplete from '../../components/CustomAutocomplete';
+import { whatFilter, whereFilter } from '../../utils/staticData';
 
 const Findsalary = () => {
   const [location, setLocation] = useState('');
@@ -26,9 +29,13 @@ const Findsalary = () => {
       }
       setTopSalaries(response.data.nodes);
     });
-  }, [searchFlag]);
+  }, []);
   const search = (event) => {
     event.preventDefault();
+    if (title === '' && location === '') {
+      setSearchFlag(true);
+      return;
+    }
     searchSalary(payload).then((response) => {
       if (!response) {
         return;
@@ -52,7 +59,13 @@ const Findsalary = () => {
           alignItems: 'flex-end',
         }}
       >
-        <div style={{ position: 'absolute', marginLeft: '220px', marginBottom: '30px' }}>
+        <div
+          style={{
+            position: 'absolute',
+            marginLeft: '220px',
+            marginBottom: '30px',
+          }}
+        >
           <div className="findsalary_header">
             <h1 className="headersalary1">Find a career you&apos;ll love</h1>
             <h2 className="headersalary2">
@@ -66,21 +79,62 @@ const Findsalary = () => {
               <div className="findsalary_form">
                 <div className="salarylabel">
                   <p className="namesalaryLabel">What</p>
-                  <div className="inputsalaryLabel">
-                    <input className="takesalaryinput" placeholder="job title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                  <CustomAutocomplete
+                    placeholder="Enter job title"
+                    className="inputLabel"
+                    sx={{
+                      width: '330px',
+                      marginLeft: '5px',
+                      marginTop: '10px',
+                    }}
+                    variant="outlined"
+                    value={title}
+                    setValue={setTitle}
+                    options={whatFilter}
+                    endAdornmentIcon={(
+                      <div style={{ marginRight: '15px', marginTop: '5px' }}>
+                        <SearchIcon className="iconsinput" />
+                      </div>
+                    )}
+                  />
+                  {/* <div className="inputsalaryLabel">
+                    <input
+                      className="takesalaryinput"
+                      placeholder="job title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
                     <div className="salaryIcons">
                       <SearchIcon className="salaryiconsinput" />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="salarylabel">
                   <p className="namesalaryLabel">Where</p>
-                  <div className="inputsalaryLabel">
+                  <CustomAutocomplete
+                    placeholder="Enter location"
+                    className="inputLabel"
+                    sx={{
+                      width: '330px',
+                      marginLeft: '5px',
+                      marginTop: '10px',
+                    }}
+                    variant="outlined"
+                    value={location}
+                    setValue={setLocation}
+                    options={whereFilter}
+                    endAdornmentIcon={(
+                      <div style={{ marginRight: '15px', marginTop: '5px' }}>
+                        <LocationOnIcon className="iconsinput" />
+                      </div>
+                    )}
+                  />
+                  {/* <div className="inputsalaryLabel">
                     <input className="takesalaryinput" placeholder="location" value={location} onChange={(e) => setLocation(e.target.value)} />
                     <div className="salaryIcons">
                       <LocationOnIcon className="salaryiconsinput" />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <button type="submit" className="salaryButton" onClick={search}>
                   Search
@@ -101,8 +155,11 @@ const Findsalary = () => {
           }}
         />
       </div>
-      <SearchSalary salary={topSalaries} />
-      {searchFlag ? <></> : <TopSalary />}
+      {searchFlag ? (
+        <SearchSalary salary={topSalaries} />
+      ) : (
+        <TopSalary salary={salaryData} title={title} location={location} />
+      )}
     </Container>
   );
 };

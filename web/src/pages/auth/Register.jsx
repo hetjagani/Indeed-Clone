@@ -85,12 +85,19 @@ const Register = () => {
     if (!response) {
       return;
     }
-    const user = await jwt(response.data.token);
+    setUserToken(response.data.token);
+    const user = jwt(response.data.token);
+    dispatch(loginSuccess({
+      loggedIn: true,
+      id: user.id,
+      email,
+    }));
+    const decoded = await jwt(response.data.token);
     await setUserToken(response.data.token);
     await dispatch(loginSuccess({
       loggedIn: true,
-      id: user.id,
-      role: user.role,
+      id: decoded.id,
+      role: decoded.role,
     }));
     if (payload.role === 'employer' || role.employer === true) {
       history.push('/employee');

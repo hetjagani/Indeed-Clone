@@ -79,6 +79,7 @@ const Login = () => {
         dispatch(loginSuccess({
           loggedIn: true,
           id: user.id,
+          email,
           role: user.role,
         }));
         if (user.role === 'user') {
