@@ -86,7 +86,7 @@ const Login = () => {
         if (user.role === 'user') {
           history.push('/');
         } else if (user.role === 'employer') {
-          history.push('/employee');
+          history.push('/employee/dashboard');
         }
       })
       .catch((err) => {

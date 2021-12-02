@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 import { Card, CardContent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -6,17 +7,22 @@ import toast from 'react-hot-toast';
 import getJobByCompanyID from '../../../api/jobs/getJobByCompanyID';
 import getEmployerByID from '../../../api/employer/get';
 import { compamny } from '../../../app/actions';
+import Button from '../../../components/Button';
+import AddJobModal from './AddJobModal';
 
 function EmployeeJobs() {
   const [jobs, setJobs] = useState([]);
   const [totalNumberOfJobs, setTotalNumberOfJobs] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [companyID, setCompanyID] = useState('');
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const getCompanyJobs = async (id) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
+
+  const getCompanyJobs = async (id = user.company._id) => {
     setCurrentPage(1);
     const params = { page: 1, limit: 10 };
     const response = await getJobByCompanyID(id, params);
@@ -37,7 +43,11 @@ function EmployeeJobs() {
   };
 
   useEffect(() => {
-    getEmployerDetails();
+    if (!user.company) {
+      getEmployerDetails();
+    } else {
+      getCompanyJobs();
+    }
     // eslint-disable-next-line no-undef
     window.scrollTo(0, 0);
   }, []);
@@ -48,17 +58,65 @@ function EmployeeJobs() {
   console.log(currentPage);
 
   return (
-    <div style={{ backgroundColor: '#F3F2F1', height: '100%', padding: '20px' }}>
-      <Card
-        variant="outlined"
-        className="jobCardHover"
-        sx={{ borderRadius: '12px' }}
+    <>
+      <AddJobModal
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+        getCompanyJobs={getCompanyJobs}
+        isOpen={isOpen}
+      />
+      <div
+        style={{
+          backgroundColor: '#F3F2F1', height: '100%', display: 'flex', flexDirection: 'column', padding: '20px',
+        }}
       >
-        <CardContent>
-          bruh2
-        </CardContent>
-      </Card>
-    </div>
+        <Button
+          onClick={handleOpen}
+          style={{
+            height: '50px',
+            width: '200px',
+            marginTop: '5px',
+            marginBottom: '10px',
+          }}
+          label="Post a job"
+        />
+        {jobs
+          ? jobs.length > 0
+            ? jobs.map((job) => (
+              <Card
+                variant="outlined"
+                className="jobCardHover"
+                sx={{ borderRadius: '12px', marginTop: '10px' }}
+              >
+                <CardContent>
+                  <p
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '16px',
+                      color: '#2557a7',
+                    }}
+                  >
+                    {job.title}
+                  </p>
+                  <p style={{ fontSize: '14px', marginTop: '-10px' }}>
+                    {job.type === 'internship'
+                      ? 'Internship'
+                      : job.type === 'full_time'
+                        ? 'Full Time'
+                        : 'Contract'}
+                    {' '}
+                    -
+                    {' '}
+                    {job.jobLocation === 'remote' ? 'Remote' : 'In Person'}
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+            : null
+          : null}
+      </div>
+
+    </>
   );
 }
 
