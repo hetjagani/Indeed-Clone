@@ -99,18 +99,31 @@ const getAvgSalaryData = async (auth) => {
 
 const getAllCompanies = async (req, res) => {
   try {
-    const { all, q } = req.query;
+    const { all, q, city } = req.query;
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
     if (all) {
       const companies = await Company.find({});
-      res.status(200).json(companies);
+      const avgReviewMap = await getAvgReviewData(req.headers.authorization);
+      const avgSalaryMap = await getAvgSalaryData(req.headers.authorization);
+
+      const result = companies.map((c) => ({
+        ...avgReviewMap[c._id.toString()],
+        ...avgSalaryMap[c._id.toString()],
+        ...c._doc,
+      }));
+
+      res.status(200).json(result);
       return;
     }
 
     const whereOpts = {};
     if (q) {
       whereOpts.name = { $regex: `(?i)${q}` };
+    }
+
+    if (city && city !== '') {
+      whereOpts.headquarters = { $regex: `(?i)${city}` };
     }
 
     const companyCount = await Company.count(whereOpts);

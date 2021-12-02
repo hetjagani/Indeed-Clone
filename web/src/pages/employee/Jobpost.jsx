@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -96,7 +97,6 @@ const Jobpost = () => {
 
     console.log('body', body);
     await postJob(body);
-
     history.push('/jobDescription');
   };
   console.log(jobLocation);

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const handle_request = async (msg, callback) => {
   const { User } = getUserConnection();
-
+  console.log(msg);
   const custId = msg._id;
 
   try {
@@ -20,6 +20,7 @@ const handle_request = async (msg, callback) => {
     );
     callback(null, user);
   } catch (err) {
+    console.log(err);
     callback({ isError: true, error: err.toString() });
   }
 };

@@ -30,3 +30,10 @@ export function compamny(payload) {
     payload,
   };
 }
+
+export function userDets(payload) {
+  return {
+    type: 'USER_DETAIL',
+    payload,
+  };
+}

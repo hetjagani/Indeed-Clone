@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 
 import { useSelector } from 'react-redux';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import toast from 'react-hot-toast';
 import postEmployers from '../../api/company/postEmployeeDetails';
@@ -324,8 +325,12 @@ const Employeedetails = () => {
             marginTop: '2rem',
           }}
         >
-          <div style={{ width: '100%', paddingBottom: '1rem' }}>
+          <div style={{
+            width: '100%', paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
+          }}
+          >
             <span className="employeeLabel">Add Photo</span>
+            <span style={{ paddingTop: '0.5rem', color: 'rgb(89, 89, 89)', fontSize: '14px' }}>Give an inside look at working at your company by adding photos to your post</span>
           </div>
           <Stack direction="row" alignItems="center" spacing={2}>
             <label htmlFor="contained-button-file">

@@ -3,7 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Container } from 'react-bootstrap';
 
-import './css/FindSalary.css';
+import './css/Findsalary.css';
 import searchSalary from '../../api/salary/searchSalary';
 import SearchSalary from './SearchSalary';
 import TopSalary from './TopSalary';
@@ -11,6 +11,7 @@ import TopSalary from './TopSalary';
 const Findsalary = () => {
   const [location, setLocation] = useState('');
   const [title, setTitle] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [salaryData, setSalaryData] = useState([]);
   const [searchFlag, setSearchFlag] = useState(true);
   const [topSalaries, setTopSalaries] = useState([]);
@@ -32,7 +33,6 @@ const Findsalary = () => {
       if (!response) {
         return;
       }
-      console.log(salaryData);
       setSearchFlag(false);
       setSalaryData(response.data.nodes);
     });
