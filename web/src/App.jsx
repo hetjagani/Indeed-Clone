@@ -21,6 +21,7 @@ import EmployeeDashboard from './pages/employers/EmployeeDashboard';
 
 // Config / other files
 import withAuth from './utils/withAuth';
+import Userchat from './pages/chat/Userchat';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
+          <Route path="/messages" component={withAuth(Userchat, 'any', true)} />
           <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>
