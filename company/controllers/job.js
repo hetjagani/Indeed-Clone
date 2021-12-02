@@ -96,7 +96,14 @@ const getJobById = async (req, res) => {
       return;
     }
 
-    res.status(200).json(result[0]);
+    const applicationsResp = await axios.get(`${global.gConfig.application_url}/applications`, {
+      params: { jobIds: result[0]._id.toString(), all: true },
+      headers: { Authorization: req.headers.authorization },
+    });
+
+    res.applications = applicationsResp.data?.nodes;
+
+    res.status(200).json({ ...result[0], applications: applicationsResp.data.nodes });
   } catch (err) {
     console.log(err);
     if (err instanceof TypeError) {
