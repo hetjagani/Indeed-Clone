@@ -1,8 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable object-shorthand */
 /* eslint-disable max-len */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import Stack from '@mui/material/Stack';
@@ -12,12 +13,14 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useHistory } from 'react-router';
+import toast from 'react-hot-toast';
 
 import ValuesSVG from '../../components/svg/ValuesSVG';
-import postCompany from '../../api/company/postCompanydetails';
+import putCompany from '../../api/company/putCompanyDetails';
 import './css/Employeedetails.css';
 import { compamny } from '../../app/actions';
 import Editor from '../../utils/Editor';
+import changeDateFormat from '../../utils/changeDateFormat';
 
 const Input = styled('input')({
   display: 'none',
@@ -41,6 +44,11 @@ const CompanyValues = () => {
   const dispatch = useDispatch();
   const company = useSelector((state) => state.user);
   const [description, setDescription] = useState(DEFAULT_INITIAL_DATA);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    window.scrollTo(0, 0);
+  }, []);
 
   const [workCulture, setWorkCulture] = useState({
     Learning: false,
@@ -67,13 +75,8 @@ const CompanyValues = () => {
   const [about, setAbout] = useState('');
   // eslint-disable-next-line no-unused-vars
   const backtoprofile = () => {
-    history.push('/company');
+    history.push('/employee');
   };
-  console.log(value, workCulture);
-  console.log('company', company);
-  console.log('company', company.company);
-  console.log('company', company.company.name);
-
   // const handleSave = async () => {
   //   const savedData = await descptionRef.current.save();
   //   console.log(savedData);
@@ -134,34 +137,38 @@ const CompanyValues = () => {
       headquarters: company.company.headquarters,
       revenue: company.company.revenue,
       website: company.company.website,
-      foundedOn: company.company.foundedOn,
-      industry: company.company.industry,
+      foundedOn: changeDateFormat(company.company.foundedOn),
+      industry: company.company.industry.name,
       size: company.company.size,
-      description: {},
+      description: description,
       about: about,
       workCulture: work,
       mission: mission,
       values: val,
     };
 
+    const response = await putCompany(body, company._id);
+    if (!response) {
+      toast.error('Could not update!');
+      return;
+    }
     dispatch(compamny({
-      name: company.company.name,
-      ceo: company.company.ceo,
-      headquarters: company.company.headquarters,
-      revenue: company.company.revenue,
-      website: company.company.website,
-      foundedOn: company.company.foundedOn,
-      industry: company.company.industry,
-      size: company.company.size,
-      description: {},
+      id: response.data._id,
+      name: response.data.name,
+      ceo: response.data.ceo,
+      headquarters: response.data.headquarters,
+      revenue: response.data.revenue,
+      website: response.data.website,
+      foundedOn: response.data.foundedOn,
+      industry: response.data.industry,
+      size: response.data.size,
+      description: description,
       about: about,
       workCulture: workCulture,
       mission: mission,
       values: value,
     }));
 
-    console.log('body', body);
-    await postCompany(body);
     history.push('/employee/companyValues');
   };
 
@@ -235,7 +242,7 @@ const CompanyValues = () => {
                   fontSize: '1.25rem',
                 }}
               >
-                You haven&apos;t posted a job before, please tell about your company.
+                Your company is now created, please tell about your company...
               </span>
             </div>
             <div

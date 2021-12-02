@@ -21,7 +21,6 @@ const Editor = ({ description, setDescription }) => {
         // Put your logic here to save this data to your DB
         setDescription(content);
       },
-      autofocus: true,
       tools: {
         header: Header,
         list: {

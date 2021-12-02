@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable object-shorthand */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -5,12 +6,14 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 // import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
 import postCompany from '../../api/company/postCompanydetails';
 
 import CompanySVG from '../../components/svg/CompanySVG';
 import './css/Employeedetails.css';
 
 import { compamny } from '../../app/actions';
+import changeDateFormat from '../../utils/changeDateFormat';
 
 const industries = [
   {
@@ -99,19 +102,6 @@ const Companydetails = () => {
   const [website, setWebsite] = useState('');
   const [companyName, setCompanyName] = useState('');
 
-  function changeDateFormat(inputDate) { // expects Y-m-d
-    const splitDate = inputDate.split('-');
-    if (splitDate.count === 0) {
-      return null;
-    }
-
-    const year = splitDate[0];
-    const month = splitDate[1];
-    const day = splitDate[2];
-
-    return `${month}/${day}/${year}`;
-  }
-
   const saveDetails = async (e) => {
     e.preventDefault();
     const formattedDOB = String(changeDateFormat(foundedOn));
@@ -131,24 +121,27 @@ const Companydetails = () => {
       values: '',
     };
 
+    const response = await postCompany(body);
+    if (!response) {
+      toast.error('Could not create company!');
+      return;
+    }
     dispatch(compamny({
-      name: companyName,
-      ceo: ceo,
-      headquarters: headquarters,
-      revenue: revenue,
-      website: website,
-      foundedOn: formattedDOB,
-      industry: { name: industry },
-      size: size,
+      id: response.data._id,
+      name: response.data.name,
+      ceo: response.data.ceo,
+      headquarters: response.data.headquarters,
+      revenue: response.data.revenue,
+      website: response.data.website,
+      foundedOn: response.data.foundedOn,
+      industry: response.data.industry,
+      size: response.data.size,
     }));
-
-    console.log('body', body);
-    await postCompany(body);
     history.push('/employee/companyValues');
   };
 
   return (
-    <form>
+    <form onSubmit={saveDetails}>
       <div
         style={{
           display: 'flex',
@@ -280,8 +273,8 @@ const Companydetails = () => {
             <div className="employeeform">
               <label className="employeeLabel">
                 Industry
+                <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               </label>
-              <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               <select
                 className="employeeInput"
                 select
@@ -303,8 +296,8 @@ const Companydetails = () => {
             <div className="employeeform">
               <label className="employeeLabel">
                 Revenue
+                <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               </label>
-              <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               <input
                 type="Number"
                 value={revenue}
@@ -316,8 +309,8 @@ const Companydetails = () => {
             <div className="employeeform">
               <label className="employeeLabel">
                 Size of company
+                <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               </label>
-              <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               <select
                 className="employeeInput"
                 select
@@ -355,19 +348,16 @@ const Companydetails = () => {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             backgroundColor: 'white',
             borderRadius: '1rem',
-            width: '43%',
+            width: '37%',
             padding: '3rem',
             marginTop: '2rem',
           }}
         >
           <div>
-            <button disabled className="employeeBack">back</button>
-          </div>
-          <div>
-            <button type="submit" className="employeeButton" onClick={saveDetails}>
+            <button type="submit" className="employeeButton">
               Save & continue
             </button>
           </div>
