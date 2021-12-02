@@ -6,17 +6,21 @@ const { getPagination, errors } = require('u-server-utils');
 const { Job, Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
-const getAllApplications = async (req, res) => {};
-
 // get all applications along with jobs when getApplication=true is passed in query
 const getAllJobs = async (req, res) => {
   const { compId } = req.params;
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
+  const { since } = req.query;
+
+  const whereOpts = { companyId: Types.ObjectId(compId) };
+  if (since && since !== '') {
+    whereOpts.push({ postedOn: { $gte: new Date(since) } });
+  }
 
   try {
-    const jobsCount = await Job.count({ companyId: Types.ObjectId(compId) });
+    const jobsCount = await Job.count(whereOpts);
     const jobList = await Job.aggregate([
-      { $match: { companyId: Types.ObjectId(compId) } },
+      { $match: whereOpts },
       {
         $lookup: {
           from: 'companies',
