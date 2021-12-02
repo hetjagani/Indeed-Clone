@@ -11,6 +11,7 @@ import { useHistory } from 'react-router';
 
 import EmployeSVG from '../../components/svg/EmployeSVG';
 import './css/Employeedetails.css';
+import postJob from '../../api/jobs/postJob';
 
 const industries = [
   {
@@ -72,7 +73,30 @@ const Jobpost = () => {
     remote: true,
     onsite: true,
   });
-  const saveJobDetails = () => {
+
+  const saveJobDetails = async () => {
+    const date = new Date();
+    let loc = '';
+    if (jobLocation.remote === true) {
+      loc = 'remote';
+    } else {
+      loc = 'onsite';
+    }
+    const body = {
+      title,
+      jobLocation: loc,
+      city,
+      country,
+      zipcode,
+      state: region,
+      industry: { name: industry },
+      postedOn: date,
+      description: {},
+      address,
+    };
+
+    console.log('body', body);
+    await postJob(body);
     history.push('/jobDescription');
   };
   console.log(jobLocation);
@@ -278,7 +302,7 @@ const Jobpost = () => {
           }}
         >
           <div>
-            <button disabled className="employeeBack">back</button>
+            <button type="submit" disabled className="employeeBack">back</button>
           </div>
           <div>
             <button type="submit" className="employeeButton" onClick={saveJobDetails}>

@@ -1,12 +1,20 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable object-shorthand */
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { styled } from '@mui/material/styles';
+
+import { useSelector } from 'react-redux';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
+import toast from 'react-hot-toast';
+import postEmployers from '../../api/company/postEmployeeDetails';
+// import getCompanyData from '../../api/company/getCompanyData';
+import getCompanies from '../../api/company/get';
 import EmployeSVG from '../../components/svg/EmployeSVG';
 import './css/Employeedetails.css';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
@@ -34,14 +42,95 @@ const roles = [
 ];
 
 const Employeedetails = () => {
+  const history = useHistory();
+  const user = useSelector((state) => state.user);
+
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [otherRole, setOtherRole] = useState('');
   const [address, setAddress] = useState('');
   const [dob, setDob] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [companyNameOptions, setCompanyNameOptions] = useState([]);
+
+  const getCompanyNames = async () => {
+    const queryParams = { page: 1, limit: 10 };
+    const response = await getCompanies(queryParams);
+    if (!response) {
+      return;
+    }
+    const companyNames = [];
+    response.data.nodes.forEach((company) => {
+      companyNames.push({ title: company.name, id: company._id });
+    });
+    setCompanyNameOptions(companyNames);
+  };
+
+  useEffect(() => {
+    getCompanyNames();
+    // eslint-disable-next-line no-undef
+    window.scrollTo(0, 0);
+  }, []);
+
+  const changeDateFormat = (inputDate) => { // expects Y-m-d
+    const splitDate = inputDate.split('-');
+    if (splitDate.count === 0) {
+      return null;
+    }
+
+    const year = splitDate[0];
+    const month = splitDate[1];
+    const day = splitDate[2];
+
+    return `${month}/${day}/${year}`;
+  };
+
+  const saveDetails = async (e) => {
+    e.preventDefault();
+    const formattedDOB = String(changeDateFormat(dob));
+    if (companyName === '') {
+      const body = {
+        id: user.user.id,
+        name: name,
+        role: role,
+        address: address,
+        dateOfBirth: formattedDOB,
+      };
+      const response = await postEmployers(body);
+      if (!response) {
+        return;
+      }
+      history.push('/employee/company');
+    } else {
+      // const queryParams = { page: 1, limit: 20 };
+      let companyID = null;
+      companyNameOptions.forEach((company) => {
+        if (company.title === companyName) {
+          companyID = company.id;
+        }
+      });
+      if (companyID === null) {
+        toast.error('Please select valid company or keep empty to create new company!');
+        return;
+      }
+      const body = {
+        id: user.user.id,
+        name: name,
+        role: role,
+        address: address,
+        dateOfBirth: formattedDOB,
+        companyId: companyID,
+      };
+      const response = await postEmployers(body);
+      if (!response) {
+        return;
+      }
+      history.push('/employee/companyValues');
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={saveDetails}>
       <div
         style={{
           display: 'flex',
@@ -149,6 +238,7 @@ const Employeedetails = () => {
                 Your role in hiring process
               </label>
               <CustomAutocomplete
+                className="employeeInput"
                 sx={{
                   width: '100%',
                   marginTop: '10px',
@@ -161,29 +251,27 @@ const Employeedetails = () => {
                   <div style={{ marginRight: '15px', marginTop: '-10px' }}>
                     <ArrowDropDownIcon fontSize="10px" />
                   </div>
-            )}
+                )}
               />
             </div>
-            {role === 'Other'
-              ? (
-                <div className="employeeform">
-                  <input
-                    placeholder="Enter role"
-                    type="text"
-                    value={otherRole}
-                    onChange={(e) => setOtherRole(e.target.value)}
-                    required
-                    className="employeeInput"
-                  />
-                </div>
-              ) : null}
+            {role === 'Other' ? (
+              <div className="employeeform">
+                <input
+                  placeholder="Enter role"
+                  type="text"
+                  value={otherRole}
+                  onChange={(e) => setOtherRole(e.target.value)}
+                  required
+                  className="employeeInput"
+                />
+              </div>
+            ) : null}
             <div className="employeeform">
               <label className="employeeLabel">Your address</label>
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                required
                 className="employeeInput"
               />
             </div>
@@ -203,15 +291,23 @@ const Employeedetails = () => {
             </div>
             <div className="employeeform">
               <label className="employeeLabel">
-                Your Company name
-                <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
+                Select company or keep empty if creating new company
               </label>
-              <input
-                type="text"
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
+              <CustomAutocomplete
                 className="employeeInput"
+                sx={{
+                  width: '100%',
+                  marginTop: '10px',
+                }}
+                placeholder="Company"
+                value={companyName}
+                setValue={setCompanyName}
+                options={companyNameOptions}
+                endAdornmentIcon={(
+                  <div style={{ marginRight: '15px', marginTop: '-10px' }}>
+                    <ArrowDropDownIcon fontSize="10px" />
+                  </div>
+            )}
               />
             </div>
           </div>
@@ -266,12 +362,15 @@ const Employeedetails = () => {
           }}
         >
           <div>
-            <button disabled className="employeeBack">
-              back
+            <button onClick={() => history.push('/login')} className="employeeBack">
+              Back to login
             </button>
           </div>
           <div>
-            <button type="submit" className="employeeButton">
+            <button
+              type="submit"
+              className="employeeButton"
+            >
               Save Changes
             </button>
           </div>

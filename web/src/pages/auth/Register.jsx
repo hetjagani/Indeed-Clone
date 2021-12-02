@@ -21,6 +21,7 @@ import './css/Login.css';
 import Input from '../../components/Input';
 import register from '../../api/auth/register';
 import Button from '../../components/Button';
+import { loginSuccess } from '../../app/actions';
 
 const Register = () => {
   const history = useHistory();
@@ -85,14 +86,18 @@ const Register = () => {
     if (!response) {
       return;
     }
-    console.log('here1', payload.role);
-    setUserToken(response.data.token);
-    const user = jwt(response.data.token);
-    dispatch(loginSuccess({
+    const user = await jwt(response.data.token);
+    await setUserToken(response.data.token);
+    await dispatch(loginSuccess({
       loggedIn: true,
       id: user.id,
+      role: user.role,
     }));
-    history.push('/');
+    if (payload.role === 'employer' || role.employer === true) {
+      history.push('/employee');
+    } else {
+      history.push('/');
+    }
   };
 
   return (

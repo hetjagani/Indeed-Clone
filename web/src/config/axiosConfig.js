@@ -29,21 +29,36 @@ axiosInstance.interceptors.response.use(
     if (!err.response) {
       toast.error('Network error!');
     }
-    // if (err && err.response && err.response.status === 401) {
-    //   toast.error('Unauthorized request!');
-    //   return;
-    // }
-    // if (err && err.response && err.response.status === 403) {
-    //   toast.error(err.response.data.message);
-    //   return;
-    // }
-    // if (err && err.response && err.response.data && err.response.data.error) {
-    //   toast.error(err.response.data.error);
-    //   return;
-    // }
-    // if (err && err.response && err.response.data && err.response.data.message) {
-    //   toast.error(err.response.data.message);
-    // }
+    if (err && err.response && err.response.status === 401) {
+      if (err.response.data && err.response.data.message) {
+        console.log(err.response.data.message);
+      }
+      toast.error('Unauthorized request!');
+      return;
+    }
+    if (err && err.response && err.response.status === 403) {
+      if (err.response.data.message && typeof (err.response.data.message) === 'string') {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Forbidden request!');
+      }
+      return;
+    }
+    if (err && err.response && err.response.data && err.response.data.error) {
+      if (typeof (err.response.data.message) === 'string') {
+        toast.error(err.response.data.error);
+      } else {
+        toast.error('Forbidden request!');
+      }
+      return;
+    }
+    if (err && err.response && err.response.data && err.response.data.message) {
+      if (typeof (err.response.data.message) === 'string') {
+        toast.error(err.response.data.message);
+      } else {
+        console.log(err.response.data.message);
+      }
+    }
   },
 );
 
