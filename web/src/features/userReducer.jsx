@@ -2,6 +2,7 @@ import { setCookie } from 'react-use-cookie';
 
 const initialState = {
   user: {},
+  salary: {},
   token: '',
   errMsg: '',
   company: {},
@@ -25,6 +26,10 @@ const reducer = (state = initialState, action) => {
       };
     case 'REMOVE_TOKEN':
       return { ...state, token: '' };
+    case 'ADD_SALARY':
+      return { ...state, salary: action.payload };
+    case 'REMOVE_SALARY':
+      return { ...state, salary: null };
     case 'COMPANY':
       return { ...state, company: action.payload };
     case 'USER_DETAIL':

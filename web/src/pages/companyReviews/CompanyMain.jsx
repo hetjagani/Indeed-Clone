@@ -132,17 +132,18 @@ function CompanyMain({ match }) {
                   ? companyDetails.overallRating
                   : null}
               </p>
-              {companyDetails && companyDetails.overallRating ? (
-                <StarRatings
-                  rating={companyDetails.overallRating}
-                  starRatedColor="#9D2B6B"
-                  numberOfStars={5}
-                  name="rating"
-                  starDimension="17px"
-                  starSpacing="2px"
-                />
-              )
-                : null}
+              <StarRatings
+                rating={
+                  companyDetails && companyDetails.overallRating
+                    ? companyDetails.overallRating
+                    : 0
+                }
+                starRatedColor="#9D2B6B"
+                numberOfStars={5}
+                name="rating"
+                starDimension="17px"
+                starSpacing="2px"
+              />
             </div>
           </div>
         </div>
@@ -195,6 +196,8 @@ function CompanyMain({ match }) {
               <SalariesMain
                 salaries={salaries}
                 compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails.name}
+                getSalaryDetails={getSalaryDetails}
               />
             )}
           />

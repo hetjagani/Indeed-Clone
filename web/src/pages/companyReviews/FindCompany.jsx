@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */

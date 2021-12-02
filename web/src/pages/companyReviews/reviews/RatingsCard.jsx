@@ -9,6 +9,8 @@ import updateReview from '../../../api/review/updateReview';
 function RatingsCard(props) {
   const [helpfulReview, setHelpfulReview] = useState(-1);
   const updateUserReview = async (reviewObj, flag) => {
+    console.log(reviewObj);
+    console.log(flag);
     await updateReview(reviewObj, flag);
     await props.getCompanyReviews();
   };

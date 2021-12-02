@@ -37,3 +37,16 @@ export function userDets(payload) {
     payload,
   };
 }
+
+export function addSalary(payload) {
+  return {
+    type: 'ADD_SALARY',
+    payload,
+  };
+}
+
+export function removeSalary() {
+  return {
+    type: 'REMOVE_SALARY',
+  };
+}
