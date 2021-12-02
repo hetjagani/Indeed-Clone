@@ -33,11 +33,11 @@ function App() {
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
           <Route path="/profile" component={withAuth(UserProfile, 'any', true)} />
+          <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
+          <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
-          <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
-          <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>

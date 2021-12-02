@@ -27,7 +27,9 @@ const style = {
 
 Array.range = (start, end) => Array.from({ length: end - start }, (v, k) => k + start);
 
-export default function AddSalaryModal({ handleClose, isOpen }) {
+export default function AddSalaryModal({
+  handleClose, isOpen, compId,
+}) {
   const [gotoNextFlag, setGotoNextFlag] = useState(false);
   return (
     <div>
@@ -60,12 +62,12 @@ export default function AddSalaryModal({ handleClose, isOpen }) {
                 of 2
               </Typography>
               {!gotoNextFlag ? (
-                <ModalDetailsPage1
-                  gotoNextFlag={gotoNextFlag}
-                  setGotoNextFlag={setGotoNextFlag}
-                />
+                <ModalDetailsPage1 gotoNextFlag={gotoNextFlag} setGotoNextFlag={setGotoNextFlag} />
               ) : (
-                <ModalDetailsPage2 />
+                <ModalDetailsPage2
+                  compId={compId}
+                  handleClose={handleClose}
+                />
               )}
             </div>
           </Box>

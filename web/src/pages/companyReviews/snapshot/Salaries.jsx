@@ -7,15 +7,18 @@ import AddSalaryModal from '../salaries/AddSalaryModal';
 import SalariesByIndustry from './SalariesByIndustry';
 
 function Salaries({
-  title, showButton = false, salaries, flag,
+  companyName, showButton = false, salaries, flag, compId, getSalaryDetails,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const handleClose = async () => {
+    await getSalaryDetails();
+    setIsOpen(false);
+  };
 
   return (
     <>
-      <AddSalaryModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} />
+      <AddSalaryModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} compId={compId} getSalaryDetails={getSalaryDetails} />
       <div style={{
         display: 'flex', width: '100%', justifyContent: 'space-between', marginTop: '15px',
       }}
@@ -24,7 +27,9 @@ function Salaries({
           fontWeight: 'bold', fontSize: '1.75rem', lineHeight: '1.25', marginBottom: '0.5rem',
         }}
         >
-          {title}
+          Avg Salaries at
+          {' '}
+          {companyName}
         </Typography>
         {showButton
           ? (

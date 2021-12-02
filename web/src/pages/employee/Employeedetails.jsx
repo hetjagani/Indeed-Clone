@@ -5,22 +5,18 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { styled } from '@mui/material/styles';
 
 import { useSelector } from 'react-redux';
-import Stack from '@mui/material/Stack';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import toast from 'react-hot-toast';
 import postEmployers from '../../api/company/postEmployeeDetails';
 // import getCompanyData from '../../api/company/getCompanyData';
 import getCompanies from '../../api/company/get';
 import EmployeSVG from '../../components/svg/EmployeSVG';
+
 import './css/Employeedetails.css';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
-
-const Input = styled('input')({
-  display: 'none',
-});
+import companyUpload from '../../api/media/companyUpload';
 
 const roles = [
   {
@@ -39,6 +35,13 @@ const roles = [
     title: 'Other',
   },
 ];
+async function postImages({ image }) {
+  // eslint-disable-next-line no-undef
+  const formData = new FormData();
+  formData.append('imageData', image);
+  const response = await companyUpload(formData);
+  return response;
+}
 
 const Employeedetails = () => {
   const history = useHistory();
@@ -51,6 +54,8 @@ const Employeedetails = () => {
   const [dob, setDob] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [companyNameOptions, setCompanyNameOptions] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [photo, setPhoto] = useState({});
 
   const getCompanyNames = async () => {
     const queryParams = { page: 1, limit: 10 };
@@ -94,11 +99,10 @@ const Employeedetails = () => {
         role: role,
         address: address,
         dateOfBirth: formattedDOB,
+        medium: photo.url,
       };
-      const response = await postEmployers(body);
-      if (!response) {
-        return;
-      }
+      console.log(body);
+      await postEmployers(body);
       history.push('/employee/company');
     } else {
       // const queryParams = { page: 1, limit: 20 };
@@ -119,13 +123,26 @@ const Employeedetails = () => {
         address: address,
         dateOfBirth: formattedDOB,
         companyId: companyID,
+        medium: photo.url,
       };
+      console.log(body);
       const response = await postEmployers(body);
+      console.log('reponse employee', response);
       if (!response) {
         return;
       }
       history.push('/employee/companyValues');
     }
+  };
+
+  const uploadPhoto = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setPhoto({ url: result.data });
   };
 
   return (
@@ -324,29 +341,19 @@ const Employeedetails = () => {
             marginTop: '2rem',
           }}
         >
-          <div style={{
-            width: '100%', paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
-          }}
-          >
-            <span className="employeeLabel">Add Photo</span>
-            <span style={{ paddingTop: '0.5rem', color: 'rgb(89, 89, 89)', fontSize: '14px' }}>Give an inside look at working at your company by adding photos to your post</span>
-          </div>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <label htmlFor="contained-button-file">
-              <Input
-                accept="image/*"
-                id="contained-button-file"
-                multiple
-                type="file"
-              />
-              <button
-                className="employeeBack"
-                style={{ width: '165px', height: '44px' }}
-              >
-                Add photo
-              </button>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <label className="employeeLabel">
+              Add photo
+              <div>
+                <input
+                  onChange={uploadPhoto}
+                  type="file"
+                  accept="image/*"
+                  style={{ paddingTop: '10px' }}
+                />
+              </div>
             </label>
-          </Stack>
+          </div>
         </div>
         <div
           style={{
@@ -366,10 +373,7 @@ const Employeedetails = () => {
             </button>
           </div>
           <div>
-            <button
-              type="submit"
-              className="employeeButton"
-            >
+            <button type="submit" className="employeeButton" onClick={saveDetails}>
               Save Changes
             </button>
           </div>
