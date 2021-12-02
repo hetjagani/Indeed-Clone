@@ -90,6 +90,10 @@ const TopSalary = ({ salary, title, location }) => (
                         }}
                       >
                         {option.company.name}
+                        {' '}
+                        -
+                        {' '}
+                        {option.title}
                       </span>
                     </Link>
                   </div>
