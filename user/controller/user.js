@@ -70,27 +70,12 @@ const getUserById = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
-  if (!id || id == 0) {
-    res.status(400).json(errors.badRequest);
-    return;
-  }
-
-  const { user } = req.headers;
-  if (user != id) {
-    res.status(400).json({
-      ...errors.badRequest,
-      message: 'id should be same as logged in user',
-    });
-    return;
-  }
-
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    console.log('-----', req.body);
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
-  }
+  try {
+    const { id } = req.params;
+    if (!id || id == 0) {
+      res.status(400).json(errors.badRequest);
+      return;
+    }
 
     const { user } = req.headers;
     if (user != id) {
@@ -101,15 +86,12 @@ const updateUser = async (req, res) => {
       return;
     }
 
-  makeRequest('user.update', userObj, (err, resp) => {
-    if (err || !resp) {
-      console.log(err);
-      res.status(500).json(errors.serverError);
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      console.log('-----', req.body);
+      res.status(400).json({ status: 400, message: valErr.array() });
       return;
     }
-
-    const userObj = req.body;
-    userObj._id = id;
 
     makeRequest('user.update', userObj, (err, resp) => {
       if (err || !resp) {

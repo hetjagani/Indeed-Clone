@@ -21,7 +21,6 @@ import './css/Login.css';
 import Input from '../../components/Input';
 import register from '../../api/auth/register';
 import Button from '../../components/Button';
-import { loginSuccess } from '../../app/actions';
 
 const Register = () => {
   const history = useHistory();
@@ -82,7 +81,9 @@ const Register = () => {
       password,
       role: role.employer === true ? 'employer' : 'user',
     };
+    console.log(payload);
     const response = await register(payload);
+    console.log(response);
     if (!response) {
       return;
     }

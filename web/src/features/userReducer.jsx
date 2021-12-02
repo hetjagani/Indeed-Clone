@@ -20,7 +20,9 @@ const reducer = (state = initialState, action) => {
       return { ...state, errMsg: action.payload };
     case 'LOGOUT':
       setCookie('token', '', { path: '/' });
-      return { ...state, user: null, token: '' };
+      return {
+        ...state, user: null, token: '', company: null, userDetail: '',
+      };
     case 'REMOVE_TOKEN':
       return { ...state, token: '' };
     case 'COMPANY':

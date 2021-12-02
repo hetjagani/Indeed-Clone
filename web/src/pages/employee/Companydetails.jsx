@@ -6,8 +6,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 // import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import toast from 'react-hot-toast';
-import postCompany from '../../api/company/postCompanydetails';
 
 import CompanySVG from '../../components/svg/CompanySVG';
 import './css/Employeedetails.css';
@@ -114,29 +112,8 @@ const Companydetails = () => {
       foundedOn: formattedDOB,
       industry: { name: industry },
       size: size,
-      description: {},
-      about: '',
-      workCulture: '',
-      mission: '',
-      values: '',
     };
-
-    const response = await postCompany(body);
-    if (!response) {
-      toast.error('Could not create company!');
-      return;
-    }
-    dispatch(compamny({
-      id: response.data._id,
-      name: response.data.name,
-      ceo: response.data.ceo,
-      headquarters: response.data.headquarters,
-      revenue: response.data.revenue,
-      website: response.data.website,
-      foundedOn: response.data.foundedOn,
-      industry: response.data.industry,
-      size: response.data.size,
-    }));
+    dispatch(compamny(body));
     history.push('/employee/companyValues');
   };
 
