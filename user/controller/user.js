@@ -92,9 +92,6 @@ const updateUser = async (req, res) => {
       return;
     }
 
-    const userObj = req.body;
-    userObj._id = id;
-
     makeRequest('user.update', userObj, (err, resp) => {
       if (err || !resp) {
         console.log(err);

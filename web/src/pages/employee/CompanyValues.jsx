@@ -4,27 +4,27 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import Stack from '@mui/material/Stack';
+import { useSelector } from 'react-redux';
 import {
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
-import Button from '@mui/material/Button';
 import { useHistory } from 'react-router';
 import toast from 'react-hot-toast';
 
 import ValuesSVG from '../../components/svg/ValuesSVG';
-import putCompany from '../../api/company/putCompanyDetails';
+import companyUpload from '../../api/media/companyUpload';
 import './css/Employeedetails.css';
-import { compamny } from '../../app/actions';
 import Editor from '../../utils/Editor';
-import changeDateFormat from '../../utils/changeDateFormat';
+import postCompany from '../../api/company/postCompanydetails';
 
-const Input = styled('input')({
-  display: 'none',
-});
+async function postImages({ image }) {
+  // eslint-disable-next-line no-undef
+  const formData = new FormData();
+  formData.append('imageData', image);
+  const response = await companyUpload(formData);
+  return response;
+}
 
 const DEFAULT_INITIAL_DATA = () => ({
   time: new Date().getTime(),
@@ -41,7 +41,6 @@ const DEFAULT_INITIAL_DATA = () => ({
 
 const CompanyValues = () => {
   const history = useHistory();
-  const dispatch = useDispatch();
   const company = useSelector((state) => state.user);
   const [description, setDescription] = useState(DEFAULT_INITIAL_DATA);
 
@@ -74,6 +73,9 @@ const CompanyValues = () => {
   const [mission, setMission] = useState('');
   const [about, setAbout] = useState('');
   // eslint-disable-next-line no-unused-vars
+  const [photo, setPhoto] = useState('');
+  const [logo, setLogo] = useState({});
+
   const backtoprofile = () => {
     history.push('/employee');
   };
@@ -131,45 +133,50 @@ const CompanyValues = () => {
       work.concat('Respect, ');
     }
     e.preventDefault();
+    const media = [];
+    media.push(photo.url);
     const body = {
       name: company.company.name,
       ceo: company.company.ceo,
       headquarters: company.company.headquarters,
       revenue: company.company.revenue,
       website: company.company.website,
-      foundedOn: changeDateFormat(company.company.foundedOn),
-      industry: company.company.industry.name,
+      foundedOn: company.company.foundedOn,
+      industry: { name: company.company.industry.name },
       size: company.company.size,
       description: description,
       about: about,
       workCulture: work,
       mission: mission,
       values: val,
+      media,
+      logo: logo.url,
     };
-
-    const response = await putCompany(body, company._id);
+    const response = await postCompany(body, company.company.id);
     if (!response) {
       toast.error('Could not update!');
       return;
     }
-    dispatch(compamny({
-      id: response.data._id,
-      name: response.data.name,
-      ceo: response.data.ceo,
-      headquarters: response.data.headquarters,
-      revenue: response.data.revenue,
-      website: response.data.website,
-      foundedOn: response.data.foundedOn,
-      industry: response.data.industry,
-      size: response.data.size,
-      description: description,
-      about: about,
-      workCulture: workCulture,
-      mission: mission,
-      values: value,
-    }));
+    history.push('/hire');
+  };
 
-    history.push('/employee/companyValues');
+  const uploadPhoto = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setPhoto({ url: result.data });
+  };
+  const uploadLogo = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setLogo({ url: result.data });
   };
 
   return (
@@ -195,7 +202,7 @@ const CompanyValues = () => {
               alignItems: 'center',
               backgroundColor: 'white',
               borderRadius: '1rem',
-              maxWidth: '50%',
+              width: '50%',
             }}
           >
             <div style={{ minWidth: '0px', width: '100%', paddingLeft: '40px' }}>
@@ -222,7 +229,7 @@ const CompanyValues = () => {
               backgroundColor: 'white',
               borderRadius: '1rem',
               marginTop: '2rem',
-              maxWidth: '50%',
+              width: '50%',
             }}
           >
             <div
@@ -487,39 +494,43 @@ const CompanyValues = () => {
               </div>
             </div>
           </div>
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'left',
-            backgroundColor: 'white',
-            borderRadius: '1rem',
-            width: '43%',
-            padding: '3rem',
-            marginTop: '2rem',
-          }}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              alignItems: 'left',
+              backgroundColor: 'white',
+              borderRadius: '1rem',
+              width: '45%',
+              padding: '3rem',
+              marginTop: '2rem',
+            }}
           >
             <div style={{
-              width: '100%', paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
+              paddingBottom: '1rem', display: 'flex', flexDirection: 'column',
             }}
             >
               <span className="employeeLabel">Add Photo</span>
               <span style={{ paddingTop: '0.5rem', color: 'rgb(89, 89, 89)', fontSize: '14px' }}>Give an inside look at working at your company by adding photos to your post</span>
+              <div>
+                <input
+                  onChange={uploadPhoto}
+                  type="file"
+                  accept="image/*"
+                  style={{ paddingTop: '10px' }}
+                />
+              </div>
+              <span className="employeeLabel">Add Logo</span>
+              <div>
+                <input
+                  onChange={uploadLogo}
+                  type="file"
+                  accept="image/*"
+                  style={{ paddingTop: '10px' }}
+                />
+              </div>
             </div>
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <label htmlFor="contained-button-file">
-                <Input accept="image/*" id="contained-button-file" multiple type="file" />
-                <Button
-                  variant="contained"
-                  component="span"
-                  style={{
-                    width: '160px', height: '44px', color: '#2557a7', fontWeight: '700', backgroundColor: '#f2f2f2', border: '#949494',
-                  }}
-                >
-                  Add Photo
-                </Button>
-              </label>
-            </Stack>
           </div>
           <div
             style={{
@@ -528,7 +539,7 @@ const CompanyValues = () => {
               justifyContent: 'space-between',
               backgroundColor: 'white',
               borderRadius: '1rem',
-              width: '43%',
+              width: '45%',
               padding: '3rem',
               marginTop: '2rem',
             }}
