@@ -26,8 +26,6 @@ function CompanyJobsMain({ match }) {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
-  console.log(totalNumberOfJobs);
-
   const getCompanyJobs = async () => {
     const params = { page: currentPage, limit: 10 };
     const response = await getJobByCompanyID(match.params.id, params);

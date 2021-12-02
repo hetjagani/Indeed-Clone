@@ -81,9 +81,7 @@ const Register = () => {
       password,
       role: role.employer === true ? 'employer' : 'user',
     };
-    console.log(payload);
     const response = await register(payload);
-    console.log(response);
     if (!response) {
       return;
     }

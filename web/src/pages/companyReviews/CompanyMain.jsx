@@ -20,7 +20,6 @@ function CompanyMain({ match }) {
   const [salaries, setSalaries] = useState({});
   const [reviews, setReviews] = useState([]);
   const [reviewFilter, setReviewFilter] = useState(2);
-
   const getCompanyDetails = async () => {
     const companyData = await getCompanyData(match.params.id);
     if (!companyData) return;
@@ -42,8 +41,10 @@ function CompanyMain({ match }) {
         }
       });
     }
+
     setSalaries(industrySalaryMap);
   };
+  console.log(salaries);
 
   const getCompanyReviews = async (sortBy) => {
     const companyReviews = await getReviewsOfCompany(match.params.id, sortBy);
@@ -176,7 +177,7 @@ function CompanyMain({ match }) {
               <Snapshot data={companyDetails} salaries={salaries} reviews={reviews} />
             )}
           />
-          <Route path={`${match.path}/about`} component={AboutCompany} />
+          <Route path={`${match.path}/about`} component={() => <AboutCompany data={companyDetails} />} />
           <Route
             path={`${match.path}/reviews`}
             component={() => (
