@@ -46,7 +46,7 @@
 
 .employeeBack {
     height:44px;
-    width: 106px;
+    width: 200px;
     color: #2557a7;
     border-radius: 0.5rem;
     border: 1px solid #949494;
@@ -56,5 +56,17 @@
 }
 
 .employeeBack:hover {
+    cursor: pointer;
     background-color: #d5e2f6;
+}
+
+.companyradiodiv{
+  width: 250px;
+  height: 40px;
+  border-radius: 0.5rem;
+  border: 1px solid #909090;
+  background-color: #fff;
+  padding: 2px;
+  padding-left: 5px;
+  margin: 5px 0 5px 0;
 }

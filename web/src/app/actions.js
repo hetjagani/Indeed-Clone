@@ -24,6 +24,20 @@ export function logout() {
   };
 }
 
+export function compamny(payload) {
+  return {
+    type: 'COMPANY',
+    payload,
+  };
+}
+
+export function userDets(payload) {
+  return {
+    type: 'USER_DETAIL',
+    payload,
+  };
+}
+
 export function addSalary(payload) {
   return {
     type: 'ADD_SALARY',

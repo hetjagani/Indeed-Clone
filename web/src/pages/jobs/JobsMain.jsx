@@ -98,6 +98,43 @@ function JobsMain() {
             currentPage={currentPage}
             totalPages={totalPages}
           />
+          {jobs ? (
+            jobs.length > 0 ? (
+              <div
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  maxWidth: '1400px',
+                  justifyContent: 'center',
+                  margin: '0 auto',
+                  marginTop: '10px',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
+                }}
+              >
+                {Array.range(1, totalPages + 1).map((pageNo) => (
+                  <p
+                    onClick={() => setCurrentPage(pageNo)}
+                    style={{
+                      cursor: 'pointer',
+                      backgroundColor: `${
+                        currentPage === pageNo ? '#595959' : '#E4E2E0'
+                      }`,
+                      padding: '17px',
+                      paddingLeft: '20px',
+                      paddingRight: '20px',
+                      color: `${currentPage === pageNo ? '#fff' : '#000'}`,
+                      fontWeight: 'bolder',
+                      fontSize: '18px',
+                      marginLeft: '20px',
+                    }}
+                  >
+                    {pageNo}
+                  </p>
+                ))}
+              </div>
+            ) : null
+          ) : null}
         </>
       ) : (
         <>
@@ -105,43 +142,6 @@ function JobsMain() {
           <PopularSearches />
         </>
       )}
-      {jobs ? (
-        jobs.length > 0 ? (
-          <div
-            style={{
-              display: 'flex',
-              width: '100%',
-              maxWidth: '1400px',
-              justifyContent: 'center',
-              margin: '0 auto',
-              marginTop: '10px',
-              paddingLeft: '1rem',
-              paddingRight: '1rem',
-            }}
-          >
-            {Array.range(1, totalPages + 1).map((pageNo) => (
-              <p
-                onClick={() => setCurrentPage(pageNo)}
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: `${
-                    currentPage === pageNo ? '#595959' : '#E4E2E0'
-                  }`,
-                  padding: '17px',
-                  paddingLeft: '20px',
-                  paddingRight: '20px',
-                  color: `${currentPage === pageNo ? '#fff' : '#000'}`,
-                  fontWeight: 'bolder',
-                  fontSize: '18px',
-                  marginLeft: '20px',
-                }}
-              >
-                {pageNo}
-              </p>
-            ))}
-          </div>
-        ) : null
-      ) : null}
       <hr
         className="separatingLine"
         style={{ margin: '30px 0 20px 0', bottom: '-30px' }}

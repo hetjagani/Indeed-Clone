@@ -69,18 +69,23 @@ const Login = () => {
     }
     const payload = { email, password };
     login(payload)
-      .then((response) => {
+      .then(async (response) => {
         dispatch(loginRequest());
         if (response === null || response === undefined) {
           return;
         }
         setCookie('token', response.data.token, { path: '/' });
-        const user = jwt(response.data.token);
+        const user = await jwt(response.data.token);
         dispatch(loginSuccess({
           loggedIn: true,
           id: user.id,
+          role: user.role,
         }));
-        history.push('/');
+        if (user.role === 'user') {
+          history.push('/');
+        } else if (user.role === 'employer') {
+          history.push('/employee');
+        }
       })
       .catch((err) => {
         dispatch(loginFailure(err));
@@ -223,9 +228,6 @@ const Login = () => {
         >
           <Link to="/login" style={{ textDecoration: 'none' }}>
             <p className="rpar">Forgot your password?</p>
-          </Link>
-          <Link to="/login" style={{ textDecoration: 'none' }}>
-            <p className="rpar">Help Center</p>
           </Link>
         </div>
       </div>

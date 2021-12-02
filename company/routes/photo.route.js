@@ -22,6 +22,7 @@ const bodyValidators = () => [body('isFeatured').exists().isBoolean()];
  * @param {integer} page.query
  * @param {integer} limit.query
  * @param {string} compId.path
+ * @param {boolean} isFeatured.query
  * @group Photos
  * @security JWT
  * @returns {Array.<Photo>} 200 - List of photo info

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
@@ -42,7 +42,7 @@ const FindCompany = () => {
     const queryParams = { page: 1, limit: 10 };
     const locFilter = query.getAll('location');
     const qFilter = query.getAll('jobs');
-    if (typeof (locFilter) === 'string') {
+    if (typeof locFilter === 'string') {
       queryParams.city = locFilter;
     } else if (locFilter.length) {
       queryParams.city = locFilter[0].split(',')[0];
@@ -67,8 +67,28 @@ const FindCompany = () => {
     if (!jobF.length && !locFilter.length) {
       return;
     }
-    if (location.search && location.search.length > 0) { getFilteredCompanies(); }
+    if (location.search && location.search.length > 0) {
+      getFilteredCompanies();
+    }
   }, [history.location]);
+
+  useEffect(() => {
+    const jobF = query.get('jobs');
+    const locF = query.get('location');
+    if (jobF !== 'null' && jobF !== null && jobF !== undefined && jobF !== '') {
+      setJobFilter(jobF);
+    }
+    if (locF !== 'null' && locF !== null && locF !== undefined && locF !== '') {
+      setLocationFilter(locF);
+    }
+    if (location.search && location.search.length > 0) {
+      getFilteredCompanies();
+    }
+  }, []);
+
+  useEffect(() => {
+    getFilteredCompanies();
+  }, []);
 
   return (
     <>
@@ -86,7 +106,9 @@ const FindCompany = () => {
         <div>
           <div className="findCompany_header">
             <h1 className="header1">Find great places to work</h1>
-            <h2 className="header2">Get access to millions of company reviews</h2>
+            <h2 className="header2">
+              Get access to millions of company reviews
+            </h2>
           </div>
           <div>
             <form onSubmit={handleSubmit}>
@@ -108,7 +130,7 @@ const FindCompany = () => {
                       <div style={{ marginRight: '15px', marginTop: '5px' }}>
                         <SearchIcon className="iconsinput" />
                       </div>
-                  )}
+                    )}
                   />
                 </div>
                 <div className="label">
@@ -128,38 +150,48 @@ const FindCompany = () => {
                       <div style={{ marginRight: '15px', marginTop: '5px' }}>
                         <LocationOnIcon className="iconsinput" />
                       </div>
-                  )}
+                    )}
                   />
                 </div>
-                <button type="submit" className="findButton">
+                <button style={{ cursor: 'pointer' }} type="submit" className="findButton">
                   Find Companies
                 </button>
               </div>
             </form>
           </div>
-          <p className="reviewsSalary" onClick={() => history.push('/salaries')}>
+          <p
+            className="reviewsSalary"
+            onClick={() => history.push('/salaries')}
+          >
             Do you want to search for salaries?
           </p>
 
-          <p style={{
-            fontSize: '25px', fontWeight: 'bold', marginBottom: '-20px', marginTop: '30px',
-          }}
+          <p
+            style={{
+              fontSize: '25px',
+              fontWeight: 'bold',
+              marginBottom: '-20px',
+              marginTop: '30px',
+            }}
           >
             Popular Companies
           </p>
         </div>
 
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', width: '69%', flexWrap: 'wrap', marginLeft: '30px',
-        }}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: '69%',
+            flexWrap: 'wrap',
+            marginLeft: '30px',
+          }}
         >
-          <FindCompanyCard />
-          <FindCompanyCard />
-          <FindCompanyCard />
-          <FindCompanyCard />
-          <FindCompanyCard />
-          <FindCompanyCard />
-          <FindCompanyCard />
+          {companies
+            ? companies.length > 0
+              ? companies.map((company) => <FindCompanyCard company={company} />)
+              : null
+            : null}
         </div>
       </div>
       <div style={{ marginTop: '100px' }}>

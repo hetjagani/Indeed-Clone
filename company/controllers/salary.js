@@ -3,11 +3,11 @@ const { errors } = require('u-server-utils');
 
 const getCompanySalaries = async (req, res) => {
   try {
-    const { limit, page } = req.query;
+    const { limit, page, isFeatured } = req.query;
     const { compId } = req.params;
 
     const response = await axios.get(`${global.gConfig.user_url}/salaries`, {
-      params: { limit, page, companyId: compId },
+      params: { limit, page, companyId: compId, isFeatured },
       headers: { Authorization: req.headers.authorization },
     });
 

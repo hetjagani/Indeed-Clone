@@ -96,7 +96,6 @@ const updateSalary = async (req, res) => {
       company = await axios.get(`${global.gConfig.company_url}/companies/${req.body.companyId}`, {
         headers: { authorization: req.headers.authorization },
       });
-      console.log(company);
     } catch (err) {
       console.log(err);
       if (err.isAxiosError && err.response.status === 404) {
@@ -230,14 +229,11 @@ const generalGetSalaries = async (req, res) => {
     }
 
     if (title && title !== '') {
-      searchObj.title = { $regex: title };
+      searchObj.title = { $regex: `(?i)${title}` };
     }
 
     if (all && all == 'true') {
       const salaryList = await Salary.aggregate([
-        {
-          $match: searchObj,
-        },
         {
           $lookup: {
             from: 'users',
@@ -294,11 +290,14 @@ const generalGetSalaries = async (req, res) => {
       });
 
       result.nodes = filteredSalaries.slice(offset, limit + offset);
+      result.nodes = result.nodes.sort((a, b) => b.salary - a.salary);
+
       res.status(200).json(result);
       return;
     }
 
     result.nodes = salaryListWithCompany.slice(offset, limit + offset);
+    result.nodes = result.nodes.sort((a, b) => b.salary - a.salary);
     res.status(200).json(result);
   } catch (err) {
     console.log(err);

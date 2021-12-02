@@ -3,7 +3,9 @@
         "database_host": "mysqldb",
         "database_user": "indeedadmin",
         "database_password": "indeedadminpass",
-        "database_name": "auth"
+        "database_name": "auth",
+        "admin_email": "admin@mail.com",
+        "admin_password": "admin@123"
     },
     "test": {
         "database_host": "localhost",

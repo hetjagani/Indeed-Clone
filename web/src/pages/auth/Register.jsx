@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-wrap-multilines */
 // Import packages
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
@@ -12,7 +13,9 @@ import {
 import { validate as validateEmail } from 'email-validator';
 // import toast from 'react-hot-toast';
 import useCookie from 'react-use-cookie';
-
+import { useDispatch } from 'react-redux';
+import jwt from 'jwt-decode';
+import { loginSuccess } from '../../app/actions';
 // Import files
 import './css/Login.css';
 import Input from '../../components/Input';
@@ -21,7 +24,7 @@ import Button from '../../components/Button';
 
 const Register = () => {
   const history = useHistory();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [emailIsVisited, setEmailIsVisited] = useState(false);
   const [emailHasError, setEmailHasError] = useState(false);
@@ -76,14 +79,26 @@ const Register = () => {
     const payload = {
       email,
       password,
-      role: role.employer === true ? 'employeer' : 'user',
+      role: role.employer === true ? 'employer' : 'user',
     };
+    console.log(payload);
     const response = await register(payload);
+    console.log(response);
     if (!response) {
       return;
     }
-    setUserToken(response.data.token);
-    history.push('/');
+    const user = await jwt(response.data.token);
+    await setUserToken(response.data.token);
+    await dispatch(loginSuccess({
+      loggedIn: true,
+      id: user.id,
+      role: user.role,
+    }));
+    if (payload.role === 'employer' || role.employer === true) {
+      history.push('/employee');
+    } else {
+      history.push('/');
+    }
   };
 
   return (
@@ -248,14 +263,14 @@ const Register = () => {
               </RadioGroup>
 
               <FormControlLabel
-                control={(
+                control={
                   <Checkbox
                     size="medium"
                     sx={{
                       color: '#2557a7',
                     }}
                   />
-                )}
+                }
                 label="Keep me signed in on this device."
               />
               <div style={{ marginTop: '20px', marginBottom: '30px' }}>

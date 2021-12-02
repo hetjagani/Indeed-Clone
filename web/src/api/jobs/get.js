@@ -1,14 +1,9 @@
-import { getCookie } from 'react-use-cookie';
+/* eslint-disable implicit-arrow-linebreak */
+// import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const getJobs = async (params) => {
-  const token = getCookie('token');
-  return axiosInstance.get('/jobs', {
-    headers: {
-      Authorization: token,
-    },
+const getJobs = async (params) =>
+  axiosInstance.get('/jobs', {
     params,
   });
-};
-
 export default getJobs;

@@ -5,6 +5,7 @@ const { errors, getPagination } = require('u-server-utils');
 const { User } = require('../model');
 const mongoose = require('mongoose');
 const { response } = require('express');
+const { concat } = require('lodash');
 
 const createUser = async (req, res) => {
   const { user } = req.headers;
@@ -52,50 +53,57 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const user = await User.findById(id);
-  if (!user) {
-    res.status(404).json(errors.notFound);
-    return;
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
   }
-
-  res.status(200).json(user);
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
-  if (!id || id == 0) {
-    res.status(400).json(errors.badRequest);
-    return;
-  }
-
-  const { user } = req.headers;
-  if (user != id) {
-    res.status(400).json({
-      ...errors.badRequest,
-      message: 'id should be same as logged in user',
-    });
-    return;
-  }
-
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
-  }
-
-  const userObj = req.body;
-  userObj._id = id;
-
-  makeRequest('user.update', userObj, (err, resp) => {
-    if (err || !resp) {
-      console.log(err);
-      res.status(500).json(errors.serverError);
+  try {
+    const { id } = req.params;
+    if (!id || id == 0) {
+      res.status(400).json(errors.badRequest);
       return;
     }
-    res.status(200).json(resp);
-  });
+
+    const { user } = req.headers;
+    if (user != id) {
+      res.status(400).json({
+        ...errors.badRequest,
+        message: 'id should be same as logged in user',
+      });
+      return;
+    }
+
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      res.status(400).json({ status: 400, message: valErr.array() });
+      return;
+    }
+
+    makeRequest('user.update', userObj, (err, resp) => {
+      if (err || !resp) {
+        console.log(err);
+        res.status(500).json(errors.serverError);
+        return;
+      }
+      res.status(200).json(resp);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const deleteUser = async (req, res) => {
