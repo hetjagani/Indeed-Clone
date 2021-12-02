@@ -13,6 +13,7 @@ import Snapshot from './snapshot/Snapshot';
 import AboutCompany from './about/AboutCompany';
 import SalariesMain from './salaries/SalariesMain';
 import ReviewsMain from './reviews/ReviewsMain';
+import Companyphotos from './photos/Companyphotos';
 import CompanyJobsMain from './companyJobs/CompanyJobsMain';
 
 function CompanyMain({ match }) {
@@ -202,6 +203,15 @@ function CompanyMain({ match }) {
             )}
           />
           <Route path={`${match.path}/jobs`} component={CompanyJobsMain} />
+          <Route
+            path={`${match.path}/photos`}
+            component={() => (
+              <Companyphotos
+                compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails.name}
+              />
+            )}
+          />
         </div>
       </div>
     </Container>
