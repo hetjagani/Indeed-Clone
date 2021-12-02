@@ -99,7 +99,7 @@ const getAvgSalaryData = async (auth) => {
 
 const getAllCompanies = async (req, res) => {
   try {
-    const { all, q, city } = req.query;
+    const { all, q, city, byReviewed, byRatings } = req.query;
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
     if (all) {
@@ -143,12 +143,41 @@ const getAllCompanies = async (req, res) => {
 
     const avgReviewMap = await getAvgReviewData(req.headers.authorization);
     const avgSalaryMap = await getAvgSalaryData(req.headers.authorization);
-
     const result = companyList.map((c) => ({
       ...avgReviewMap[c._id.toString()],
       ...avgSalaryMap[c._id.toString()],
       ...c,
     }));
+
+    if (byReviewed && byReviewed == 'true') {
+      const sortedByReviewed = result.sort((a, b) => {
+        if (!a.totalReviews) {
+          return 1;
+        }
+        if (!b.totalReviews) {
+          return -1;
+        }
+        return b.totalReviews - a.totalReviews;
+      });
+      const topFive = sortedByReviewed.slice(0, 5);
+      res.status(200).json({ nodes: topFive });
+      return;
+    }
+
+    if (byRatings && byRatings == 'true') {
+      const sortedByRaings = result.sort((a, b) => {
+        if (!a.overallRating) {
+          return 1;
+        }
+        if (!b.overallRating) {
+          return -1;
+        }
+        return b.overallRating - a.overallRating;
+      });
+      const topFive = sortedByRaings.slice(0, 5);
+      res.status(200).json({ nodes: topFive });
+      return;
+    }
 
     res.status(200).json({ total: companyCount, nodes: result });
   } catch (err) {
