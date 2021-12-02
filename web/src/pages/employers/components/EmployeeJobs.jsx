@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 import { Card, CardContent } from '@mui/material';
@@ -9,6 +11,8 @@ import getEmployerByID from '../../../api/employer/get';
 import { compamny } from '../../../app/actions';
 import Button from '../../../components/Button';
 import AddJobModal from './AddJobModal';
+
+Array.range = (start, end) => Array.from({ length: end - start }, (v, k) => k + start);
 
 function EmployeeJobs() {
   const [jobs, setJobs] = useState([]);
@@ -23,8 +27,7 @@ function EmployeeJobs() {
   const handleClose = () => setIsOpen(false);
 
   const getCompanyJobs = async (id = user.company._id) => {
-    setCurrentPage(1);
-    const params = { page: 1, limit: 10 };
+    const params = { page: currentPage, limit: 10 };
     const response = await getJobByCompanyID(id, params);
     if (!response) return;
     setJobs(response.data.nodes);
@@ -50,12 +53,7 @@ function EmployeeJobs() {
     }
     // eslint-disable-next-line no-undef
     window.scrollTo(0, 0);
-  }, []);
-
-  console.log(jobs);
-  console.log(totalNumberOfJobs);
-  console.log(totalPages);
-  console.log(currentPage);
+  }, [currentPage]);
 
   return (
     <>
@@ -80,6 +78,31 @@ function EmployeeJobs() {
           }}
           label="Post a job"
         />
+        {jobs
+          ? jobs.length > 0
+
+            ? (
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '10px' }}>
+                <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+                  Showing
+                  {' '}
+                  {jobs.length}
+                  {' '}
+                  results of
+                  {' '}
+                  {totalNumberOfJobs}
+                </p>
+                <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+                  Page
+                  {' '}
+                  <span style={{ fontWeight: 'bold' }}>{currentPage}</span>
+                  {' '}
+                  of
+                  {' '}
+                  {totalPages}
+                </p>
+              </div>
+            ) : null : null}
         {jobs
           ? jobs.length > 0
             ? jobs.map((job) => (
@@ -115,6 +138,43 @@ function EmployeeJobs() {
             : null
           : null}
       </div>
+      {jobs ? (
+        jobs.length > 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              maxWidth: '1400px',
+              justifyContent: 'center',
+              margin: '0 auto',
+              marginTop: '10px',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
+            }}
+          >
+            {Array.range(1, totalPages + 1).map((pageNo) => (
+              <p
+                onClick={() => setCurrentPage(pageNo)}
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: `${
+                    currentPage === pageNo ? '#595959' : '#E4E2E0'
+                  }`,
+                  padding: '17px',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  color: `${currentPage === pageNo ? '#fff' : '#000'}`,
+                  fontWeight: 'bolder',
+                  fontSize: '18px',
+                  marginLeft: '20px',
+                }}
+              >
+                {pageNo}
+              </p>
+            ))}
+          </div>
+        ) : null
+      ) : null}
 
     </>
   );

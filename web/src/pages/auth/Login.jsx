@@ -8,6 +8,7 @@ import jwt from 'jwt-decode';
 // import toast from 'react-hot-toast';
 // import Cookies from 'universal-cookie';
 import { setCookie } from 'react-use-cookie';
+import toast from 'react-hot-toast';
 
 // Import files
 import './css/Login.css';
@@ -15,7 +16,10 @@ import { useDispatch } from 'react-redux';
 import Input from '../../components/Input';
 import login from '../../api/auth/login';
 import Button from '../../components/Button';
-import { loginRequest, loginFailure, loginSuccess } from '../../app/actions';
+import {
+  loginRequest, loginFailure, loginSuccess, compamny,
+} from '../../app/actions';
+import getEmployerByID from '../../api/employer/get';
 
 const Login = () => {
   // eslint-disable-next-line no-unused-vars
@@ -82,10 +86,15 @@ const Login = () => {
           email,
           role: user.role,
         }));
-        console.log(user);
         if (user.role === 'user') {
           history.push('/');
         } else if (user.role === 'employer') {
+          const employer = await getEmployerByID(user.id);
+          if (!employer) {
+            toast.error('Employer not found. Please register your company!');
+            return;
+          }
+          await dispatch(compamny(employer.data.company[0]));
           history.push('/employee/dashboard');
         }
       })

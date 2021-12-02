@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import { Typography } from '@mui/material';
@@ -125,7 +128,7 @@ function ReviewsMain(props) {
       >
         Found
         {' '}
-        <span style={{ fontWeight: 'bold' }}>{props && props.reviews ? props.reviews.length : null}</span>
+        <span style={{ fontWeight: 'bold' }}>{props && props.totalNumberOfReviews ? props.totalNumberOfReviews : null}</span>
         {' '}
         reviews matching the search
       </p>
@@ -137,6 +140,68 @@ function ReviewsMain(props) {
           </div>
         ))
         : null}
+      {props && props.reviews && props.reviews.length > 0
+        ? (
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+              Showing
+              {' '}
+              {props.reviews.length}
+              {' '}
+              results of
+              {' '}
+              {props.totalNumberOfReviews}
+            </p>
+            <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+              Page
+              {' '}
+              <span style={{ fontWeight: 'bold' }}>{props.currentPage}</span>
+              {' '}
+              of
+              {' '}
+              {props.totalPages}
+            </p>
+          </div>
+        ) : null }
+
+      {props && props.reviews ? (
+        props.reviews.length > 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              maxWidth: '1400px',
+              justifyContent: 'center',
+              margin: '0 auto',
+              marginTop: '10px',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
+            }}
+          >
+            {Array.range(1, props.totalPages + 1).map((pageNo) => (
+              <p
+                onClick={() => props.setCurrentPage(pageNo)}
+                style={{
+                  cursor: 'pointer',
+                  backgroundColor: `${
+                    props.currentPage === pageNo ? '#595959' : '#E4E2E0'
+                  }`,
+                  padding: '17px',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  color: `${props.currentPage === pageNo ? '#fff' : '#000'}`,
+                  fontWeight: 'bolder',
+                  fontSize: '18px',
+                  marginLeft: '20px',
+                }}
+              >
+                {pageNo}
+              </p>
+            ))}
+          </div>
+        ) : null
+      ) : null}
+
     </>
   );
 }
