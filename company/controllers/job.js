@@ -1,17 +1,21 @@
 /* eslint-disable no-underscore-dangle */
+const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { Types, Schema } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Job, Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
+const getAllApplications = async (req, res) => {};
+
+// get all applications along with jobs when getApplication=true is passed in query
 const getAllJobs = async (req, res) => {
   const { compId } = req.params;
   const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
   try {
     const jobsCount = await Job.count({ companyId: Types.ObjectId(compId) });
-    const result = await Job.aggregate([
+    const jobList = await Job.aggregate([
       { $match: { companyId: Types.ObjectId(compId) } },
       {
         $lookup: {
@@ -28,11 +32,39 @@ const getAllJobs = async (req, res) => {
       .skip(offset)
       .limit(limit);
 
+    let jobString = '';
+    jobList.forEach((item) => {
+      jobString = `${item._id},${jobString}`;
+    });
+
+    const applicationsResp = await axios.get(`${global.gConfig.application_url}/applications`, {
+      params: { jobIds: jobString, all: true },
+      headers: { Authorization: req.headers.authorization },
+    });
+
+    const jobApplicationMap = {};
+    applicationsResp.data?.nodes?.forEach((app) => {
+      if (jobApplicationMap[app.jobId]) {
+        jobApplicationMap[app.jobId].push(app);
+      } else {
+        jobApplicationMap[app.jobId] = [app];
+      }
+    });
+
+    const result = jobList.map((job) => ({
+      ...job,
+      applications: jobApplicationMap[job._id.toString()],
+    }));
+
     res.status(200).json({ total: jobsCount, nodes: result });
   } catch (err) {
     console.log(err);
     if (err instanceof TypeError) {
       res.status(400).json(errors.badRequest);
+      return;
+    }
+    if (err.isAxiosError) {
+      res.status(err.response?.status).json(err.response?.data);
       return;
     }
     res.status(500).json(errors.serverError);
@@ -222,7 +254,9 @@ const getJobsList = async (req, res) => {
     }
 
     if (q && q !== '') {
-      whereOpts.push({ $or: [{ title: { $regex: `(?i)${q}` } }, { 'company.name': { $regex: `(?i)${q}` } }] });
+      whereOpts.push({
+        $or: [{ title: { $regex: `(?i)${q}` } }, { 'company.name': { $regex: `(?i)${q}` } }],
+      });
     }
 
     if (since && since !== '') {
