@@ -11,6 +11,7 @@ import CompanyMain from './pages/companyReviews/CompanyMain';
 import FindCompany from './pages/companyReviews/FindCompany';
 import FindSalary from './pages/salaries/Findsalary';
 import Employeedetails from './pages/employee/Employeedetails';
+import UserProfile from './pages/profile/UserProfile';
 import Companydetails from './pages/employee/Companydetails';
 import CompanyValues from './pages/employee/CompanyValues';
 import Jobpost from './pages/employee/Jobpost';
@@ -31,6 +32,7 @@ function App() {
           <Route path="/cmp/:id" component={withAuth(CompanyMain, 'any', true)} />
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
+          <Route path="/profile" component={withAuth(UserProfile, 'any', true)} />
           <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />

@@ -4,6 +4,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@editorjs/editorjs": "^2.22.2",
+    "@editorjs/header": "^2.6.2",
+    "@editorjs/list": "^1.6.2",
+    "@editorjs/paragraph": "^2.8.0",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.1.1",
@@ -26,6 +30,7 @@
     "react-bootstrap": "^2.0.2",
     "react-country-region-selector": "^3.4.0",
     "react-dom": "^17.0.2",
+    "react-editor-js": "^2.0.3",
     "react-helmet-async": "^1.1.2",
     "react-hot-toast": "^2.1.1",
     "react-redux": "^7.2.6",

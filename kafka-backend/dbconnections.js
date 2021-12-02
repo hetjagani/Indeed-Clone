@@ -114,7 +114,15 @@ const getUserConnection = () => {
     state: String,
     country: String,
     zip: String,
-    jobPreferences: mongoose.Schema.Types.Mixed,
+    jobPreferences: new mongoose.Schema({
+      title: String,
+    relocation: String,
+    type: String,
+    schedule: String,
+    pay: String,
+    remote: String,
+    }),
+
   });
 
   const SalarySchema = new mongoose.Schema({
