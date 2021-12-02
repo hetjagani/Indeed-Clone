@@ -32,7 +32,7 @@ const DEFAULT_INITIAL_DATA = () => ({
     {
       type: 'header',
       data: {
-        text: 'Job Description',
+        text: 'Company Description',
         level: 1,
       },
     },
@@ -77,7 +77,7 @@ const CompanyValues = () => {
   const [logo, setLogo] = useState({});
 
   const backtoprofile = () => {
-    history.push('/employee');
+    history.push('/employee/company');
   };
   // const handleSave = async () => {
   //   const savedData = await descptionRef.current.save();
