@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const emailValidator = require('email-validator');
 const { ObjectId } = require('mongodb');
+const { errors } = require('u-server-utils');
 const { User } = require('../model');
 const { getPasswordHash, validatePassword, validatePassHash } = require('../util/passwords');
-const { errors } = require('u-server-utils');
 
 const JWT_SECRET = 'myubereatessuperdupersecret';
 
@@ -12,6 +12,20 @@ const getToken = async (req, res) => {
 
   if (!email || !password) {
     res.status(400).json(errors.badRequest);
+    return;
+  }
+
+  if (email === global.gConfig.admin_email && password === global.gConfig.admin_password) {
+    const accessToken = jwt.sign(
+      {
+        id: 'admin',
+        role: 'admin',
+      },
+      JWT_SECRET,
+      { expiresIn: '1d' },
+    );
+
+    res.json({ token: accessToken });
     return;
   }
 
@@ -105,6 +119,11 @@ const validateToken = async (req, res) => {
   jwt.verify(token, JWT_SECRET, async (err, data) => {
     if (err) {
       res.status(401).json({ valid: false });
+      return;
+    }
+
+    if (data.id === 'admin' && data.role === 'admin') {
+      res.status(200).json({ valid: true, role: data.role, user: data.id });
       return;
     }
 

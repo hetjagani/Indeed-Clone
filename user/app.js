@@ -57,10 +57,11 @@ const options = {
 
 expressSwagger(options);
 
-app.use(getAuthMiddleware(validate));
+// app.use(getAuthMiddleware(validate));
 // app.use(getAccessMiddleware(acl));
-app.use('/users', userRouter);
+
+app.use('/users', getAuthMiddleware(validate), userRouter);
 app.use('/salaries', generalSalaryRouter);
-app.use('/media', mediaRouter);
+app.use('/media', getAuthMiddleware(validate), mediaRouter);
 
 module.exports = app;
