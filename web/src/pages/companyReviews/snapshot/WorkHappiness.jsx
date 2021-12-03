@@ -79,8 +79,8 @@ function WorkHappiness(props) {
                 }}
               >
                 {props && props.data ? (
-                  props.data.avgHappinessScore ? (
-                    props.data.avgHappinessScore
+                  props.data.workLifeBalance ? (
+                    Math.ceil(props.data.workLifeBalance * 20)
                   ) : (
                     <span style={{ fontSize: '0.7rem' }}>NA</span>
                   )
@@ -90,9 +90,11 @@ function WorkHappiness(props) {
               </div>
               {props
               && props.data
-              && props.data.avgHappinessScore
-              && props.data.avgHappinessScore > 80 ? (
+              && props.data.workLifeBalance
+              && Math.ceil(props.data.workLifeBalance * 20) > 80 ? (
                 <VeryHappyEmojiSVG />
+                ) : Math.ceil(props.data.workLifeBalance * 20) > 65 ? (
+                  <HappyEmojiSVG />
                 ) : (
                   <SadEmojiSVG />
                 )}
@@ -159,8 +161,8 @@ function WorkHappiness(props) {
                 }}
               >
                 {props && props.data ? (
-                  props.data.learningScore ? (
-                    props.data.learningScore
+                  props.data.jobCulture ? (
+                    Math.ceil(props.data.jobCulture * 20)
                   ) : (
                     <span style={{ fontSize: '0.7rem' }}>NA</span>
                   )
@@ -170,9 +172,11 @@ function WorkHappiness(props) {
               </div>
               {props
               && props.data
-              && props.data.avgHappinessScore
-              && props.data.avgHappinessScore > 65 ? (
-                <HappyEmojiSVG />
+              && props.data.jobCulture
+              && Math.ceil(props.data.jobCulture * 20) > 80 ? (
+                <VeryHappyEmojiSVG />
+                ) : Math.ceil(props.data.jobCulture * 20) > 65 ? (
+                  <HappyEmojiSVG />
                 ) : (
                   <SadEmojiSVG />
                 )}
@@ -238,8 +242,8 @@ function WorkHappiness(props) {
                 }}
               >
                 {props && props.data ? (
-                  props.data.appreciationScore ? (
-                    props.data.appreciationScore
+                  props.data.compensation ? (
+                    Math.ceil(props.data.compensation * 20)
                   ) : (
                     <span style={{ fontSize: '0.7rem' }}>NA</span>
                   )
@@ -249,10 +253,10 @@ function WorkHappiness(props) {
               </div>
               {props
               && props.data
-              && props.data.appreciationScore
-              && props.data.appreciationScore > 85 ? (
+              && props.data.compensation
+              && Math.ceil(props.data.compensation * 20) > 80 ? (
                 <VeryHappyEmojiSVG />
-                ) : props.data.appreciationScore > 65 ? (
+                ) : Math.ceil(props.data.compensation * 20) > 65 ? (
                   <HappyEmojiSVG />
                 ) : (
                   <SadEmojiSVG />

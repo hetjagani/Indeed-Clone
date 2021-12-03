@@ -72,7 +72,7 @@ export default function AddReviewModal({
       ceoApproval,
       userId: user && user.user && user.user.id ? user.user.id : null,
       companyId: compId,
-      isFeatured: true,
+      isFeatured: false,
       status: 'PENDING',
       reviewDate: date,
       helpful: 0,
@@ -131,7 +131,10 @@ export default function AddReviewModal({
                     lineHeight: '1.25',
                   }}
                 >
-                  Take a minute to review Facebook.
+                  Take a minute to review
+                  {' '}
+                  {companyName}
+                  .
                 </Typography>
                 <p
                   style={{

@@ -21,6 +21,10 @@ function CompanyMain({ match }) {
   const [salaries, setSalaries] = useState({});
   const [reviews, setReviews] = useState([]);
   const [reviewFilter, setReviewFilter] = useState(2);
+  const [totalNumberOfReviews, setTotalNumberOfReviews] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const getCompanyDetails = async () => {
     const companyData = await getCompanyData(match.params.id);
     if (!companyData) return;
@@ -45,12 +49,15 @@ function CompanyMain({ match }) {
 
     setSalaries(industrySalaryMap);
   };
-  console.log(salaries);
+  console.log(reviews);
 
   const getCompanyReviews = async (sortBy) => {
-    const companyReviews = await getReviewsOfCompany(match.params.id, sortBy);
-    if (!companyReviews) return;
-    setReviews(companyReviews);
+    const limit = 10;
+    const response = await getReviewsOfCompany(match.params.id, sortBy, currentPage, limit);
+    if (!response) return;
+    setReviews(response.data.nodes);
+    setTotalNumberOfReviews(response.data.total);
+    setTotalPages(Math.ceil(response.data.total / limit));
   };
 
   useEffect(() => {
@@ -58,6 +65,10 @@ function CompanyMain({ match }) {
     getSalaryDetails();
     getCompanyReviews();
   }, []);
+
+  useEffect(() => {
+    getCompanyReviews();
+  }, [currentPage]);
 
   return (
     <Container fluid>
@@ -107,7 +118,7 @@ function CompanyMain({ match }) {
               }}
             >
               <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>
-                {companyDetails ? companyDetails.avgHappinessScore : 'NA'}
+                {companyDetails ? Math.ceil(companyDetails.workLifeBalance * 20) : 'NA'}
               </p>
               {' '}
               <hr
@@ -131,7 +142,7 @@ function CompanyMain({ match }) {
                 }}
               >
                 {companyDetails && companyDetails.overallRating
-                  ? companyDetails.overallRating
+                  ? companyDetails.overallRating.toFixed(2)
                   : null}
               </p>
               <StarRatings
@@ -183,6 +194,10 @@ function CompanyMain({ match }) {
             path={`${match.path}/reviews`}
             component={() => (
               <ReviewsMain
+                totalNumberOfReviews={totalNumberOfReviews}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
                 reviewFilter={reviewFilter}
                 setReviewFilter={setReviewFilter}
                 reviews={reviews}

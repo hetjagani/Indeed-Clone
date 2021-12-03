@@ -11,9 +11,9 @@ function EmployersReview() {
   const company = useSelector((state) => state.user.company);
 
   const fetchReviews = async () => {
-    const companyReviews = await getReviewsOfCompany(company._id);
-    if (companyReviews && companyReviews.length === 0) return;
-    setReviews(companyReviews);
+    const response = await getReviewsOfCompany(company._id);
+    if (!response) return;
+    setReviews(response.data.nodes);
   };
 
   useEffect(() => {
@@ -22,7 +22,10 @@ function EmployersReview() {
 
   return (
     <>
-      <div style={{ width: '90%' }}>
+      <div style={{
+        width: '98%', display: 'flex', justifyContent: 'center', overflowX: 'hidden',
+      }}
+      >
         <p
           style={{
             fontSize: '.875rem',
@@ -36,7 +39,7 @@ function EmployersReview() {
           ? reviews.map((review) => (
             <div>
               <RatingsCard review={review} flag={false} />
-              <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
+              <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '95%' }} />
             </div>
           ))
           : null}
