@@ -208,7 +208,7 @@ const updateApplication = async (req, res) => {
         }
 
         const result = await Application.findById(Types.ObjectId(resp._id));
-        const job = await getJob(application.jobId, req.headers.authorization);
+        const job = await getJob(result.jobId, req.headers.authorization);
 
         res.status(200).json({ ...result._doc, job });
       },
