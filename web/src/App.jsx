@@ -21,7 +21,8 @@ import EmployeeDashboard from './pages/employers/EmployeeDashboard';
 
 // Config / other files
 import withAuth from './utils/withAuth';
-import Userchat from './pages/chat/Userchat';
+import EmployeeChat from './pages/chat/EmployeeChat';
+import Usermessages from './pages/chat/Usermessages';
 
 function App() {
   return (
@@ -35,13 +36,14 @@ function App() {
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
           <Route path="/profile" component={withAuth(UserProfile, 'any', true)} />
+          <Route path="/employee/messages" component={withAuth(EmployeeChat, 'any', false)} />
           <Route path="/employee/company" component={withAuth(Companydetails, 'any', false)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/employee/dashboard" component={withAuth(EmployeeDashboard, 'any', false)} />
+          <Route path="/messages" component={withAuth(Usermessages, 'any', false)} />
           <Route path="/employee" component={withAuth(Employeedetails, 'any', false)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
-          <Route path="/messages" component={withAuth(Userchat, 'any', true)} />
           <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>

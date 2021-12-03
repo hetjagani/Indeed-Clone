@@ -50,3 +50,10 @@ export function removeSalary() {
     type: 'REMOVE_SALARY',
   };
 }
+
+export function message(payload) {
+  return {
+    type: 'MESSAGE',
+    payload,
+  };
+}
