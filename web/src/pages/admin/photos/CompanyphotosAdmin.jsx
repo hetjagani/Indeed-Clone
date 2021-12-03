@@ -37,7 +37,7 @@ function CompanyphotosAdmin({ compId, companyName }) {
   const [status, setStatus] = useState('');
 
   const getUploadedPhotos = async () => {
-    const response = await getPhotos(compId);
+    const response = await getPhotos(compId, true);
     if (!response) {
       return;
     }

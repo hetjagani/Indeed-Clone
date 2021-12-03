@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const { validationResult } = require('express-validator');
+const { validationResult, query } = require('express-validator');
 const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Review } = require('../model');
@@ -52,6 +52,10 @@ const getAllReviews = async (req, res) => {
       queryObj.isFeatured = true;
     } else if (req.query.isFeatured == 'false') {
       queryObj.isFeatured = false;
+    }
+
+    if (req.query.status && req.query.status != '') {
+      queryObj.status = req.query.status;
     }
 
     if (req.query.byDate && req.query.byDate == 'true') {

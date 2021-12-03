@@ -28,7 +28,7 @@ function CompanyReviewsAdmin({ match }) {
 
   const getCompanyReviews = async (sortBy) => {
     const limit = 10;
-    const response = await getReviewsOfCompany(match.params.id, sortBy, currentPage, limit);
+    const response = await getReviewsOfCompany(match.params.id, sortBy, currentPage, limit, true);
     if (!response) return;
     setReviews(response.data.nodes);
     setTotalNumberOfReviews(response.data.total);
