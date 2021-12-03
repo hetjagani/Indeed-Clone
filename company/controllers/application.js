@@ -64,6 +64,7 @@ const getCompanyApplicationById = async (req, res) => {
 const updateCompanyApplication = async (req, res) => {
   try {
     const { compId, appId } = req.params;
+    console.log(req.body);
 
     const valErr = validationResult(req);
     if (!valErr.isEmpty()) {

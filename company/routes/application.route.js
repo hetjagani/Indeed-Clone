@@ -1,6 +1,10 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { getCompanyApplications, getCompanyApplicationById, updateCompanyApplication } = require('../controllers/application');
+const {
+  getCompanyApplications,
+  getCompanyApplicationById,
+  updateCompanyApplication,
+} = require('../controllers/application');
 
 const router = express.Router({ mergeParams: true });
 
@@ -10,7 +14,7 @@ const router = express.Router({ mergeParams: true });
  */
 
 const bodyValidators = () => [
-  body('status').exists().isString().isIn('RECEIVED', 'UNDER_REVIEW', 'ACCEPTED', 'REJECTED'),
+  // body('status').exists().isString().isIn('RECEIVED', 'UNDER_REVIEW', 'ACCEPTED', 'REJECTED'),
 ];
 
 /**
