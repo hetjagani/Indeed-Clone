@@ -220,7 +220,7 @@ function ApplicantsDetails({ details }) {
                         {key}
                       </span>
                       <span style={{ marginTop: '5px', marginBottom: '1rem' }}>
-                        ans.
+                        Ans.
                         {' '}
                         {option.answers[key]}
                       </span>
