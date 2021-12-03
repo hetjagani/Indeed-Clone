@@ -20,7 +20,7 @@ function EmployersReview() {
 
   const fetchReviews = async () => {
     const limit = 10;
-    const response = await getReviewsOfCompany(company._id, 'overallRating', currentPage, limit);
+    const response = await getReviewsOfCompany(company._id, 'overallRating', currentPage, limit, true);
     if (!response) return;
     setReviews(response.data.nodes);
     setTotalNumberOfReviews(response.data.total);
