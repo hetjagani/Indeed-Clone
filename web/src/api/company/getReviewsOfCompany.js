@@ -6,6 +6,7 @@ const getReviewsOfCompany = (payload, sortBy = 'overallRating', page, limit) => 
       sortBy,
       page,
       limit,
+      all: true,
     },
   })
   .then((response) => response)

@@ -12,12 +12,15 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ReactComponent as SendSVG } from '../../assets/svg/send.svg';
 import MoneySVG from '../../components/svg/MoneySVG';
 
-function Applicants({ option }) {
+Array.range = (start, end) => Array.from({ length: end - start }, (v, k) => k + start);
+
+function Applicants({ option, selectedJobFlag }) {
   return (
     <div>
       <Card
         variant="outlined"
         className="jobCardHover"
+        sx={{ marginTop: '15px', borderColor: selectedJobFlag ? '#2557A6' : '' }}
       >
         <CardContent>
           <div

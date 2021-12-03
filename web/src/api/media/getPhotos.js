@@ -8,6 +8,9 @@ const getPhotos = (payload) => axiosInstance
     headers: {
       Authorization: token,
     },
+    params: {
+      all: true,
+    },
   })
   .then((response) => response);
 

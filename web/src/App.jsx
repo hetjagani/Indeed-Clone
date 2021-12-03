@@ -18,9 +18,11 @@ import Jobpost from './pages/employee/Jobpost';
 import Jobdescription from './pages/employee/Jobdescription';
 import EmployersMain from './pages/employers/EmployersMain';
 import EmployeeDashboard from './pages/employers/EmployeeDashboard';
+import FindCompanyMainAdmin from './pages/admin/FindCompanyMainAdmin';
 
 // Config / other files
 import withAuth from './utils/withAuth';
+import CompanyReviewsAdmin from './pages/admin/CompanyReviewsAdmin';
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
           <Route path="/profile" component={withAuth(UserProfile, 'any', true)} />
+          <Route path="/admin/reviews/:id" component={withAuth(CompanyReviewsAdmin, 'any', false)} />
+          <Route path="/admin/reviews" component={withAuth(FindCompanyMainAdmin, 'any', false)} />
           <Route path="/employee/company" component={withAuth(Companydetails, 'any', false)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/employee/dashboard" component={withAuth(EmployeeDashboard, 'any', false)} />

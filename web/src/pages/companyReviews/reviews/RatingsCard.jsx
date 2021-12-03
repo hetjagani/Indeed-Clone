@@ -22,7 +22,7 @@ function RatingsCard(props) {
 
   return (
     <>
-      <div style={{ display: 'flex', marginTop: '20px' }}>
+      <div style={{ display: 'flex', marginTop: '20px', width: '900px' }}>
         <div
           aria-label="ratingsColumn"
           style={{
@@ -66,7 +66,7 @@ function RatingsCard(props) {
           }}
         >
           <span style={{ fontSize: '1.1rem' }}>
-            {props && props.review ? props.review.review : null}
+            {props && props.review ? props.review.summary : null}
           </span>
           <span style={{ fontSize: '0.8rem', color: '#767676' }}>
             {props && props.review && props.review.user ? props.review.user.name : null}
@@ -84,7 +84,7 @@ function RatingsCard(props) {
               : null}
           </span>
           <span style={{ marginTop: '20px' }}>
-            {props && props.review ? props.review.summary : null}
+            {props && props.review ? props.review.review : null}
           </span>
           <span
             style={{

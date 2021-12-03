@@ -4,22 +4,16 @@ import StarRatings from 'react-star-ratings';
 import { Route } from 'react-router';
 import { Container } from 'react-bootstrap';
 
-import Button from '../../components/Button';
 import getCompanyData from '../../api/company/getCompanyData';
 import getReviewsOfCompany from '../../api/company/getReviewsOfCompany';
-import getSalariesOfCompany from '../../api/company/getSalariesOfCompany';
-import CompanyNav from '../../components/CompanyNav';
-import './css/CompanyProfile.css';
-import Snapshot from './snapshot/Snapshot';
-import AboutCompany from './about/AboutCompany';
-import SalariesMain from './salaries/SalariesMain';
-import ReviewsMain from './reviews/ReviewsMain';
-import Companyphotos from './photos/Companyphotos';
-import CompanyJobsMain from './companyJobs/CompanyJobsMain';
+import CompanyNavAdmin from '../../components/CompanyNavAdmin';
+import '../companyReviews/css/CompanyProfile.css';
 
-function CompanyMain({ match }) {
+import ReviewsMainAdmin from './reviews/ReviewsMainAdmin';
+import CompanyphotosAdmin from './photos/CompanyphotosAdmin';
+
+function CompanyReviewsAdmin({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
-  const [salaries, setSalaries] = useState({});
   const [reviews, setReviews] = useState([]);
   const [reviewFilter, setReviewFilter] = useState(2);
   const [totalNumberOfReviews, setTotalNumberOfReviews] = useState(0);
@@ -30,25 +24,6 @@ function CompanyMain({ match }) {
     const companyData = await getCompanyData(match.params.id);
     if (!companyData) return;
     setCompanyDetails(companyData);
-  };
-
-  const getSalaryDetails = async () => {
-    const salariesData = await getSalariesOfCompany(match.params.id);
-    if (!salariesData) return;
-    const industrySalaryMap = {};
-    if (salariesData.length > 0) {
-      salariesData.forEach((salary) => {
-        if (salary.industry && salary.industry.name) {
-          if (industrySalaryMap[salary.industry.name]) {
-            industrySalaryMap[salary.industry.name].push(salary);
-          } else {
-            industrySalaryMap[salary.industry.name] = [salary];
-          }
-        }
-      });
-    }
-
-    setSalaries(industrySalaryMap);
   };
 
   const getCompanyReviews = async (sortBy) => {
@@ -62,7 +37,6 @@ function CompanyMain({ match }) {
 
   useEffect(() => {
     getCompanyDetails();
-    getSalaryDetails();
     getCompanyReviews();
   }, []);
 
@@ -72,20 +46,6 @@ function CompanyMain({ match }) {
 
   return (
     <Container fluid>
-      <div
-        className="row"
-        style={{
-          overflowX: 'hidden',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <img
-          className="company-image"
-          src={companyDetails.media ? companyDetails.media.length ? companyDetails.media[0].url : '' : ''}
-          alt="sample"
-        />
-      </div>
       <div
         style={{
           display: 'flex',
@@ -160,16 +120,10 @@ function CompanyMain({ match }) {
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', marginTop: '40px' }}>
-          <Button label="Follow" style={{ width: '200px' }} />
-          <p style={{ fontSize: '10px', color: '#6f6f6f' }}>
-            Get weekly updates, new jobs and reviews
-          </p>
-        </div>
       </div>
 
       <div className="wrapper" style={{ marginTop: '10px' }}>
-        <CompanyNav />
+        <CompanyNavAdmin />
         <div
           style={{
             display: 'flex',
@@ -183,17 +137,19 @@ function CompanyMain({ match }) {
           }}
         >
           <Route
+            path={`${match.path}/photos`}
+            component={() => (
+              <CompanyphotosAdmin
+                compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails.name}
+              />
+            )}
+          />
+          <Route
             exact
             path={`${match.path}/`}
             component={() => (
-              <Snapshot data={companyDetails} salaries={salaries} reviews={reviews} />
-            )}
-          />
-          <Route path={`${match.path}/about`} component={() => <AboutCompany data={companyDetails} />} />
-          <Route
-            path={`${match.path}/reviews`}
-            component={() => (
-              <ReviewsMain
+              <ReviewsMainAdmin
                 totalNumberOfReviews={totalNumberOfReviews}
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
@@ -209,31 +165,10 @@ function CompanyMain({ match }) {
               />
             )}
           />
-          <Route
-            path={`${match.path}/salaries`}
-            component={() => (
-              <SalariesMain
-                salaries={salaries}
-                compId={match && match.params && match.params.id ? match.params.id : null}
-                companyName={companyDetails.name}
-                getSalaryDetails={getSalaryDetails}
-              />
-            )}
-          />
-          <Route path={`${match.path}/jobs`} component={CompanyJobsMain} />
-          <Route
-            path={`${match.path}/photos`}
-            component={() => (
-              <Companyphotos
-                compId={match && match.params && match.params.id ? match.params.id : null}
-                companyName={companyDetails.name}
-              />
-            )}
-          />
         </div>
       </div>
     </Container>
   );
 }
 
-export default CompanyMain;
+export default CompanyReviewsAdmin;

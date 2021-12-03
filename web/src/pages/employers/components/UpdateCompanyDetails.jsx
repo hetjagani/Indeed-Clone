@@ -8,6 +8,7 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import { createReactEditorJS } from 'react-editor-js';
 import List from '@editorjs/list';
 import Header from '@editorjs/header';
+import toast from 'react-hot-toast';
 
 import changeDateFormat from '../../../utils/changeDateFormat';
 import CompanySVG from '../../../components/svg/CompanySVG';
@@ -132,8 +133,8 @@ function UpdateCompanyDetails() {
   const [companyName, setCompanyName] = useState('');
   const [mission, setMission] = useState('');
   const [about, setAbout] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [photo, setPhoto] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [companyDetails, setCompanyDetails] = useState({});
 
   const [workCulture, setWorkCulture] = useState({
@@ -248,9 +249,11 @@ function UpdateCompanyDetails() {
       media,
       logo: logo.url,
     };
-    console.log('body', body);
     const res = await putCompanyDetails(body, company._id);
-    console.log(res);
+    if (!res) {
+      return;
+    }
+    toast.success('Details updated!');
   };
 
   const uploadPhoto = async (event) => {
@@ -276,8 +279,6 @@ function UpdateCompanyDetails() {
   useEffect(() => {
     getCompanyDetails();
   }, []);
-
-  console.log(companyDetails);
 
   return (
     <div>
@@ -401,7 +402,6 @@ function UpdateCompanyDetails() {
                   type="date"
                   value={foundedOn}
                   onChange={(e) => {
-                    console.log(e.target.value);
                     setFoundedOn(e.target.value);
                   }}
                   required
