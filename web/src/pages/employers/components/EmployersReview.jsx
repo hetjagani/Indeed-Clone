@@ -22,9 +22,13 @@ function EmployersReview() {
 
   return (
     <>
-      <div style={{
-        width: '98%', display: 'flex', justifyContent: 'center', overflowX: 'hidden',
-      }}
+      <div
+        style={{
+          width: '98%',
+          display: 'flex',
+          justifyContent: 'center',
+          overflowX: 'hidden',
+        }}
       >
         <p
           style={{
@@ -38,7 +42,7 @@ function EmployersReview() {
         {reviews && reviews.length > 0
           ? reviews.map((review) => (
             <div>
-              <RatingsCard review={review} flag={false} />
+              <RatingsCard review={review} flag={false} showButtons />
               <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '95%' }} />
             </div>
           ))

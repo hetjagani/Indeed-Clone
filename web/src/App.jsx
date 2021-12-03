@@ -21,6 +21,8 @@ import EmployeeDashboard from './pages/employers/EmployeeDashboard';
 
 // Config / other files
 import withAuth from './utils/withAuth';
+import ReviewsPage from './pages/users/ReviewsPage';
+import ApplicationsPage from './pages/users/ApplicationsPage';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function App() {
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
           <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
+          <Route path="/users/reviews" component={withAuth(ReviewsPage, 'any', true)} />
+          <Route path="/users/applications" component={withAuth(ApplicationsPage, 'any', true)} />
           <Route exact path="/" component={withAuth(JobsMain, 'any', true)} />
         </Switch>
       </Router>
