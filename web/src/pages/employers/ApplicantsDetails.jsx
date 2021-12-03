@@ -58,22 +58,32 @@ const style = {
   p: 4,
 };
 
-function ApplicantsDetails({ details }) {
+function ApplicantsDetails({ companyId, details, getJobs }) {
   const [open, setOpen] = React.useState(false);
   const [status, setStatus] = React.useState('');
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  async function changeStatus(compId, appId) {
+  const [selectedApp, setSelectedApp] = React.useState('');
+
+  const handleOpen = (appId) => {
+    setOpen(true);
+    setSelectedApp(appId);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedApp('');
+  };
+  async function changeStatus() {
     const payload = {
       status,
     };
-    const response = await updateStatus(payload, compId, appId);
+    const response = await updateStatus(payload, companyId, selectedApp);
     if (!response) {
       return;
     }
-    console.log(response);
+    setOpen(false);
+    setSelectedApp('');
+    getJobs();
   }
-  console.log(details);
+
   return (
     <div>
       {details
@@ -107,10 +117,7 @@ function ApplicantsDetails({ details }) {
                     variant="subtitle1"
                     style={{ fontSize: '14px', marginTop: '-15px' }}
                   >
-                    <EmailIcon
-                      fontSize="10px"
-                      sx={{ color: '#595959', marginRight: '0.5rem' }}
-                    />
+                    <EmailIcon fontSize="10px" sx={{ color: '#595959', marginRight: '0.5rem' }} />
                     {option ? option.user.emails[0] : ' '}
                   </Typography>
                   <div
@@ -124,12 +131,10 @@ function ApplicantsDetails({ details }) {
                     }}
                   >
                     <PhoneIcon fontSize="10px" sx={{ color: '#595959' }} />
-                    <p style={{ marginLeft: '0.5rem' }}>
-                      {option ? option.user.contactNo : ''}
-                    </p>
+                    <p style={{ marginLeft: '0.5rem' }}>{option ? option.user.contactNo : ''}</p>
                   </div>
                   <div>
-                    <span>Current Status</span>
+                    <span><b>Current Status: </b></span>
                     <span>{option ? option.status : 'RECEIVED'}</span>
                   </div>
                   <div
@@ -142,54 +147,9 @@ function ApplicantsDetails({ details }) {
                     <Button
                       label="Update Status"
                       style={{ width: '150px', marginRight: '1rem' }}
-                      onClick={handleOpen}
+                      onClick={() => handleOpen(option._id)}
                     />
-                    <Modal
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style2}>
-                        <Typography
-                          id="modal-modal-title"
-                          variant="h6"
-                          component="h2"
-                        >
-                          Update Status
-                        </Typography>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            marginTop: '10px',
-                          }}
-                        >
-                          <TextField
-                            select
-                            value={status}
-                            onChange={(e) => setStatus(e.target.value)}
-                            SelectProps={{
-                              native: true,
-                            }}
-                          >
-                            {statuses.map((opt) => (
-                              <option key={opt.value} value={opt.value}>
-                                {opt.label}
-                              </option>
-                            ))}
-                          </TextField>
-                          <Button
-                            label="Save"
-                            style={{ width: '100px', marginTop: '20px' }}
-                            onClick={() => changeStatus(
-                              option ? option.job.companyId : '',
-                              option ? option._id : '',
-                            )}
-                          />
-                        </div>
-                      </Box>
-                    </Modal>
+
                     <Button label="Intiate Chat" style={{ width: '150px' }} />
                   </div>
                 </CardContent>
@@ -211,29 +171,26 @@ function ApplicantsDetails({ details }) {
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', paddingTop: '1rem ' }}>
                     <span style={{ fontSize: '20px', fontWeight: '700' }}>Questions</span>
-                    {
-                  Object.keys(option.answers).map((key) => (
-                    <>
-                      <span style={{ fontSize: '16px', fontWeight: '700', marginTop: '0.5rem' }}>
-                        Ques.
-                        {' '}
-                        {key}
-                      </span>
-                      <span style={{ marginTop: '5px', marginBottom: '1rem' }}>
-                        Ans.
-                        {' '}
-                        {option.answers[key]}
-                      </span>
-                    </>
-                  ))
-}
+                    {Object.keys(option.answers).map((key) => (
+                      <>
+                        <span
+                          style={{ fontSize: '16px', fontWeight: '700', marginTop: '0.5rem' }}
+                        >
+                          Ques.
+                          {' '}
+                          {key}
+                        </span>
+                        <span style={{ marginTop: '5px', marginBottom: '1rem' }}>
+                          Ans.
+                          {' '}
+                          {option.answers[key]}
+                        </span>
+                      </>
+                    ))}
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <span>CoverLetter:</span>
-                    <a
-                      href={option ? option.coverLetters : ''}
-                      target="blank"
-                    >
+                    <span><b>CoverLetter: </b></span>
+                    <a href={option ? option.coverLetter : ''} target="_blank" rel="noreferrer">
                       {option ? option.coverLetter : ''}
                     </a>
                   </div>
@@ -244,7 +201,7 @@ function ApplicantsDetails({ details }) {
                       marginTop: '0.5rem',
                     }}
                   >
-                    <span style={{ marginRight: '5px ' }}>Resume:</span>
+                    <span style={{ marginRight: '5px ' }}><b>Resume: </b></span>
                     <a href={option ? option.resume : ''} target="blank">
                       {option ? option.resume : ''}
                     </a>
@@ -255,6 +212,45 @@ function ApplicantsDetails({ details }) {
           ))
           : 'No applicants for this job'
         : null}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style2}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Update Status
+          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: '10px',
+            }}
+          >
+            <TextField
+              select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              SelectProps={{
+                native: true,
+              }}
+            >
+              {statuses.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </TextField>
+            <Button
+              label="Save"
+              style={{ width: '100px', marginTop: '20px' }}
+              onClick={() => changeStatus()}
+            />
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 }
