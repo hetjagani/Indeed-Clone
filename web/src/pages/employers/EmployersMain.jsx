@@ -1,9 +1,12 @@
 import React from 'react';
+import { useHistory } from 'react-router';
+
 import EmployerNav from './components/EmployerNav';
 import EmployerSVG from '../../components/svg/EmployerSVG';
 import Button from '../../components/Button';
 
 function EmployersMain() {
+  const history = useHistory();
   return (
     <div>
       <EmployerNav />
@@ -20,7 +23,7 @@ function EmployersMain() {
           <p style={{ fontSize: '28px', marginLeft: '5px', marginTop: '-10px' }}>
             Post your job, interview candidates, and make offers all on Indeed. Start hiring today.
           </p>
-          <Button label="Post a job" style={{ width: '200px', marginTop: '20px' }} />
+          <Button onClick={() => history.push('/employee/dashboard')} label="Post a job" style={{ width: '200px', marginTop: '20px' }} />
         </div>
         <EmployerSVG />
       </div>

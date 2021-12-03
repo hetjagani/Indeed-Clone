@@ -17,7 +17,7 @@ import EmployeSVG from '../../components/svg/EmployeSVG';
 import './css/Employeedetails.css';
 import CustomAutocomplete from '../../components/CustomAutocomplete';
 import companyUpload from '../../api/media/companyUpload';
-import EmployerNav from '../employers/components/EmployerNav';
+import EmployerNavBeforeRegister from '../employers/components/EmployerNavBeforeRegister';
 
 const roles = [
   {
@@ -148,7 +148,7 @@ const Employeedetails = () => {
 
   return (
     <>
-      <EmployerNav showButton={false} />
+      <EmployerNavBeforeRegister />
       <form onSubmit={saveDetails}>
         <div
           style={{
