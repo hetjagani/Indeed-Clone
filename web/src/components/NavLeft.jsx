@@ -55,11 +55,7 @@ const NavLeft = () => {
     <div>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ bgcolor: '#fff' }}>
-          <AntTabs
-            value={value}
-            onChange={handleChange}
-            aria-label="ant example"
-          >
+          <AntTabs value={value} onChange={handleChange} aria-label="ant example">
             <AntTab icon={<ChatIcon />} aria-label="phone" />
             <AntTab icon={<NotificationsIcon />} aria-label="favorite" />
             <AntTab icon={<PersonIcon />} aria-label="person" />
@@ -118,16 +114,22 @@ const NavLeft = () => {
           {' '}
           <p style={{ marginLeft: '15px' }}>Profile</p>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => history.push('/users/reviews')}>
           <ReviewsIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>My reviews</p>
         </MenuItem>
         <Divider />
         <p
-          onClick={() => { dispatch(logout()); history.push('/login'); }}
+          onClick={() => {
+            dispatch(logout());
+            history.push('/login');
+          }}
           style={{
-            textAlign: 'center', fontWeight: '700', color: '#2557a7', cursor: 'pointer',
+            textAlign: 'center',
+            fontWeight: '700',
+            color: '#2557a7',
+            cursor: 'pointer',
           }}
         >
           Sign out
