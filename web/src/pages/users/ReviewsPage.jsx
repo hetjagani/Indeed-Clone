@@ -19,34 +19,36 @@ const ReviewsPage = () => {
   }, []);
 
   return (
-    <>
-      <div
+    <div
+      style={{
+        display: 'flex',
+        width: '900px',
+        maxWidth: '900px',
+        margin: '0 auto',
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+        alignItems: 'flex-end',
+        marginTop: '-20px',
+      }}
+    >
+      <p
         style={{
-          width: '98%',
-          display: 'flex',
-          justifyContent: 'center',
-          overflowX: 'hidden',
+          fontSize: '.875rem',
+          lineHeight: '1.5',
+          color: '#595959',
+          marginLeft: '5px',
+          marginTop: '30px',
         }}
-      >
-        <p
-          style={{
-            fontSize: '.875rem',
-            lineHeight: '1.5',
-            color: '#595959',
-            marginLeft: '5px',
-            marginTop: '30px',
-          }}
-        />
-        {reviews && reviews.length > 0
-          ? reviews.map((review) => (
-            <div>
-              <RatingsCard review={review} flag={false} />
-              <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '95%' }} />
-            </div>
-          ))
-          : null}
-      </div>
-    </>
+      />
+      {reviews && reviews.length > 0
+        ? reviews.map((review) => (
+          <div>
+            <RatingsCard review={review} flag={false} />
+          </div>
+        ))
+        : null}
+      <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
+    </div>
   );
 };
 

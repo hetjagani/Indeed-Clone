@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
+import { Favorite } from '@mui/icons-material';
 import { logout } from '../app/actions';
 
 import { AntTab, AntTabs } from './AntTabs';
@@ -85,7 +86,7 @@ const NavLeft = () => {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 0,
             width: 350,
-            height: 180,
+            height: 220,
             '& .MuiMenuItem-root': {
               height: 42,
               mt: 1,
@@ -118,6 +119,11 @@ const NavLeft = () => {
           <ReviewsIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>My reviews</p>
+        </MenuItem>
+        <MenuItem onClick={() => history.push('/users/applications')}>
+          <Favorite />
+          {' '}
+          <p style={{ marginLeft: '15px' }}>My Jobs</p>
         </MenuItem>
         <Divider />
         <p
