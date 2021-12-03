@@ -13,7 +13,9 @@ import {
 import { validate as validateEmail } from 'email-validator';
 // import toast from 'react-hot-toast';
 import useCookie from 'react-use-cookie';
-
+import { useDispatch } from 'react-redux';
+import jwt from 'jwt-decode';
+import { loginSuccess } from '../../app/actions';
 // Import files
 import './css/Login.css';
 import Input from '../../components/Input';
@@ -22,7 +24,7 @@ import Button from '../../components/Button';
 
 const Register = () => {
   const history = useHistory();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [emailIsVisited, setEmailIsVisited] = useState(false);
   const [emailHasError, setEmailHasError] = useState(false);
@@ -83,10 +85,21 @@ const Register = () => {
     if (!response) {
       return;
     }
-    console.log('here1', payload.role);
     setUserToken(response.data.token);
+    const user = jwt(response.data.token);
+    dispatch(loginSuccess({
+      loggedIn: true,
+      id: user.id,
+      email,
+    }));
+    const decoded = await jwt(response.data.token);
+    await setUserToken(response.data.token);
+    await dispatch(loginSuccess({
+      loggedIn: true,
+      id: decoded.id,
+      role: decoded.role,
+    }));
     if (payload.role === 'employer' || role.employer === true) {
-      console.log('here', payload.role);
       history.push('/employee');
     } else {
       history.push('/');

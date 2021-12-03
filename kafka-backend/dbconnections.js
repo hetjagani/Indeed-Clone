@@ -34,6 +34,7 @@ const getCompanyConnection = () => {
     appreciationScore: Number,
     employers: [mongoose.Types.ObjectId],
     media: [MediumSchema],
+    logo: MediumSchema,
   });
 
   const EmployerSchema = new mongoose.Schema({
@@ -114,8 +115,15 @@ const getUserConnection = () => {
     state: String,
     country: String,
     zip: String,
-    jobPreferences: [String],
- 
+    jobPreferences: new mongoose.Schema({
+      title: String,
+    relocation: String,
+    type: String,
+    schedule: String,
+    pay: String,
+    remote: String,
+    }),
+
   });
 
   const SalarySchema = new mongoose.Schema({
@@ -150,6 +158,7 @@ const getReviewConnection = () => {
     compensation: Number,
     jobSecurity: Number,
     management: Number,
+    helpful: Number,
     jobCulture: Number,
     summary: String,
     review: String,

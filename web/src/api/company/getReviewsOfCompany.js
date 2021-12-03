@@ -1,15 +1,15 @@
-import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const token = getCookie('token');
-
-const getReviewsOfCompany = (payload) => axiosInstance
+const getReviewsOfCompany = (payload, sortBy = 'overallRating', page, limit, all) => axiosInstance
   .get(`/companies/${payload}/reviews`, {
-    headers: {
-      Authorization: token,
+    params: {
+      sortBy,
+      page,
+      limit,
+      all,
     },
   })
-  .then((response) => response.data.nodes)
+  .then((response) => response)
   .catch((err) => {
     console.log(err);
   });

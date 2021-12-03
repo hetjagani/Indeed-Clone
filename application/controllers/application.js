@@ -17,7 +17,7 @@ const getAllJobs = async (auth) => {
 
   const jobsList = response.data;
 
-  const jobMap = [];
+  const jobMap = {};
   jobsList.forEach((job) => {
     jobMap[job._id] = job;
   });
@@ -36,9 +36,28 @@ const getJob = async (id, auth) => {
   return response.data;
 };
 
+const getAllUsers = async (auth) => {
+  const response = await axios.get(`${global.gConfig.user_url}/users`, {
+    params: { all: true },
+    headers: { Authorization: auth },
+  });
+  if (!response) {
+    throw Error('something went wrong');
+  }
+
+  const userList = response.data;
+
+  const userMap = {};
+  userList.nodes?.forEach((user) => {
+    userMap[user._id] = user;
+  });
+
+  return userMap;
+};
+
 const getApplications = async (req, res) => {
   try {
-    const { userId, jobIds } = req.query;
+    const { userId, jobIds, all } = req.query;
     const whereOpts = {};
     if (userId && userId !== '') {
       whereOpts.userId = Types.ObjectId(userId);
@@ -50,20 +69,26 @@ const getApplications = async (req, res) => {
         .map((i) => {
           if (i.trim() !== '') return Types.ObjectId(i.trim());
         });
-      console.log(jobIdList);
       whereOpts.jobId = { $in: jobIdList };
     }
 
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
 
     const jobMap = await getAllJobs(req.headers.authorization);
+    const userMap = await getAllUsers(req.headers.authorization);
 
     const applicationCount = await Application.count(whereOpts);
-    const applicationList = await Application.find(whereOpts).skip(offset).limit(limit);
+    let applicationList = [];
+    if (all == 'true') {
+      applicationList = await Application.find(whereOpts);
+    } else {
+      applicationList = await Application.find(whereOpts).skip(offset).limit(limit);
+    }
 
     const result = applicationList.map((app) => ({
       ...app._doc,
       job: jobMap[app.jobId],
+      user: userMap[app.userId],
     }));
 
     res.status(200).json({ total: applicationCount, nodes: result });
@@ -92,7 +117,6 @@ const getApplicationById = async (req, res) => {
         .map((i) => {
           if (i.trim() !== '') return Types.ObjectId(i.trim());
         });
-      console.log(jobIdList);
       whereOpts.jobId = { $in: jobIdList };
     }
 
@@ -184,7 +208,7 @@ const updateApplication = async (req, res) => {
         }
 
         const result = await Application.findById(Types.ObjectId(resp._id));
-        const job = await getJob(application.jobId, req.headers.authorization);
+        const job = await getJob(result.jobId, req.headers.authorization);
 
         res.status(200).json({ ...result._doc, job });
       },

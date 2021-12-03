@@ -2,16 +2,20 @@
 const { errors } = require('u-server-utils');
 const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
-const { User } = require('../model');
 const { Types } = require('mongoose');
+const { User } = require('../model');
 
 const getUserReviews = async (req, res) => {
   try {
     const { id } = req.params;
-    const { page, limit, sortBy, sortOrder, isFeatured } = req.query;
+    const {
+      page, limit, sortBy, sortOrder, isFeatured,
+    } = req.query;
 
     const result = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { userId: id, page, limit, sortBy, sortOrder, isFeatured },
+      params: {
+        userId: id, page, limit, sortBy, sortOrder, isFeatured,
+      },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -25,15 +29,17 @@ const getUserReviews = async (req, res) => {
       userMap.set(String(ele._id), ele);
     });
 
-
     result.data.nodes.forEach((ele) => {
       ele.user = userMap.get(String(ele.userId));
     });
 
-    const allCompany = await axios.get(`${global.gConfig.company_url}/companies`, {
-      params: { all: 'true' },
-      headers: { Authorization: req.headers.authorization },
-    });
+    const allCompany = await axios.get(
+      `${global.gConfig.company_url}/companies`,
+      {
+        params: { all: 'true' },
+        headers: { Authorization: req.headers.authorization },
+      },
+    );
 
     const companyMap = new Map();
 

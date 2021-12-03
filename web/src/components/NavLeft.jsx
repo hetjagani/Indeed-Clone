@@ -1,102 +1,62 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable react/jsx-no-comment-textnodes */
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import React, { useEffect } from 'react';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import FeedIcon from '@mui/icons-material/Feed';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ReviewsIcon from '@mui/icons-material/Reviews';
-import EmailIcon from '@mui/icons-material/Email';
-import SearchIcon from '@mui/icons-material/Search';
-import SettingsIcon from '@mui/icons-material/Settings';
-import HelpIcon from '@mui/icons-material/Help';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import { Favorite } from '@mui/icons-material';
 import { logout } from '../app/actions';
 
-const AntTabs = styled(Tabs)({
-  borderBottom: '1px solid #e8e8e8',
-  height: 82,
-  '& .MuiTabs-indicator': {
-    backgroundColor: '#2557a7',
-  },
-  '& .MuiTabs-indicator:hover': {
-    backgroundColor: '#2557a7',
-  },
-});
-
-const AntTab = styled((props) => <Tab disableRipple {...props} />)(
-  ({ theme }) => ({
-    textTransform: 'none',
-    minWidth: 0,
-    marginTop: 25,
-    marginLeft: 20,
-    [theme.breakpoints.up('sm')]: {
-      minWidth: 0,
-    },
-    fontWeight: theme.typography.fontWeightRegular,
-    marginRight: theme.spacing(1),
-    color: 'rgba(0, 0, 0, 0.85)',
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '& .MuiTabs-indicator:hover': {
-      backgroundColor: '#2557a7',
-    },
-    '&.Mui-selected': {
-      color: 'black',
-      fontWeight: theme.typography.fontWeightMedium,
-    },
-    '&.Mui-focusVisible': {
-      backgroundColor: 'black',
-    },
-  }),
-);
+import { AntTab, AntTabs } from './AntTabs';
 
 const NavLeft = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-
-  const [value, setValue] = React.useState(0);
+  const user = useSelector((state) => state.user);
+  const [value, setValue] = React.useState(1);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const location = useLocation();
+
+  useEffect(() => {
+    const paths = location.pathname.split('/');
+    if (paths.length > 1) {
+      if (paths[1] === 'hire') {
+        setValue(4);
+      } else {
+        setValue(-1);
+      }
+    }
+  }, []);
+
   const handleChange = (event, newValue) => {
     if (newValue === 2) {
       setAnchorEl(event.currentTarget);
     }
     setValue(newValue);
+    if (newValue === 4) {
+      history.push('/hire');
+    }
   };
   const handleClose = () => {
     setAnchorEl(null);
-    setValue(0);
+    setValue(2);
   };
   return (
     <div>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ bgcolor: '#fff' }}>
-          <AntTabs
-            value={value}
-            onChange={handleChange}
-            aria-label="ant example"
-          >
+          <AntTabs value={value} onChange={handleChange} aria-label="ant example">
             <AntTab icon={<ChatIcon />} aria-label="phone" />
             <AntTab icon={<NotificationsIcon />} aria-label="favorite" />
             <AntTab icon={<PersonIcon />} aria-label="person" />
@@ -126,7 +86,7 @@ const NavLeft = () => {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 0,
             width: 350,
-            height: 470,
+            height: 220,
             '& .MuiMenuItem-root': {
               height: 42,
               mt: 1,
@@ -150,47 +110,32 @@ const NavLeft = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>emailAddress</MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => history.push('/profile')}>
           <FeedIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>Profile</p>
         </MenuItem>
-        <MenuItem>
-          <FavoriteIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>My jobs</p>
-        </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => history.push('/users/reviews')}>
           <ReviewsIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>My reviews</p>
         </MenuItem>
-        <MenuItem>
-          <EmailIcon />
+        <MenuItem onClick={() => history.push('/users/applications')}>
+          <Favorite />
           {' '}
-          <p style={{ marginLeft: '15px' }}>Email preferences</p>
-        </MenuItem>
-        <MenuItem>
-          <SearchIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Search preferences</p>
-        </MenuItem>
-        <MenuItem>
-          <SettingsIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Settings</p>
-        </MenuItem>
-        <MenuItem>
-          <HelpIcon />
-          {' '}
-          <p style={{ marginLeft: '15px' }}>Help Center</p>
+          <p style={{ marginLeft: '15px' }}>My Jobs</p>
         </MenuItem>
         <Divider />
         <p
-          onClick={() => { dispatch(logout()); history.push('/login'); }}
+          onClick={() => {
+            dispatch(logout());
+            history.push('/login');
+          }}
           style={{
-            textAlign: 'center', fontWeight: '700', color: '#2557a7', cursor: 'pointer',
+            textAlign: 'center',
+            fontWeight: '700',
+            color: '#2557a7',
+            cursor: 'pointer',
           }}
         >
           Sign out

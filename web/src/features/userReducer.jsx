@@ -2,8 +2,11 @@ import { setCookie } from 'react-use-cookie';
 
 const initialState = {
   user: {},
+  salary: {},
   token: '',
   errMsg: '',
+  company: {},
+  userDetail: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -18,9 +21,19 @@ const reducer = (state = initialState, action) => {
       return { ...state, errMsg: action.payload };
     case 'LOGOUT':
       setCookie('token', '', { path: '/' });
-      return { ...state, user: null, token: '' };
+      return {
+        ...state, user: null, token: '', company: null, userDetail: '',
+      };
     case 'REMOVE_TOKEN':
       return { ...state, token: '' };
+    case 'ADD_SALARY':
+      return { ...state, salary: action.payload };
+    case 'REMOVE_SALARY':
+      return { ...state, salary: null };
+    case 'COMPANY':
+      return { ...state, company: action.payload };
+    case 'USER_DETAIL':
+      return { ...state, userDetail: action.payload };
     default:
       return state;
   }

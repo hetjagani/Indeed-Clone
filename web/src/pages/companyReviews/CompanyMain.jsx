@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import StarRatings from 'react-star-ratings';
 import { Route } from 'react-router';
@@ -11,14 +12,20 @@ import CompanyNav from '../../components/CompanyNav';
 import './css/CompanyProfile.css';
 import Snapshot from './snapshot/Snapshot';
 import AboutCompany from './about/AboutCompany';
-import ReviewsMain from './reviews/ReviewsMain';
 import SalariesMain from './salaries/SalariesMain';
+import ReviewsMain from './reviews/ReviewsMain';
+import Companyphotos from './photos/Companyphotos';
 import CompanyJobsMain from './companyJobs/CompanyJobsMain';
 
 function CompanyMain({ match }) {
   const [companyDetails, setCompanyDetails] = useState({});
   const [salaries, setSalaries] = useState({});
   const [reviews, setReviews] = useState([]);
+  const [reviewFilter, setReviewFilter] = useState(2);
+  const [totalNumberOfReviews, setTotalNumberOfReviews] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const getCompanyDetails = async () => {
     const companyData = await getCompanyData(match.params.id);
     if (!companyData) return;
@@ -40,13 +47,17 @@ function CompanyMain({ match }) {
         }
       });
     }
+
     setSalaries(industrySalaryMap);
   };
 
-  const getCompanyReviews = async () => {
-    const companyReviews = await getReviewsOfCompany(match.params.id);
-    if (!companyReviews) return;
-    setReviews(companyReviews);
+  const getCompanyReviews = async (sortBy) => {
+    const limit = 10;
+    const response = await getReviewsOfCompany(match.params.id, sortBy, currentPage, limit);
+    if (!response) return;
+    setReviews(response.data.nodes);
+    setTotalNumberOfReviews(response.data.total);
+    setTotalPages(Math.ceil(response.data.total / limit));
   };
 
   useEffect(() => {
@@ -54,6 +65,10 @@ function CompanyMain({ match }) {
     getSalaryDetails();
     getCompanyReviews();
   }, []);
+
+  useEffect(() => {
+    getCompanyReviews();
+  }, [currentPage]);
 
   return (
     <Container fluid>
@@ -67,7 +82,7 @@ function CompanyMain({ match }) {
       >
         <img
           className="company-image"
-          src="https://ubereats-media.s3.amazonaws.com/1619644672652.jpeg"
+          src={companyDetails.media ? companyDetails.media.length ? companyDetails.media[0].url : '' : ''}
           alt="sample"
         />
       </div>
@@ -87,7 +102,7 @@ function CompanyMain({ match }) {
         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <img
             className="company-logo"
-            src="https://ubereats-media.s3.amazonaws.com/amazon-logo-square.jpg"
+            src={companyDetails.logo ? companyDetails.logo.url : ''}
             alt="Logo"
           />
           <div style={{ marginLeft: '20px', marginTop: '30px' }}>
@@ -102,7 +117,9 @@ function CompanyMain({ match }) {
                 marginTop: '-20px',
               }}
             >
-              <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>61</p>
+              <p style={{ fontSize: '1.1rem', color: 'black', fontWeight: 700 }}>
+                {companyDetails ? Math.ceil(companyDetails.workLifeBalance * 20) : 'NA'}
+              </p>
               {' '}
               <hr
                 style={{
@@ -124,10 +141,16 @@ function CompanyMain({ match }) {
                   marginRight: '10px',
                 }}
               >
-                4.2
+                {companyDetails && companyDetails.overallRating
+                  ? companyDetails.overallRating.toFixed(2)
+                  : null}
               </p>
               <StarRatings
-                rating={4.2}
+                rating={
+                  companyDetails && companyDetails.overallRating
+                    ? companyDetails.overallRating
+                    : 0
+                }
                 starRatedColor="#9D2B6B"
                 numberOfStars={5}
                 name="rating"
@@ -167,9 +190,46 @@ function CompanyMain({ match }) {
             )}
           />
           <Route path={`${match.path}/about`} component={() => <AboutCompany data={companyDetails} />} />
-          <Route path={`${match.path}/reviews`} component={ReviewsMain} />
-          <Route path={`${match.path}/salaries`} component={SalariesMain} />
+          <Route
+            path={`${match.path}/reviews`}
+            component={() => (
+              <ReviewsMain
+                totalNumberOfReviews={totalNumberOfReviews}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                totalPages={totalPages}
+                reviewFilter={reviewFilter}
+                setReviewFilter={setReviewFilter}
+                reviews={reviews}
+                compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails && companyDetails.name ? companyDetails.name : null}
+                getCompanyReviews={getCompanyReviews}
+                logo={companyDetails && companyDetails.logo && companyDetails.logo.url
+                  ? companyDetails.logo.url : null}
+              />
+            )}
+          />
+          <Route
+            path={`${match.path}/salaries`}
+            component={() => (
+              <SalariesMain
+                salaries={salaries}
+                compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails.name}
+                getSalaryDetails={getSalaryDetails}
+              />
+            )}
+          />
           <Route path={`${match.path}/jobs`} component={CompanyJobsMain} />
+          <Route
+            path={`${match.path}/photos`}
+            component={() => (
+              <Companyphotos
+                compId={match && match.params && match.params.id ? match.params.id : null}
+                companyName={companyDetails.name}
+              />
+            )}
+          />
         </div>
       </div>
     </Container>

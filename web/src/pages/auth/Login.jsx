@@ -8,6 +8,7 @@ import jwt from 'jwt-decode';
 // import toast from 'react-hot-toast';
 // import Cookies from 'universal-cookie';
 import { setCookie } from 'react-use-cookie';
+import toast from 'react-hot-toast';
 
 // Import files
 import './css/Login.css';
@@ -15,7 +16,10 @@ import { useDispatch } from 'react-redux';
 import Input from '../../components/Input';
 import login from '../../api/auth/login';
 import Button from '../../components/Button';
-import { loginRequest, loginFailure, loginSuccess } from '../../app/actions';
+import {
+  loginRequest, loginFailure, loginSuccess, compamny,
+} from '../../app/actions';
+import getEmployerByID from '../../api/employer/get';
 
 const Login = () => {
   // eslint-disable-next-line no-unused-vars
@@ -69,18 +73,30 @@ const Login = () => {
     }
     const payload = { email, password };
     login(payload)
-      .then((response) => {
+      .then(async (response) => {
         dispatch(loginRequest());
         if (response === null || response === undefined) {
           return;
         }
         setCookie('token', response.data.token, { path: '/' });
-        const user = jwt(response.data.token);
+        const user = await jwt(response.data.token);
         dispatch(loginSuccess({
           loggedIn: true,
           id: user.id,
+          email,
+          role: user.role,
         }));
-        history.push('/');
+        if (user.role === 'user') {
+          history.push('/');
+        } else if (user.role === 'employer') {
+          const employer = await getEmployerByID(user.id);
+          if (!employer) {
+            toast.error('Employer not found. Please register your company!');
+            return;
+          }
+          await dispatch(compamny(employer.data.company[0]));
+          history.push('/employee/dashboard');
+        }
       })
       .catch((err) => {
         dispatch(loginFailure(err));
@@ -223,9 +239,6 @@ const Login = () => {
         >
           <Link to="/login" style={{ textDecoration: 'none' }}>
             <p className="rpar">Forgot your password?</p>
-          </Link>
-          <Link to="/login" style={{ textDecoration: 'none' }}>
-            <p className="rpar">Help Center</p>
           </Link>
         </div>
       </div>

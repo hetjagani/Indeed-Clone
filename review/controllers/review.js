@@ -1,9 +1,32 @@
 /* eslint-disable no-underscore-dangle */
-const { validationResult } = require('express-validator');
+const { validationResult, query } = require('express-validator');
 const { Types } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Review } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
+
+const getReviewsPerDay = async () => {
+  const allReviews = await Review.find({});
+
+  const reviewMap = {};
+  allReviews.forEach((review) => {
+    if (reviewMap[review.reviewDate]) {
+      reviewMap[review.reviewDate].push(review);
+    } else {
+      reviewMap[review.reviewDate] = [review];
+    }
+  });
+
+  const reviewsByDate = [];
+  Object.entries(reviewMap).forEach(([date, review]) => {
+    reviewsByDate.push({
+      date,
+      review,
+    });
+  });
+
+  return reviewsByDate;
+};
 
 const getAllReviews = async (req, res) => {
   try {
@@ -31,8 +54,22 @@ const getAllReviews = async (req, res) => {
       queryObj.isFeatured = false;
     }
 
+    if (req.query.status && req.query.status != '') {
+      queryObj.status = req.query.status;
+    }
+
+    if (req.query.byDate && req.query.byDate == 'true') {
+      const reviewsByDate = await getReviewsPerDay();
+      res.status(200).json(reviewsByDate);
+      return;
+    }
+
     const sortObj = {};
-    sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    if (sortBy === 'reviewDate') {
+      sortObj[sortBy] = sortOrder === 'desc' ? 1 : -1;
+    } else {
+      sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    }
 
     if (req.query.all == 'true') {
       const allReviews = await Review.find(queryObj).sort(sortObj);

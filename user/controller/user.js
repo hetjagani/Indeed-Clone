@@ -1,13 +1,36 @@
 /* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
-const { makeRequest } = require('../util/kafka/client');
 const { errors, getPagination } = require('u-server-utils');
+const { default: axios } = require('axios');
+const { makeRequest } = require('../util/kafka/client');
 const { User } = require('../model');
-const mongoose = require('mongoose');
-const { response } = require('express');
+
+const getUsersByReviews = async (auth) => {
+  const reviewResponse = await axios.get(`${global.gConfig.review_url}/reviews`, {
+    params: { all: true },
+    headers: { Authorization: auth },
+  });
+
+  const userReviewMap = new Map();
+  reviewResponse.data.forEach((re) => {
+    if (re.status === 'ACCEPTED') {
+      if (userReviewMap.has(re.userId)) {
+        userReviewMap.set(re.userId, userReviewMap.get(re.userId) + 1);
+      } else {
+        userReviewMap.set(re.userId, 1);
+      }
+    }
+  });
+
+  const sortedReviewMap = new Map([...userReviewMap.entries()].sort((a, b) => b[1] - a[1]));
+
+  return Array.from(sortedReviewMap.keys()).slice(0, 5);
+};
 
 const createUser = async (req, res) => {
   const { user } = req.headers;
+  console.log(user);
+  console.log(req.body.id);
   if (user !== req.body.id) {
     res.status(400).json({
       ...errors.badRequest,
@@ -37,65 +60,87 @@ const createUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  let { limit, offset } = getPagination(req.query.page, req.query.limit);
+  try {
+    let { limit, offset } = getPagination(req.query.page, req.query.limit);
 
-  const usersCount = await User.count();
+    const usersCount = await User.count();
 
-  if (req.query.all === 'true') {
-    limit = usersCount;
-    offset = 0;
+    if (req.query.all === 'true') {
+      limit = usersCount;
+      offset = 0;
+    }
+
+    if (req.query.byReviews && req.query.byReviews == 'true') {
+      const userIds = await getUsersByReviews(req.headers.authorization);
+      const userList = await User.find({ _id: { $in: userIds } });
+      res.status(200).json(userList);
+      return;
+    }
+
+    const userList = await User.find({}).skip(offset).limit(limit);
+
+    res.status(200).json({ total: usersCount, nodes: userList });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
   }
-
-  const userList = await User.find({}).skip(offset).limit(limit);
-
-  res.status(200).json({ total: usersCount, nodes: userList });
 };
 
 const getUserById = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const user = await User.findById(id);
-  if (!user) {
-    res.status(404).json(errors.notFound);
-    return;
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json(errors.notFound);
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
   }
-
-  res.status(200).json(user);
 };
 
 const updateUser = async (req, res) => {
-  const { id } = req.params;
-  if (!id || id == 0) {
-    res.status(400).json(errors.badRequest);
-    return;
-  }
-
-  const { user } = req.headers;
-  if (user != id) {
-    res.status(400).json({
-      ...errors.badRequest,
-      message: 'id should be same as logged in user',
-    });
-    return;
-  }
-
-  const valErr = validationResult(req);
-  if (!valErr.isEmpty()) {
-    res.status(400).json({ status: 400, message: valErr.array() });
-    return;
-  }
-
-  const userObj = req.body;
-  userObj._id = id;
-
-  makeRequest('user.update', userObj, (err, resp) => {
-    if (err || !resp) {
-      console.log(err);
-      res.status(500).json(errors.serverError);
+  try {
+    const { id } = req.params;
+    if (!id || id == 0) {
+      res.status(400).json(errors.badRequest);
       return;
     }
-    res.status(200).json(resp);
-  });
+
+    const { user } = req.headers;
+    if (user != id) {
+      res.status(400).json({
+        ...errors.badRequest,
+        message: 'id should be same as logged in user',
+      });
+      return;
+    }
+
+    const valErr = validationResult(req);
+    if (!valErr.isEmpty()) {
+      res.status(400).json({ status: 400, message: valErr.array() });
+      return;
+    }
+
+    const userObj = req.body;
+    userObj._id = id;
+
+    makeRequest('user.update', userObj, (err, resp) => {
+      if (err || !resp) {
+        console.log(err);
+        res.status(500).json(errors.serverError);
+        return;
+      }
+      res.status(200).json(resp);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(errors.serverError);
+  }
 };
 
 const deleteUser = async (req, res) => {

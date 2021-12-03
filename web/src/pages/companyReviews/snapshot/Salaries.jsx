@@ -6,14 +6,19 @@ import Button from '../../../components/Button';
 import AddSalaryModal from '../salaries/AddSalaryModal';
 import SalariesByIndustry from './SalariesByIndustry';
 
-function Salaries({ title, showButton = false, salaries }) {
+function Salaries({
+  companyName, showButton = false, salaries, flag, compId, getSalaryDetails,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const handleClose = async () => {
+    await getSalaryDetails();
+    setIsOpen(false);
+  };
 
   return (
     <>
-      <AddSalaryModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} />
+      <AddSalaryModal handleOpen={handleOpen} handleClose={handleClose} isOpen={isOpen} compId={compId} getSalaryDetails={getSalaryDetails} />
       <div style={{
         display: 'flex', width: '100%', justifyContent: 'space-between', marginTop: '15px',
       }}
@@ -22,7 +27,9 @@ function Salaries({ title, showButton = false, salaries }) {
           fontWeight: 'bold', fontSize: '1.75rem', lineHeight: '1.25', marginBottom: '0.5rem',
         }}
         >
-          {title}
+          Avg Salaries at
+          {' '}
+          {companyName}
         </Typography>
         {showButton
           ? (
@@ -39,15 +46,7 @@ function Salaries({ title, showButton = false, salaries }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
         {salaries ? Object.keys(salaries).length > 0
           ? Object.keys(salaries).map((key) => (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <p style={{ fontSize: '0.88rem', lineHeight: '1.5', color: '#595959' }}>
-                  Salaries estimated from employees, users, and past and present job advertisements on
-                  Indeed.
-                </p>
-              </div>
-              <SalariesByIndustry industry={key} data={salaries[key]} />
-            </>
+            <SalariesByIndustry industry={key} data={salaries[key]} flag={flag} />
           ))
           : null : null}
       </div>

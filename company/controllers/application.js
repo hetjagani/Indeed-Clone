@@ -17,12 +17,12 @@ const getCompanyApplications = async (req, res) => {
       jobString = `${item._id},${jobString}`;
     });
 
-    const reviewResp = await axios.get(`${global.gConfig.application_url}/applications`, {
+    const applicationsResp = await axios.get(`${global.gConfig.application_url}/applications`, {
       params: { page, limit, jobIds: jobString },
       headers: { Authorization: req.headers.authorization },
     });
 
-    res.status(200).json(reviewResp.data);
+    res.status(200).json(applicationsResp.data);
   } catch (err) {
     console.log(err);
     if (err.isAxiosError) {

@@ -1,8 +1,8 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import CompanyAbout from './CompanyAbout';
-import Reviews from './Reviews';
-import Salaries from './Salaries';
+// import Reviews from './Reviews';
+// import Salaries from './Salaries';
 import WorkHappiness from './WorkHappiness';
 
 function Snapshot(props) {
@@ -16,8 +16,8 @@ function Snapshot(props) {
       </p>
       <WorkHappiness data={props.data} />
       <CompanyAbout data={props.data} />
-      <Salaries salaries={props.salaries} />
-      <Reviews reviews={props.reviews} />
+      {/* <Salaries salaries={props.salaries} flag={false} /> */}
+      {/* <Reviews reviews={props.reviews} /> */}
     </>
   );
 }

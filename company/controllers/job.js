@@ -1,18 +1,26 @@
 /* eslint-disable no-underscore-dangle */
+const { default: axios } = require('axios');
 const { validationResult } = require('express-validator');
 const { Types, Schema } = require('mongoose');
 const { getPagination, errors } = require('u-server-utils');
 const { Job, Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
+// get all applications along with jobs when getApplication=true is passed in query
 const getAllJobs = async (req, res) => {
-  const { compId } = req.params;
-  const { limit, offset } = getPagination(req.query.page, req.query.limit);
-
   try {
-    const jobsCount = await Job.count({ companyId: Types.ObjectId(compId) });
-    const result = await Job.aggregate([
-      { $match: { companyId: Types.ObjectId(compId) } },
+    const { compId } = req.params;
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+    const { since } = req.query;
+
+    const whereOpts = { companyId: Types.ObjectId(compId) };
+    if (since && since !== '') {
+      whereOpts.push({ postedOn: { $gte: new Date(since) } });
+    }
+
+    const jobsCount = await Job.count(whereOpts);
+    const jobList = await Job.aggregate([
+      { $match: whereOpts },
       {
         $lookup: {
           from: 'companies',
@@ -28,11 +36,39 @@ const getAllJobs = async (req, res) => {
       .skip(offset)
       .limit(limit);
 
+    let jobString = '';
+    jobList.forEach((item) => {
+      jobString = `${item._id},${jobString}`;
+    });
+
+    const applicationsResp = await axios.get(`${global.gConfig.application_url}/applications`, {
+      params: { jobIds: jobString, all: true },
+      headers: { Authorization: req.headers.authorization },
+    });
+
+    const jobApplicationMap = {};
+    applicationsResp.data?.nodes?.forEach((app) => {
+      if (jobApplicationMap[app.jobId]) {
+        jobApplicationMap[app.jobId].push(app);
+      } else {
+        jobApplicationMap[app.jobId] = [app];
+      }
+    });
+
+    const result = jobList.map((job) => ({
+      ...job,
+      applications: jobApplicationMap[job._id.toString()],
+    }));
+
     res.status(200).json({ total: jobsCount, nodes: result });
   } catch (err) {
     console.log(err);
     if (err instanceof TypeError) {
       res.status(400).json(errors.badRequest);
+      return;
+    }
+    if (err.isAxiosError) {
+      res.status(err.response?.status).json(err.response?.data);
       return;
     }
     res.status(500).json(errors.serverError);
@@ -64,7 +100,14 @@ const getJobById = async (req, res) => {
       return;
     }
 
-    res.status(200).json(result[0]);
+    const applicationsResp = await axios.get(`${global.gConfig.application_url}/applications`, {
+      params: { jobIds: result[0]._id.toString(), all: true },
+      headers: { Authorization: req.headers.authorization },
+    });
+
+    res.applications = applicationsResp.data?.nodes;
+
+    res.status(200).json({ ...result[0], applications: applicationsResp.data.nodes });
   } catch (err) {
     console.log(err);
     if (err instanceof TypeError) {
@@ -222,7 +265,9 @@ const getJobsList = async (req, res) => {
     }
 
     if (q && q !== '') {
-      whereOpts.push({ $or: [{ title: { $regex: `(?i)${q}` } }, { 'company.name': { $regex: `(?i)${q}` } }] });
+      whereOpts.push({
+        $or: [{ title: { $regex: `(?i)${q}` } }, { 'company.name': { $regex: `(?i)${q}` } }],
+      });
     }
 
     if (since && since !== '') {
