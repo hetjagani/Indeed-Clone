@@ -82,6 +82,7 @@ const Login = () => {
           email,
           role: user.role,
         }));
+        console.log(user);
         if (user.role === 'user') {
           history.push('/');
         } else if (user.role === 'employer') {

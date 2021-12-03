@@ -1,5 +1,5 @@
 import React from 'react';
-import EmployerNav from './EmployerNav';
+import EmployerNav from './components/EmployerNav';
 import EmployerSVG from '../../components/svg/EmployerSVG';
 import Button from '../../components/Button';
 

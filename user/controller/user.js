@@ -29,6 +29,8 @@ const getUsersByReviews = async (auth) => {
 
 const createUser = async (req, res) => {
   const { user } = req.headers;
+  console.log(user);
+  console.log(req.body.id);
   if (user !== req.body.id) {
     res.status(400).json({
       ...errors.badRequest,
@@ -123,6 +125,9 @@ const updateUser = async (req, res) => {
       res.status(400).json({ status: 400, message: valErr.array() });
       return;
     }
+
+    const userObj = req.body;
+    userObj._id = id;
 
     makeRequest('user.update', userObj, (err, resp) => {
       if (err || !resp) {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
 /* eslint-disable no-nested-ternary */
 import Box from '@mui/material/Box';
@@ -10,12 +11,22 @@ import LockIcon from '@mui/icons-material/Lock';
 import TextField from '@mui/material/TextField';
 // import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import putUser from '../../api/users/putDetails';
+import putUser from '../../api/user/putUser';
+import postUser from '../../api/user/postUser';
 import ResumeModal from './ResumeModal';
-import getUserByID from '../../api/users/getUser';
+import getUser from '../../api/user/getUser';
+import upload from '../../api/media/upload';
 
 import { userDets } from '../../app/actions';
 import PdfSVG from '../../components/svg/PdfSVG';
+
+async function postImages({ image }) {
+  // eslint-disable-next-line no-undef
+  const formData = new FormData();
+  formData.append('imageData', image);
+  const response = await upload(formData);
+  return response;
+}
 
 function UserProfile() {
   // const history = useHistory();
@@ -28,12 +39,15 @@ function UserProfile() {
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
-  const [firstName, setFirstName] = useState('Gunjal');
-  const [lastName, setLastName] = useState('Gupta');
-  const [mobile, setmobile] = useState('(408)-673-7346');
-  const [city, setCity] = useState('San Jose');
-  const [zipcode, setZipcode] = useState('95126');
-
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [mobile, setmobile] = useState('');
+  const [city, setCity] = useState('');
+  const [zipcode, setZipcode] = useState('');
+  const [resume, setResume] = useState('');
+  const [cover, setCover] = useState('');
+  const [flag, setFlag] = useState(false);
+  const [email, setEmail] = useState('');
   const contactInfo = () => {
     setShowMe(!showMe);
     return <div>here</div>;
@@ -53,31 +67,90 @@ function UserProfile() {
   };
 
   const getUserDetails = async () => {
-    const userDetails = await getUserByID(user.user.id);
-    setUserDetail(userDetails.data);
-    setFirstName(userDetails.data.name.split(' ').slice(0, -1).join(' '));
-    setLastName(userDetails.data.name.split(' ').slice(-1).join(' '));
-    setmobile(userDetails.data.contactNo);
-    setCity(userDetails.data.city);
+    const userDetails = await getUser(user.user.id);
+    console.log(userDetails);
+    if (!userDetails) {
+      console.log('bruh');
+      setFlag(true);
+    } else {
+      console.log('lol');
+      setUserDetail(userDetails.data);
+      setFirstName(userDetails.data.name.split(' ').slice(0, -1).join(' '));
+      setLastName(userDetails.data.name.split(' ').slice(-1).join(' '));
+      setmobile(userDetails.data.contactNo);
+      setCity(userDetails.data.city);
+      setZipcode(userDetails.data.zip);
+    }
   };
 
   const putUserDetails = async () => {
-    const body = {
-      name: firstName.concat(' ', lastName),
-      contactNo: mobile,
-      city: city,
-      zip: zipcode,
-    };
-    dispatch(userDets({
-      name: firstName.concat(' ', lastName),
-      contactNo: mobile,
-      city: city,
-      zip: zipcode,
-    }));
-    await putUser(body, user.user.id);
-    getUserDetails();
+    const resumes = [];
+    resumes.push(resume);
+    const coverLetters = [];
+    const emails = [];
+    emails.push(email);
+    coverLetters.push(cover);
+    if (flag) {
+      const body = {
+        id: user.user.id,
+        name: firstName.concat(' ', lastName),
+        contactNo: mobile,
+        city: city,
+        zip: zipcode,
+        resumes,
+        coverLetters,
+        emails,
+      };
+      console.log(body);
+      dispatch(userDets({
+        name: firstName.concat(' ', lastName),
+        contactNo: mobile,
+        city: city,
+        zip: zipcode,
+      }));
+      const response = await postUser(body);
+      getUserDetails();
+    } else {
+      console.log('in else');
+      const body = {
+        name: firstName.concat(' ', lastName),
+        contactNo: mobile,
+        city: city,
+        zip: zipcode,
+        resumes,
+        coverLetters,
+        emails,
+      };
+      console.log(body);
+      dispatch(userDets({
+        name: firstName.concat(' ', lastName),
+        contactNo: mobile,
+        city: city,
+        zip: zipcode,
+      }));
+      const updateResponse = await putUser(body, user.user.id);
+      console.log(updateResponse);
+      getUserDetails();
+    }
   };
-
+  const uploadResume = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setResume(result.data.url);
+  };
+  const uploadCoverLetter = async (event) => {
+    event.preventDefault();
+    const fil = event.target.files[0];
+    const result = await postImages({ image: fil });
+    if (!result) {
+      return;
+    }
+    setCover(result.data.url);
+  };
   useEffect(() => {
     getUserDetails();
   }, []);
@@ -193,7 +266,7 @@ function UserProfile() {
               <div style={{ display: 'flex' }}>
                 <PdfSVG />
                 <div style={{ marginLeft: ' 20px', marginTop: ' 8px' }}>
-                  {user ? user.resume ? user.resume[0] : 'Please upload resume' : 'Please upload resume'}
+                  Please upload resume
                   <div
                     style={{
                       marginLeft: '0px',
@@ -225,6 +298,14 @@ function UserProfile() {
                     />
                     Public
                   </div>
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ paddingTop: '10px' }}
+                    onChange={uploadResume}
+                  />
                 </div>
               </div>
               <MoreVertIcon
@@ -299,13 +380,6 @@ function UserProfile() {
                   >
                     {userDetail ? userDetail.emails ? userDetail.emails.length > 0 ? userDetail.emails[0] : '' : '' : ''}
                   </div>
-                  <LockIcon
-                    style={{
-                      marginLeft: '10px',
-                      color: 'grey',
-                      fontSize: 'small',
-                    }}
-                  />
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -321,13 +395,6 @@ function UserProfile() {
                   >
                     {userDetail.contactNo ? userDetail.contactNo : ''}
                   </div>
-                  <LockIcon
-                    style={{
-                      marginLeft: '10px',
-                      color: 'grey',
-                      fontSize: 'small',
-                    }}
-                  />
                 </div>
 
                 <div
@@ -435,7 +502,6 @@ function UserProfile() {
                     >
                       Email Address
                     </div>
-                    <LockIcon style={{ marginLeft: '10px', color: 'grey' }} />
                     <div
                       style={{
                         marginLeft: '0px',
@@ -450,19 +516,13 @@ function UserProfile() {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div
-                      style={{
-                        marginLeft: '0px',
-                        marginTop: ' 18px',
-                        fontSize: '0.8rem',
-                        fontWeight: '400',
-                        lineHeight: '0.8em',
-                        color: '#444444',
-                      }}
-                    >
-                      gunjal1gupta@gmail.com
-                    </div>
+                  <div style={{ display: 'flex', alignItems: 'center', paddingTop: '10px' }}>
+                    <TextField
+                      sx={{ width: '95%', height: '50%', fontSize: '0.9em' }}
+                      required
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                    />
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -475,7 +535,6 @@ function UserProfile() {
                     >
                       Phone Number (optional)
                     </div>
-                    <LockIcon style={{ marginLeft: '10px', color: 'grey' }} />
                     <div
                       style={{
                         marginLeft: '0px',
@@ -581,6 +640,24 @@ function UserProfile() {
                     onChange={(event) => setZipcode(event.target.value)}
                   />
 
+                  <p
+                    style={{
+                      fontWeight: 'bold',
+                      color: '#666',
+                      fontSize: '0.9em',
+                    }}
+                  >
+                    CoverLetter
+                  </p>
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ paddingTop: '10px' }}
+                      onChange={uploadCoverLetter}
+                    />
+                  </div>
+
                   <button
                     className="reviewSubmitButton"
                     type="submit"
@@ -604,24 +681,6 @@ function UserProfile() {
                     }}
                   >
                     Save
-                  </button>
-                  <button
-                    className="reviewSubmitButton"
-                    type="submit"
-                    style={{
-                      marginTop: '25px',
-                      marginLeft: '20px',
-                      width: '70px',
-                      height: '40px',
-                      fontWeight: 'bold',
-                      Color: 'white',
-                      backgroundColor: 'white',
-                      border: 'white',
-                      cursor: 'pointer',
-                    }}
-                    onClick={contactInfo}
-                  >
-                    Cancel
                   </button>
                 </form>
               </div>
