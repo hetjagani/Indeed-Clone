@@ -1,17 +1,7 @@
-import { getCookie } from 'react-use-cookie';
 import axiosInstance from '../../config/axiosConfig';
 
-const token = getCookie('token');
-
-const postJob = (compId, payload) => axiosInstance
-  .post(`/companies/${compId}/jobs`, payload, {
-    headers: {
-      Authorization: token,
-    },
-  })
-  .then((response) => response)
-  .catch((err) => {
-    console.log(err);
-  });
+const postJob = (payload, companyID) => axiosInstance
+  .post(`/companies/${companyID}/jobs`, payload)
+  .then((response) => response);
 
 export default postJob;

@@ -4,13 +4,14 @@ import StarRatings from 'react-star-ratings';
 import FlagIcon from '@mui/icons-material/Flag';
 import { Switch } from '@mui/material';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import toast from 'react-hot-toast';
 import Button from '../../../components/Button';
 import updateReview from '../../../api/review/updateReview';
 
 function RatingsCard(props) {
   const [helpfulReview, setHelpfulReview] = useState(-1);
   const [checkValue, setCheckValue] = useState(!!((props && props.review.isFeatured === true)));
-  const updateUserReview = async (reviewObj, flag, makeFeatured) => {
+  const updateUserReview = async (reviewObj, flag, makeFeatured = false) => {
     if (makeFeatured === true) {
       await updateReview(reviewObj, 'nothing', makeFeatured);
     } else {
@@ -94,14 +95,25 @@ function RatingsCard(props) {
               marginTop: '30px',
             }}
           >
-            Featured?
+            {props.review.helpful ? `${props.review.helpful} people found it helpful` : ''}
+          </span>
+          <span
+            style={{
+              fontSize: '.875rem',
+              lineHeight: '1.5',
+              color: '#595959',
+              marginLeft: '5px',
+              marginTop: '30px',
+            }}
+          >
+            {props.flag ? 'Featured review?' : 'Is this review helpful?'}
           </span>
 
           <div style={{ display: 'flex', marginTop: '10px', justifyContent: 'space-between' }}>
             {props && props.flag === false ? (
               <Switch
                 checked={checkValue}
-                onClick={async () => { await updateUserReview(props.review, 'nothing', true); setCheckValue(!checkValue); }}
+                onClick={async () => { await updateUserReview(props.review, 'nothing', true); setCheckValue(!checkValue); toast.success('Feature status updated!'); }}
               />
             )
               : (
@@ -130,7 +142,7 @@ function RatingsCard(props) {
                 </div>
               )}
 
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
               <FlagIcon sx={{ color: '#767676', fontSize: '1.1rem' }} />
               <span
                 style={{
