@@ -19,12 +19,12 @@ function Usermessages({ openChat }) {
       toast.error('Message cannot be empty');
       return;
     }
-    if (!openChat.user) {
+    if (!openChat.employer) {
       toast.error('Please select whom to send message to!');
       return;
     }
     const payload = {
-      to: openChat.user._id,
+      to: openChat.employer._id,
       content: message,
     };
     const response = await sendMessage(payload, openChat._id);
@@ -32,6 +32,7 @@ function Usermessages({ openChat }) {
       return;
     }
     setMessage('');
+    getChatMessages();
   };
 
   const getChatMessages = async () => {
@@ -55,11 +56,13 @@ function Usermessages({ openChat }) {
   };
 
   useEffect(() => {
-    getChatInformation();
-    getChatMessages();
-  }, [openChat._id]);
+    if (openChat && openChat._id) {
+      getChatInformation();
+      getChatMessages();
+    }
+  }, [openChat]);
 
-  console.log(chatInfo);
+  console.log(openChat);
   return (
     <div
       style={{
@@ -88,7 +91,9 @@ function Usermessages({ openChat }) {
           <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>
             {openChat && openChat.user ? openChat.user.name : ''}
           </span>
-          <span style={{ color: '#666666' }}>{openChat.subject}</span>
+          <span style={{ color: '#666666' }}>
+            {openChat ? openChat.subject : ''}
+          </span>
         </div>
         <div
           style={{
@@ -106,44 +111,72 @@ function Usermessages({ openChat }) {
               justifyContent: 'column-reverse',
             }}
           >
-                        {chatInfo && chatMessages.map((option) => (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    padding: '15px',
-                  }}
-                >
-                  {option.to === chatInfo.user._id ? (
-                    <img
-                      width="45px"
-                      src={
-                        chatInfo && chatInfo.employee.logo
-                          ? chatInfo.employee.logo
-                          : CompanyDefaultLogo
-                      }
-                      alt="Company"
-                    />
-                  ) : (
-                    <img
-                      width="45px"
-                      src={UserIcon}
-                      alt="Company"
-                    />
-                  )}
+            {chatInfo &&
+              chatMessages.map((option) => (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      padding: '15px',
+                    }}
+                  >
+                    {option.to === chatInfo.user._id ? (
+                      <img
+                        width="45px"
+                        src={
+                          chatInfo &&
+                          chatInfo.employee.company &&
+                          chatInfo.employee.company.length > 0 &&
+                          chatInfo.employee.company[0].logo.url
+                            ? chatInfo.employee.company[0].logo.url
+                            : CompanyDefaultLogo
+                        }
+                        alt="Company"
+                      />
+                    ) : (
+                      <img width="45px" src={UserIcon} alt="Company" />
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      padding: '15px',
+                    }}
+                  >
+                    {option.from === chatInfo.user._id ? (
+                      <>
+                        <span style={{ fontSize: '12px', color: 'grey' }}>
+                          <span
+                            style={{ fontWeight: 'bold', fontSize: '15px' }}
+                          >
+                            You
+                          </span>{' '}
+                          {new Date(option.createdAt).toUTCString()}
+                        </span>
+                        <span>{option.content}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span style={{ fontSize: '12px', color: 'grey' }}>
+                          <span
+                            style={{ fontWeight: 'bold', fontSize: '15px' }}
+                          >
+                            {chatInfo &&
+                            chatInfo.employee.company &&
+                            chatInfo.employee.company.length > 0 &&
+                            chatInfo.employee.company[0].name
+                              ? chatInfo.employee.company[0].name
+                              : 'Company'}
+                          </span>{' '}
+                          {new Date(option.createdAt).toUTCString()}
+                        </span>
+                        <span>{option.content}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    padding: '15px',
-                  }}
-                >
-                  <span style={{fontSize: '12px', color: 'grey'}}>{new Date(option.createdAt).toUTCString()}</span>
-                  <span>{option.content}</span>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <div

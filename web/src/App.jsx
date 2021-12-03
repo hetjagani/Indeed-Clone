@@ -22,7 +22,7 @@ import EmployeeDashboard from './pages/employers/EmployeeDashboard';
 // Config / other files
 import withAuth from './utils/withAuth';
 import EmployeeChat from './pages/chat/EmployeeChat';
-import Usermessages from './pages/chat/Usermessages';
+import UserChat from './pages/chat/Userchat';
 
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
           <Route path="/employee/company" component={withAuth(Companydetails, 'any', false)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/employee/dashboard" component={withAuth(EmployeeDashboard, 'any', false)} />
-          <Route path="/messages" component={withAuth(Usermessages, 'any', false)} />
+          <Route path="/messages" component={withAuth(UserChat, 'any', true)} />
           <Route path="/employee" component={withAuth(Employeedetails, 'any', false)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import EmployerNav from '../employers/components/EmployerNav';
 import getChats from '../../api/chat/getChats';
-import CompanyDefaultLogo from '../../assets/img/companyLogo.jpg';
+import UserIcon from '../../assets/img/usericon.jpg';
 import Message from './Message';
 
 function EmployeeChat() {
@@ -73,10 +73,10 @@ function EmployeeChat() {
             }}
             >
               <div>
-                <img src={CompanyDefaultLogo} alt="company" style={{ width: '55px' }} />
+                <img src={UserIcon} alt="company" style={{ width: '55px' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }} onClick={() => setSelectedChat(option)}>
-                <span style={{ marginLeft: '30px', marginTop: '10px' }}>{option.user.name}</span>
+                <span style={{ marginLeft: '30px', marginTop: '10px' }}>{option && option.user ? option.user.name : ''}</span>
                 <span style={{ marginLeft: '30px', marginTop: '1px' }}>{new Date(option.createdAt).toUTCString()}</span>
               </div>
             </div>
