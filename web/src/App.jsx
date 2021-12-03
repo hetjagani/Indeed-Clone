@@ -20,6 +20,8 @@ import FindCompanyMainAdmin from './pages/admin/FindCompanyMainAdmin';
 
 // Config / other files
 import withAuth from './utils/withAuth';
+import EmployeeChat from './pages/chat/EmployeeChat';
+import UserChat from './pages/chat/Userchat';
 import CompanyReviewsAdmin from './pages/admin/CompanyReviewsAdmin';
 import ReviewsPage from './pages/users/ReviewsPage';
 import ApplicationsPage from './pages/users/ApplicationsPage';
@@ -35,6 +37,8 @@ function App() {
           <Route path="/cmp/:id" component={withAuth(CompanyMain, 'user', true)} />
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
+          <Route path="/employee/messages" component={withAuth(EmployeeChat, 'employer', false)} />
+          <Route path="/messages" component={withAuth(UserChat, 'user', true)} />
           <Route path="/profile" component={withAuth(UserProfile, 'user', true)} />
           <Route path="/admin/reviews/:id" component={withAuth(CompanyReviewsAdmin, 'admin', false)} />
           <Route path="/admin/reviews" component={withAuth(FindCompanyMainAdmin, 'admin', false)} />

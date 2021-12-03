@@ -7,6 +7,7 @@ const initialState = {
   errMsg: '',
   company: {},
   userDetail: '',
+  message: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -34,6 +35,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, company: action.payload };
     case 'USER_DETAIL':
       return { ...state, userDetail: action.payload };
+    case 'MESSAGE':
+      return { ...state, message: action.payload };
     default:
       return state;
   }

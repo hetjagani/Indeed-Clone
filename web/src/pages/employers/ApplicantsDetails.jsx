@@ -10,10 +10,14 @@ import {
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import Box from '@mui/material/Box';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '../../components/Button';
 import updateStatus from '../../api/application/updateStatus';
+import { message } from '../../app/actions';
+import initateChat from '../../api/chat/initateChat';
 
 const statuses = [
   {
@@ -59,8 +63,13 @@ const style = {
 };
 
 function ApplicantsDetails({ companyId, details, getJobs }) {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const user = useSelector((state) => state.user);
   const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
   const [status, setStatus] = React.useState('');
+  const [subject, setSubject] = React.useState('');
   const [selectedApp, setSelectedApp] = React.useState('');
 
   const handleOpen = (appId) => {
@@ -70,6 +79,13 @@ function ApplicantsDetails({ companyId, details, getJobs }) {
   const handleClose = () => {
     setOpen(false);
     setSelectedApp('');
+  };
+  const handleOpen2 = (userId) => {
+    setOpen2(true);
+    dispatch(message(userId));
+  };
+  const handleClose2 = () => {
+    setOpen2(false);
   };
   async function changeStatus() {
     const payload = {
@@ -83,7 +99,18 @@ function ApplicantsDetails({ companyId, details, getJobs }) {
     setSelectedApp('');
     getJobs();
   }
-
+  async function startChat() {
+    const payload = {
+      userId: user.message,
+      subject,
+    };
+    console.log(payload);
+    const response = await initateChat(payload);
+    if (!response) {
+      return;
+    }
+    history.push('/employee/messages');
+  }
   return (
     <div>
       {details
@@ -149,8 +176,7 @@ function ApplicantsDetails({ companyId, details, getJobs }) {
                       style={{ width: '150px', marginRight: '1rem' }}
                       onClick={() => handleOpen(option._id)}
                     />
-
-                    <Button label="Intiate Chat" style={{ width: '150px' }} />
+                    <Button label="Intiate Chat" style={{ width: '150px' }} onClick={() => handleOpen2(option.userId)} />
                   </div>
                 </CardContent>
               </Paper>
@@ -247,6 +273,37 @@ function ApplicantsDetails({ companyId, details, getJobs }) {
               label="Save"
               style={{ width: '100px', marginTop: '20px' }}
               onClick={() => changeStatus()}
+            />
+          </div>
+        </Box>
+      </Modal>
+      <Modal
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style2}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Intiate Chat
+          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: '10px',
+            }}
+          >
+            <TextField
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              placeholder="Subject"
+              style={{ border: 'none' }}
+            />
+            <Button
+              label="Send"
+              style={{ width: '100px', marginTop: '20px' }}
+              onClick={() => startChat()}
             />
           </div>
         </Box>

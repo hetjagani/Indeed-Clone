@@ -43,7 +43,7 @@ const getAllMessages = async (req, res) => {
       where: {
         chatId: chat._id,
       },
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
       limit,
       offset,
     });

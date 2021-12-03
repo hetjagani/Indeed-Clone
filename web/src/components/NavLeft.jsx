@@ -40,6 +40,9 @@ const NavLeft = () => {
   }, []);
 
   const handleChange = (event, newValue) => {
+    if (newValue === 0) {
+      history.push('/messages');
+    }
     if (newValue === 2) {
       setAnchorEl(event.currentTarget);
     }

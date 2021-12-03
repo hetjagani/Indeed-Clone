@@ -31,7 +31,7 @@
         "nock": "^13.1.3",
         "password-validator": "^5.1.1",
         "sequelize": "^6.12.0-alpha.1",
-        "u-server-utils": "^1.0.15"
+        "u-server-utils": "^1.0.21"
     },
     "devDependencies": {
         "eslint": "^7.2.0",
