@@ -3,6 +3,7 @@ import EmployerDashboardNav from './components/EmployerDashboardNav';
 import EmployerNav from './components/EmployerNav';
 import EmployeeJobs from './components/EmployeeJobs';
 import EmployersReview from './components/EmployersReview';
+import UpdateCompanyDetails from './components/UpdateCompanyDetails';
 
 function EmployeeDashboard() {
   const [showComponent, setShowComponent] = useState(0);
@@ -12,6 +13,7 @@ function EmployeeDashboard() {
       <EmployerDashboardNav setShowComponent={setShowComponent} />
       {showComponent === 2 ? <EmployeeJobs /> : null}
       {showComponent === 1 ? <EmployersReview /> : null}
+      {showComponent === 0 ? <UpdateCompanyDetails /> : null}
     </div>
   );
 }

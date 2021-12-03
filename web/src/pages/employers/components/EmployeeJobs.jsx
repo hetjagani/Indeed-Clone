@@ -46,7 +46,7 @@ function EmployeeJobs() {
   };
 
   useEffect(() => {
-    if (!user.company) {
+    if (!user.company._id) {
       getEmployerDetails();
     } else {
       getCompanyJobs();
@@ -80,7 +80,6 @@ function EmployeeJobs() {
         />
         {jobs
           ? jobs.length > 0
-
             ? (
               <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '10px' }}>
                 <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
@@ -173,7 +172,7 @@ function EmployeeJobs() {
               </p>
             ))}
           </div>
-        ) : null
+        ) : <p style={{ marginLeft: '25px', marginTop: '20px' }}>No jobs posted yet...</p>
       ) : null}
 
     </>

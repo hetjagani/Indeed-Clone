@@ -37,7 +37,7 @@ function App() {
           <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/employee/dashboard" component={withAuth(EmployeeDashboard, 'any', false)} />
-          <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
+          <Route path="/employee" component={withAuth(Employeedetails, 'any', false)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
           <Route path="/hire" component={withAuth(EmployersMain, 'any', false)} />
