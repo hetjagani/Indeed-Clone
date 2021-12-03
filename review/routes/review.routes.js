@@ -65,6 +65,7 @@ const bodyValidators = () => [
  * @param {string} sortOrder.query
  * @param {boolean} all.query
  * @param {boolean} isFeatured.query
+ * @param {boolen} byDate.query
  * @group Review
  * @security JWT
  * @returns {Array.<Review>} 200 - List of review info
