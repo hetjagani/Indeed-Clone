@@ -22,7 +22,7 @@ function FindCompanyCard({ company }) {
         />
         <div style={{ marginLeft: '10px', display: 'flex', flexDirection: 'column' }}>
           <span
-            onClick={() => history.push(`/cmp/${company._id}`)}
+            onClick={() => history.push(`/admin/reviews/${company._id}`)}
             style={{
               fontWeight: 'bold', fontSize: '15px', marginBottom: '2px', cursor: 'pointer',
             }}
@@ -42,7 +42,7 @@ function FindCompanyCard({ company }) {
             ) : <span style={{ fontSize: '13px' }}>No ratings yet</span> : <span style={{ fontSize: '10px' }}>No ratings yet</span>}
         </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '12px' }}>
+      {/* <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '12px' }}>
         <span
           className="companyReviewLinks"
           onClick={() => history.push(`/cmp/${company._id}/salaries`)}
@@ -58,7 +58,7 @@ function FindCompanyCard({ company }) {
           Open jobs
 
         </span>
-      </div>
+      </div> */}
     </div>
   );
 }

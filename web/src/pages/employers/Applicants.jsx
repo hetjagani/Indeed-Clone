@@ -1,28 +1,28 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import {
-  Card,
-  CardActions,
-  CardContent,
-  Paper,
-  Typography,
+  Card, CardActions, CardContent, Paper, Typography,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { ReactComponent as SendSVG } from '../../assets/svg/send.svg';
 import MoneySVG from '../../components/svg/MoneySVG';
 
-function Applicants({ option }) {
+// function Applicants({ option }) {
+function Applicants({ option, selectedJobFlag }) {
   const date1 = new Date(option.postedOn);
   const date2 = new Date();
   const diffTime = Math.abs(date2 - date1);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  Array.range = (start, end) => Array.from({ length: end - start }, (v, k) => k + start);
 
   return (
     <div>
       <Card
         variant="outlined"
         className="jobCardHover"
+        sx={{ marginTop: '15px', borderColor: selectedJobFlag ? '#2557A6' : '' }}
       >
         <CardContent>
           <div
@@ -51,10 +51,7 @@ function Applicants({ option }) {
             {option ? option.address : ''}
           </Typography>
           <div style={{ display: 'inline-block', marginTop: '5px' }}>
-            <Paper
-              sx={{ backgroundColor: '#F3F2F1', padding: '5px' }}
-              elevation={0}
-            >
+            <Paper sx={{ backgroundColor: '#F3F2F1', padding: '5px' }} elevation={0}>
               <div
                 style={{
                   display: 'flex',
@@ -66,11 +63,7 @@ function Applicants({ option }) {
                   color: '#595959',
                 }}
               >
-                <MoneySVG
-                  width="1rem"
-                  maxHeight="1.25rem"
-                  margin="0 .25rem 0 0"
-                />
+                <MoneySVG width="1rem" maxHeight="1.25rem" margin="0 .25rem 0 0" />
                 <span style={{ marginLeft: '5px', fontWeight: 'bold' }}>
                   $
                   {option ? option.salary.toLocaleString() : ''}
@@ -94,22 +87,34 @@ function Applicants({ option }) {
           </div>
 
           <ul className="bulletList" style={{ maxHeight: '20px' }}>
-            {option ? option.summary ? option.summary.length > 0
-              ? option.summary.map((bullet) => (
-                <li className="bullet" style={{ listStyleType: 'circle' }}>
-                  {bullet}
-                </li>
-              )) : null : null : null}
+            {option
+              ? option.summary
+                ? option.summary.length > 0
+                  ? option.summary.map((bullet) => (
+                    <li className="bullet" style={{ listStyleType: 'circle' }}>
+                      {bullet}
+                    </li>
+                  ))
+                  : null
+                : null
+              : null}
           </ul>
         </CardContent>
         <CardActions sx={{ marginTop: '2px', padding: '0 0 0 0', backgroundColor: 'white' }}>
-          <div style={{
-            width: '100%', backgroundColor: 'white', zIndex: 99, margin: 0, padding: '12px',
-          }}
+          <div
+            style={{
+              width: '100%',
+              backgroundColor: 'white',
+              zIndex: 99,
+              margin: 0,
+              padding: '12px',
+            }}
           >
             <Typography
               sx={{
-                fontSize: 12, color: '#6f6f6f', marginLeft: '10px',
+                fontSize: 12,
+                color: '#6f6f6f',
+                marginLeft: '10px',
               }}
               color="text.secondary"
               gutterBottom
