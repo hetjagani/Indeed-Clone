@@ -10,7 +10,7 @@ import updateReview from '../../../api/review/updateReview';
 
 function RatingsCard(props) {
   const [helpfulReview, setHelpfulReview] = useState(-1);
-  const [checkValue, setCheckValue] = useState(!!((props && props.review.isFeatured === true)));
+  const [checkValue, setCheckValue] = useState(!!(props && props.review.isFeatured === true));
   const updateUserReview = async (reviewObj, flag, makeFeatured = false) => {
     if (makeFeatured === true) {
       await updateReview(reviewObj, 'nothing', makeFeatured);
@@ -97,29 +97,37 @@ function RatingsCard(props) {
           >
             {props.review.helpful ? `${props.review.helpful} people found it helpful` : ''}
           </span>
-          <span
-            style={{
-              fontSize: '.875rem',
-              lineHeight: '1.5',
-              color: '#595959',
-              marginLeft: '5px',
-              marginTop: '30px',
-            }}
-          >
-            {props.flag ? 'Featured review?' : 'Is this review helpful?'}
-          </span>
-
-          <div style={{ display: 'flex', marginTop: '10px', justifyContent: 'space-between' }}>
-            {props && props.flag === false ? (
-              <Switch
-                checked={checkValue}
-                onClick={async () => { await updateUserReview(props.review, 'nothing', true); setCheckValue(!checkValue); toast.success('Feature status updated!'); }}
-              />
-            )
-              : (
+          {props.showButtons ? (
+            <span
+              style={{
+                fontSize: '.875rem',
+                lineHeight: '1.5',
+                color: '#595959',
+                marginLeft: '5px',
+                marginTop: '30px',
+              }}
+            >
+              {!props.flag ? 'Featured review?' : 'Is this review helpful?'}
+            </span>
+          ) : null}
+          {props.showButtons ? (
+            <div style={{ display: 'flex', marginTop: '10px', justifyContent: 'space-between' }}>
+              {props && props.flag === false ? (
+                <Switch
+                  checked={checkValue}
+                  onClick={async () => {
+                    await updateUserReview(props.review, 'nothing', true);
+                    setCheckValue(!checkValue);
+                    toast.success('Feature status updated!');
+                  }}
+                />
+              ) : (
                 <div>
                   <Button
-                    onClick={async () => { await updateUserReview(props.review, 'up'); setHelpfulReview(1); }}
+                    onClick={async () => {
+                      await updateUserReview(props.review, 'up');
+                      setHelpfulReview(1);
+                    }}
                     label={`Yes ${helpfulReview === 1 ? '1' : ''}`}
                     style={{
                       width: '50px',
@@ -129,7 +137,10 @@ function RatingsCard(props) {
                     }}
                   />
                   <Button
-                    onClick={async () => { await updateUserReview(props.review, 'down'); setHelpfulReview(0); }}
+                    onClick={async () => {
+                      await updateUserReview(props.review, 'down');
+                      setHelpfulReview(0);
+                    }}
                     label={`No ${helpfulReview === 0 ? '1' : ''}`}
                     style={{
                       marginLeft: '20px',
@@ -142,31 +153,32 @@ function RatingsCard(props) {
                 </div>
               )}
 
-            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-              <FlagIcon sx={{ color: '#767676', fontSize: '1.1rem' }} />
-              <span
-                style={{
-                  fontSize: '0.75rem',
-                  lineHeight: '1.5',
-                  color: '#595959',
-                  marginLeft: '5px',
-                }}
-              >
-                Flag
-              </span>
-              <IosShareIcon sx={{ color: '#767676', fontSize: '1.1rem', marginLeft: '20px' }} />
-              <span
-                style={{
-                  fontSize: '.75rem',
-                  lineHeight: '1.5',
-                  color: '#595959',
-                  marginLeft: '5px',
-                }}
-              >
-                Share
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+                <FlagIcon sx={{ color: '#767676', fontSize: '1.1rem' }} />
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    lineHeight: '1.5',
+                    color: '#595959',
+                    marginLeft: '5px',
+                  }}
+                >
+                  Flag
+                </span>
+                <IosShareIcon sx={{ color: '#767676', fontSize: '1.1rem', marginLeft: '20px' }} />
+                <span
+                  style={{
+                    fontSize: '.75rem',
+                    lineHeight: '1.5',
+                    color: '#595959',
+                    marginLeft: '5px',
+                  }}
+                >
+                  Share
+                </span>
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </>

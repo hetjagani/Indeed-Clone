@@ -39,16 +39,10 @@ function EmployersReview() {
     <>
       <div
         style={{
+          width: '98%',
           display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          maxWidth: '900px',
-          justifyContent: 'flex-start',
-          alignItems: 'flex-start',
-          margin: '0 auto',
-          paddingLeft: '1rem',
-          paddingRight: '1rem',
-          marginTop: '-20px',
+          justifyContent: 'center',
+          overflowX: 'hidden',
         }}
       >
         <p
@@ -101,12 +95,10 @@ function EmployersReview() {
         />
         {reviews && reviews.length > 0
           ? reviews.map((review) => (
-            <>
-              <div>
-                <RatingsCard review={review} flag={false} />
-              </div>
-              <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '100%' }} />
-            </>
+            <div>
+              <RatingsCard review={review} flag={false} showButtons />
+              <hr style={{ marginTop: '30px', borderTop: '2px #faf9f9', width: '95%' }} />
+            </div>
           ))
           : null}
       </div>
