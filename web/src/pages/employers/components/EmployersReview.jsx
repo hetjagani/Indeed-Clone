@@ -39,9 +39,11 @@ function EmployersReview() {
     <>
       <div
         style={{
-          width: '98%',
+          width: '900',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
           overflowX: 'hidden',
         }}
       >
@@ -63,7 +65,7 @@ function EmployersReview() {
 
         {reviews && reviews.length > 0
           ? (
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', width: '900px', justifyContent: 'space-between' }}>
               <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
                 Showing
                 {' '}

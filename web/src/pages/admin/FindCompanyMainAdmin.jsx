@@ -4,6 +4,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -15,6 +16,8 @@ import '../companyReviews/css/FindCompany.css';
 import FindCompanyCard from './FindCompanyCardAdmin';
 import checkProperties from '../../utils/checkObjectProperties';
 import getCompanies from '../../api/company/get';
+import Button from '../../components/Button';
+import { logout } from '../../app/actions';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -24,6 +27,7 @@ const FindCompanyMainAdmin = () => {
   const query = useQuery();
   const location = useLocation();
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [jobFilter, setJobFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
@@ -104,11 +108,9 @@ const FindCompanyMainAdmin = () => {
         }}
       >
         <div>
-          <div className="findCompany_header">
-            <h1 className="header1">Find great places to work</h1>
-            <h2 className="header2">
-              Get access to millions of company reviews
-            </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h1 className="header1">Admin dashboard</h1>
+            <Button label="Sign out" style={{ width: '100px', marginTop: '40px' }} onClick={() => { dispatch(logout()); history.push('/login'); }} />
           </div>
           <div>
             <form onSubmit={handleSubmit}>

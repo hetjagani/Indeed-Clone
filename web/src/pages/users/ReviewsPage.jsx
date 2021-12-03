@@ -18,10 +18,13 @@ const ReviewsPage = () => {
     fetchReviews();
   }, []);
 
+  console.log(reviews);
+
   return (
     <div
       style={{
         display: 'flex',
+        flexDirection: 'column',
         width: '900px',
         maxWidth: '900px',
         margin: '0 auto',
@@ -42,7 +45,8 @@ const ReviewsPage = () => {
       />
       {reviews && reviews.length > 0
         ? reviews.map((review) => (
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {review.company ? review.company.name : ''}
             <RatingsCard review={review} flag={false} />
           </div>
         ))

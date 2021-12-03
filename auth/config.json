@@ -5,7 +5,7 @@
         "database_password": "indeedadminpass",
         "database_name": "auth",
         "admin_email": "admin@mail.com",
-        "admin_password": "admin@123"
+        "admin_password": "Admin@123"
     },
     "test": {
         "database_host": "localhost",
