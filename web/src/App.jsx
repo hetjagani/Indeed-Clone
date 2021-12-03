@@ -35,10 +35,10 @@ function App() {
           <Route path="/reviews" component={withAuth(FindCompany, 'any', true)} />
           <Route path="/salaries" component={withAuth(FindSalary, 'any', true)} />
           <Route path="/profile" component={withAuth(UserProfile, 'any', true)} />
-          <Route path="/employee/company" component={withAuth(Companydetails, 'any', true)} />
+          <Route path="/employee/company" component={withAuth(Companydetails, 'any', false)} />
           <Route path="/employee/companyValues" component={withAuth(CompanyValues, 'any', true)} />
           <Route path="/employee/dashboard" component={withAuth(EmployeeDashboard, 'any', false)} />
-          <Route path="/employee" component={withAuth(Employeedetails, 'any', true)} />
+          <Route path="/employee" component={withAuth(Employeedetails, 'any', false)} />
           <Route path="/jobpost" component={withAuth(Jobpost, 'any', true)} />
           <Route path="/jobDescription" component={withAuth(Jobdescription, 'any', true)} />
           <Route path="/messages" component={withAuth(Userchat, 'any', true)} />

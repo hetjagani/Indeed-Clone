@@ -5,6 +5,29 @@ const { getPagination, errors } = require('u-server-utils');
 const { Review } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
+const getReviewsPerDay = async () => {
+  const allReviews = await Review.find({});
+
+  const reviewMap = {};
+  allReviews.forEach((review) => {
+    if (reviewMap[review.reviewDate]) {
+      reviewMap[review.reviewDate].push(review);
+    } else {
+      reviewMap[review.reviewDate] = [review];
+    }
+  });
+
+  const reviewsByDate = [];
+  Object.entries(reviewMap).forEach(([date, review]) => {
+    reviewsByDate.push({
+      date,
+      review,
+    });
+  });
+
+  return reviewsByDate;
+};
+
 const getAllReviews = async (req, res) => {
   try {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
@@ -31,10 +54,16 @@ const getAllReviews = async (req, res) => {
       queryObj.isFeatured = false;
     }
 
+    if (req.query.byDate && req.query.byDate == 'true') {
+      const reviewsByDate = await getReviewsPerDay();
+      res.status(200).json(reviewsByDate);
+      return;
+    }
+
     const sortObj = {};
-    if(sortBy === 'reviewDate'){
+    if (sortBy === 'reviewDate') {
       sortObj[sortBy] = sortOrder === 'desc' ? 1 : -1;
-    }else{
+    } else {
       sortObj[sortBy] = sortOrder === 'desc' ? -1 : 1;
     }
 

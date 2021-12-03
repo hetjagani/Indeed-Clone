@@ -2,17 +2,22 @@
 import React, { useState } from 'react';
 import StarRatings from 'react-star-ratings';
 import FlagIcon from '@mui/icons-material/Flag';
+import { Switch } from '@mui/material';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import toast from 'react-hot-toast';
 import Button from '../../../components/Button';
 import updateReview from '../../../api/review/updateReview';
 
 function RatingsCard(props) {
   const [helpfulReview, setHelpfulReview] = useState(-1);
-  const updateUserReview = async (reviewObj, flag) => {
-    console.log(reviewObj);
-    console.log(flag);
-    await updateReview(reviewObj, flag);
-    await props.getCompanyReviews();
+  const [checkValue, setCheckValue] = useState(!!((props && props.review.isFeatured === true)));
+  const updateUserReview = async (reviewObj, flag, makeFeatured = false) => {
+    if (makeFeatured === true) {
+      await updateReview(reviewObj, 'nothing', makeFeatured);
+    } else {
+      await updateReview(reviewObj, flag);
+      await props.getCompanyReviews();
+    }
   };
 
   return (
@@ -81,12 +86,16 @@ function RatingsCard(props) {
           <span style={{ marginTop: '20px' }}>
             {props && props.review ? props.review.summary : null}
           </span>
-          <span style={{ marginTop: '20px' }}>
-            {props && props.review ? props.review.helpful : null}
-            {' '}
-            {' '}
-            {' '}
-            Users Found it userful
+          <span
+            style={{
+              fontSize: '.875rem',
+              lineHeight: '1.5',
+              color: '#595959',
+              marginLeft: '5px',
+              marginTop: '30px',
+            }}
+          >
+            {props.review.helpful ? `${props.review.helpful} people found it helpful` : ''}
           </span>
           <span
             style={{
@@ -97,35 +106,43 @@ function RatingsCard(props) {
               marginTop: '30px',
             }}
           >
-            Was this review helpful?
+            {props.flag ? 'Featured review?' : 'Is this review helpful?'}
           </span>
 
           <div style={{ display: 'flex', marginTop: '10px', justifyContent: 'space-between' }}>
-            <div>
-              <Button
-                onClick={async () => { await updateUserReview(props.review, 'up'); setHelpfulReview(1); }}
-                label={`Yes ${helpfulReview === 1 ? '1' : ''}`}
-                style={{
-                  width: '50px',
-                  fontSize: '13px',
-                  backgroundColor: '#F3F2F1',
-                  color: 'black',
-                }}
+            {props && props.flag === false ? (
+              <Switch
+                checked={checkValue}
+                onClick={async () => { await updateUserReview(props.review, 'nothing', true); setCheckValue(!checkValue); toast.success('Feature status updated!'); }}
               />
-              <Button
-                onClick={async () => { await updateUserReview(props.review, 'down'); setHelpfulReview(0); }}
-                label={`No ${helpfulReview === 0 ? '1' : ''}`}
-                style={{
-                  marginLeft: '20px',
-                  width: '50px',
-                  fontSize: '13px',
-                  backgroundColor: '#F3F2F1',
-                  color: 'black',
-                }}
-              />
-            </div>
+            )
+              : (
+                <div>
+                  <Button
+                    onClick={async () => { await updateUserReview(props.review, 'up'); setHelpfulReview(1); }}
+                    label={`Yes ${helpfulReview === 1 ? '1' : ''}`}
+                    style={{
+                      width: '50px',
+                      fontSize: '13px',
+                      backgroundColor: '#F3F2F1',
+                      color: 'black',
+                    }}
+                  />
+                  <Button
+                    onClick={async () => { await updateUserReview(props.review, 'down'); setHelpfulReview(0); }}
+                    label={`No ${helpfulReview === 0 ? '1' : ''}`}
+                    style={{
+                      marginLeft: '20px',
+                      width: '50px',
+                      fontSize: '13px',
+                      backgroundColor: '#F3F2F1',
+                      color: 'black',
+                    }}
+                  />
+                </div>
+              )}
 
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
               <FlagIcon sx={{ color: '#767676', fontSize: '1.1rem' }} />
               <span
                 style={{

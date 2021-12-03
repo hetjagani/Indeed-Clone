@@ -5,18 +5,12 @@ import { ThemeProvider } from '@emotion/react';
 import {
   AppBar, createTheme, IconButton, Toolbar,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
 
 import IndeedForEmployersSVG from '../../../components/svg/IndeedForEmployersSVG';
 import { DarkAntTabs } from '../../../components/AntTabsDark';
-import Button from '../../../components/Button';
-import getLoginDetails from '../../../utils/getLoginDetails';
-import { logout } from '../../../app/actions';
 
 function appBarLabel() {
-  const decoded = getLoginDetails();
   const history = useHistory();
-  const dispatch = useDispatch();
 
   return (
     <Toolbar>
@@ -43,42 +37,6 @@ function appBarLabel() {
           >
             {/* <DarkAntTab label="Post a job" /> */}
             {/* <DarkAntTab label="Dashboard" /> */}
-            {decoded ? (
-              decoded.id ? (
-                <Button
-                  onClick={() => { dispatch(logout()); history.push('/login'); }}
-                  style={{
-                    height: '35px',
-                    marginLeft: '1250px',
-                    width: '100px',
-                    marginTop: '5px',
-                  }}
-                  label="Sign out"
-                />
-              ) : (
-                <Button
-                  onClick={() => { dispatch(logout()); history.push('/login'); }}
-                  style={{
-                    height: '35px',
-                    marginLeft: '1250px',
-                    width: '100px',
-                    marginTop: '5px',
-                  }}
-                  label="Sign in"
-                />
-              )
-            ) : (
-              <Button
-                onClick={() => { dispatch(logout()); history.push('/login'); }}
-                style={{
-                  height: '35px',
-                  marginLeft: '1250px',
-                  width: '100px',
-                  marginTop: '5px',
-                }}
-                label="Sign in"
-              />
-            )}
           </DarkAntTabs>
         </>
       </div>
@@ -95,7 +53,7 @@ const darkTheme = createTheme({
   },
 });
 
-function EmployerNav() {
+function EmployerNavBeforeRegister() {
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="static" color="primary" sx={{ height: '52px' }}>
@@ -105,4 +63,4 @@ function EmployerNav() {
   );
 }
 
-export default EmployerNav;
+export default EmployerNavBeforeRegister;

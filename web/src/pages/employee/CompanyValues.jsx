@@ -11,12 +11,21 @@ import {
 } from '@mui/material';
 import { useHistory } from 'react-router';
 import toast from 'react-hot-toast';
+import { createReactEditorJS } from 'react-editor-js';
+import List from '@editorjs/list';
+import Header from '@editorjs/header';
 
 import ValuesSVG from '../../components/svg/ValuesSVG';
 import companyUpload from '../../api/media/companyUpload';
 import './css/Employeedetails.css';
-import Editor from '../../utils/Editor';
 import postCompany from '../../api/company/postCompanydetails';
+
+const ReactEditorJS = createReactEditorJS();
+
+const EDITOR_JS_TOOLS = {
+  list: List,
+  header: Header,
+};
 
 async function postImages({ image }) {
   // eslint-disable-next-line no-undef
@@ -26,23 +35,9 @@ async function postImages({ image }) {
   return response;
 }
 
-const DEFAULT_INITIAL_DATA = () => ({
-  time: new Date().getTime(),
-  blocks: [
-    {
-      type: 'header',
-      data: {
-        text: 'Company Description',
-        level: 1,
-      },
-    },
-  ],
-});
-
 const CompanyValues = () => {
   const history = useHistory();
   const company = useSelector((state) => state.user);
-  const [description, setDescription] = useState(DEFAULT_INITIAL_DATA);
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -69,72 +64,38 @@ const CompanyValues = () => {
     Respect: false,
     ValueCentricity: false,
   });
-  // const [description, setDescription] = useState('');
   const [mission, setMission] = useState('');
   const [about, setAbout] = useState('');
-  // eslint-disable-next-line no-unused-vars
   const [photo, setPhoto] = useState('');
   const [logo, setLogo] = useState({});
 
   const backtoprofile = () => {
     history.push('/employee/company');
   };
-  // const handleSave = async () => {
-  //   const savedData = await descptionRef.current.save();
-  //   console.log(savedData);
-  // };
+
+  const editorJS = React.useRef(null);
+  const handleInitialize = React.useCallback((instance) => {
+    editorJS.current = instance;
+  }, []);
+  const handleSave = async () => {
+    const savedData = await editorJS.current.save();
+    return savedData;
+  };
 
   const saveDetails = async (e) => {
-    const val = '';
-    const work = '';
-    if (value.Trust === true) {
-      val.concat('Trust, ');
-    }
-    if (value.Loyalty === true) {
-      val.concat('Loyalty, ');
-    }
-    if (value.Ingenuity === true) {
-      val.concat('Ingenuity, ');
-    }
-    if (value.Honesty === true) {
-      val.concat('Honesty, ');
-    }
-    if (value.Accounting === true) {
-      val.concat('Accounting');
-    }
-    if (value.Simplicity === true) {
-      val.concat('Simplicity');
-    }
-    if (value.Respect === true) {
-      val.concat('Respect, ');
-    }
-    if (value.ValueCentricity === true) {
-      val.concat('ValueCentricity, ');
-    }
-    if (workCulture.Learning === true) {
-      work.concat('Learning, ');
-    }
-    if (workCulture.Caring === true) {
-      work.concat('Caring, ');
-    }
-    if (workCulture.Purpose === true) {
-      work.concat('Purpose, ');
-    }
-    if (workCulture.Enjoyment === true) {
-      work.concat('Enjoyment, ');
-    }
-    if (workCulture.Results === true) {
-      work.concat('Results, ');
-    }
-    if (workCulture.Authority === true) {
-      work.concat('Authority, ');
-    }
-    if (workCulture.Respect === true) {
-      work.concat('Respect, ');
-    }
+    const workKeys = Object.keys(workCulture);
+    const filteredWorkKeys = workKeys.filter((key) => workCulture[key]);
+    const work = filteredWorkKeys.toString();
+
+    const valuesKeys = Object.keys(value);
+    const filteredValuesKeys = valuesKeys.filter((key) => value[key]);
+    const val = filteredValuesKeys.toString();
+
     e.preventDefault();
     const media = [];
     media.push(photo.url);
+    const descriptionObj = await handleSave();
+
     const body = {
       name: company.company.name,
       ceo: company.company.ceo,
@@ -144,7 +105,7 @@ const CompanyValues = () => {
       foundedOn: company.company.foundedOn,
       industry: { name: company.company.industry.name },
       size: company.company.size,
-      description: description,
+      description: descriptionObj,
       about: about,
       workCulture: work,
       mission: mission,
@@ -181,7 +142,7 @@ const CompanyValues = () => {
 
   return (
     <>
-      <form>
+      <form onSubmit={saveDetails}>
         <div
           style={{
             display: 'flex',
@@ -277,7 +238,11 @@ const CompanyValues = () => {
                   Description
                   <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
                 </label>
-                <Editor description={description} setDescription={setDescription} />
+
+                <ReactEditorJS
+                  onInitialize={handleInitialize}
+                  tools={EDITOR_JS_TOOLS}
+                />
               </div>
               <div className="employeeform">
                 <label className="employeeLabel">
@@ -548,7 +513,7 @@ const CompanyValues = () => {
               <button className="employeeBack" onClick={backtoprofile}>back</button>
             </div>
             <div>
-              <button onClick={saveDetails} type="submit" className="employeeButton">
+              <button type="submit" className="employeeButton">
                 Save Changes
               </button>
             </div>
