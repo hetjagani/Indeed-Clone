@@ -1,9 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 const express = require('express');
 const { body } = require('express-validator');
-const {
-  getAllJobs, createJob, getJobById, updateJob, deleteJob,
-} = require('../controllers/job');
+const { getAllJobs, createJob, getJobById, updateJob, deleteJob } = require('../controllers/job');
 
 const router = express.Router({ mergeParams: true });
 
@@ -49,6 +47,7 @@ const bodyValidators = () => [
  * @route GET /companies/{compId}/jobs
  * @param {integer} page.query
  * @param {integer} limit.query
+ * @param {string} since.query
  * @param {string} compId.path
  * @group Job
  * @security JWT
