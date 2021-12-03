@@ -65,7 +65,7 @@ const getPhotoById = async (req, res) => {
 };
 
 const getAllPhotos = async (req, res) => {
-  const { userId, companyId, isFeatured } = req.query;
+  const { userId, companyId, isFeatured, status } = req.query;
 
   try {
     const { limit, offset } = getPagination(req.query.page, req.query.limit);
@@ -81,6 +81,10 @@ const getAllPhotos = async (req, res) => {
       queryObj.isFeatured = true;
     } else if (isFeatured == 'false') {
       queryObj.isFeatured = false;
+    }
+
+    if (status && status != '') {
+      queryObj.status = status;
     }
 
     const photos = await Photo.findAndCountAll({

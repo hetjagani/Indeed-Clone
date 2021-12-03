@@ -1,12 +1,12 @@
 import axiosInstance from '../../config/axiosConfig';
 
-const getReviewsOfCompany = (payload, sortBy = 'overallRating', page, limit) => axiosInstance
+const getReviewsOfCompany = (payload, sortBy = 'overallRating', page, limit, all) => axiosInstance
   .get(`/companies/${payload}/reviews`, {
     params: {
       sortBy,
       page,
       limit,
-      all: true,
+      all,
     },
   })
   .then((response) => response)

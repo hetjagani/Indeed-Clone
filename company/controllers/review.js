@@ -6,11 +6,16 @@ const { Types } = require('mongoose');
 
 const getCompanyReviews = async (req, res) => {
   try {
-    const { page, limit, sortBy, sortOrder, isFeatured } = req.query;
+    const { page, limit, sortBy, sortOrder, isFeatured, all } = req.query;
     const { compId } = req.params;
 
+    let status = 'APPROVED';
+    if (all == 'true') {
+      status = '';
+    }
+
     const reviewResp = await axios.get(`${global.gConfig.review_url}/reviews`, {
-      params: { page, limit, companyId: compId, sortBy, sortOrder, isFeatured },
+      params: { page, limit, companyId: compId, sortBy, sortOrder, isFeatured, status },
       headers: { Authorization: req.headers.authorization },
     });
 
@@ -55,13 +60,10 @@ const getCompanyReviewById = async (req, res) => {
   try {
     const { compId, reviewId } = req.params;
 
-    const reviewResp = await axios.get(
-      `${global.gConfig.review_url}/reviews/${reviewId}`,
-      {
-        params: { companyId: compId },
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const reviewResp = await axios.get(`${global.gConfig.review_url}/reviews/${reviewId}`, {
+      params: { companyId: compId },
+      headers: { Authorization: req.headers.authorization },
+    });
 
     const oneCompany = await Company.findOne({
       _id: Types.ObjectId(compId),
@@ -70,12 +72,9 @@ const getCompanyReviewById = async (req, res) => {
     reviewResp.data.company = oneCompany;
     console.log(reviewResp.data);
 
-    const oneUser = await axios.get(
-      `${global.gConfig.user_url}/users/${reviewResp.data.userId}`,
-      {
-        headers: { Authorization: req.headers.authorization },
-      },
-    );
+    const oneUser = await axios.get(`${global.gConfig.user_url}/users/${reviewResp.data.userId}`, {
+      headers: { Authorization: req.headers.authorization },
+    });
 
     reviewResp.data.user = oneUser.data;
     res.status(200).json(reviewResp.data);

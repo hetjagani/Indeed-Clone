@@ -4,7 +4,12 @@ const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 // const acl = require("./acl");
-const { getAuthMiddleware, getAccessMiddleware } = require('u-server-utils');
+const {
+  getAuthMiddleware,
+  getAccessMiddleware,
+  getRedisRequestMiddleware,
+  getRedisResponseMiddleware,
+} = require('u-server-utils');
 
 const userRouter = require('./routes/user.routes');
 const generalSalaryRouter = require('./routes/generalsalary.routes');
@@ -57,8 +62,8 @@ const options = {
 
 expressSwagger(options);
 
-// app.use(getAuthMiddleware(validate));
-// app.use(getAccessMiddleware(acl));
+app.use(getRedisRequestMiddleware('user'));
+app.use(getRedisResponseMiddleware('user'));
 
 app.use('/users', getAuthMiddleware(validate), userRouter);
 app.use('/salaries', generalSalaryRouter);
