@@ -34,7 +34,7 @@ function appBarLabel() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <IndeedForEmployersSVG onClick={() => history.push('/employee/hire')} />
+            <IndeedForEmployersSVG onClick={() => history.push('/employee/dashboard')} />
           </IconButton>
           <DarkAntTabs
             // value={value}
