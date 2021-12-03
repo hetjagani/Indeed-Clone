@@ -6,6 +6,19 @@ const { getPagination, errors } = require('u-server-utils');
 const { Company } = require('../model');
 const { makeRequest } = require('../util/kafka/client');
 
+const getAllReviews = async (auth) => {
+  const allReviews = await axios.get(`${global.gConfig.review_url}/reviews`, {
+    headers: {
+      Authorization: auth,
+    },
+    params: {
+      all: true,
+    },
+  });
+
+  return allReviews.data;
+};
+
 const getAvgReviewData = async (auth) => {
   const resp = await axios.get(`${global.gConfig.review_url}/reviews`, {
     headers: {
@@ -326,6 +339,7 @@ const updateCompany = async (req, res) => {
     res.status(500).json(errors.serverError);
   }
 };
+
 const deleteCompany = async (req, res) => {
   try {
     const { id } = req.params;
@@ -371,10 +385,46 @@ const deleteCompany = async (req, res) => {
   }
 };
 
+const topTenCeos = async (req, res) => {
+  try {
+    const allReviews = await getAllReviews(req.headers.authorization);
+
+    // create map of companyId => # of ceoApprovals
+    const companyMap = new Map();
+    allReviews.forEach((rev) => {
+      if (rev.ceoApproval) {
+        if (companyMap.has(rev.companyId)) {
+          companyMap.set(rev.companyId, companyMap.get(rev.companyId) + 1);
+        } else {
+          companyMap.set(rev.companyId, 1);
+        }
+      }
+    });
+
+    // sort map by values
+    const sortedCompanyMap = new Map([...companyMap.entries()].sort((a, b) => b[1] - a[1]));
+
+    const topTenCompanyIds = Array.from(sortedCompanyMap.keys()).slice(0, 10);
+
+    // get ceo names of all those companies
+    const companies = (await Company.find({ _id: { $in: topTenCompanyIds } })).map((c) => c.ceo);
+
+    res.status(200).json(companies);
+  } catch (err) {
+    console.log(err);
+    if (err.isAxiosError) {
+      res.status(err.response?.status).json(err.response?.data);
+      return;
+    }
+    res.status(500).json(errors.serverError);
+  }
+};
+
 module.exports = {
   getAllCompanies,
   getCompanyById,
   createCompany,
   updateCompany,
   deleteCompany,
+  topTenCeos,
 };

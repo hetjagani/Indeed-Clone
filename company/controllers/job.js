@@ -8,16 +8,16 @@ const { makeRequest } = require('../util/kafka/client');
 
 // get all applications along with jobs when getApplication=true is passed in query
 const getAllJobs = async (req, res) => {
-  const { compId } = req.params;
-  const { limit, offset } = getPagination(req.query.page, req.query.limit);
-  const { since } = req.query;
-
-  const whereOpts = { companyId: Types.ObjectId(compId) };
-  if (since && since !== '') {
-    whereOpts.push({ postedOn: { $gte: new Date(since) } });
-  }
-
   try {
+    const { compId } = req.params;
+    const { limit, offset } = getPagination(req.query.page, req.query.limit);
+    const { since } = req.query;
+
+    const whereOpts = { companyId: Types.ObjectId(compId) };
+    if (since && since !== '') {
+      whereOpts.push({ postedOn: { $gte: new Date(since) } });
+    }
+
     const jobsCount = await Job.count(whereOpts);
     const jobList = await Job.aggregate([
       { $match: whereOpts },

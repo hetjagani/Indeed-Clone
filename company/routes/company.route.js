@@ -7,6 +7,7 @@ const {
   getCompanyById,
   updateCompany,
   deleteCompany,
+  topTenCeos,
 } = require('../controllers/company');
 const { employerCheckMiddleware, employerCheckMiddlewareOnAll } = require('../util/employerCheck');
 
@@ -74,6 +75,15 @@ const bodyValidators = () => [
  * @returns {Array.<Company>} 200 - List of company info
  */
 router.get('/', getAllCompanies);
+
+/**
+ * Get list of Companies
+ * @route GET /companies/topceos
+ * @group Company
+ * @security JWT
+ * @returns {Array.<string>} 200 - List of top ceos of companies
+ */
+router.get('/topceos', topTenCeos);
 
 /**
  * Create a Company

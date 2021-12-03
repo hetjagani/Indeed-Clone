@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 const { validationResult } = require('express-validator');
 const { errors, getPagination } = require('u-server-utils');
+const { default: axios } = require('axios');
 const { makeRequest } = require('../util/kafka/client');
 const { User } = require('../model');
-const { default: axios } = require('axios');
 
 const getUsersByReviews = async (auth) => {
   const reviewResponse = await axios.get(`${global.gConfig.review_url}/reviews`, {
