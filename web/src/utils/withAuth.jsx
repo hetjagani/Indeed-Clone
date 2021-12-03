@@ -8,6 +8,7 @@ const withAuth = (WrappedComponent, ar, withNav) => (props) => {
   if (!decoded && ar !== 'any') {
     return <Redirect to="/login" />;
   }
+
   if (ar === 'any') {
     return withNav ? (
       <>
@@ -37,6 +38,10 @@ const withAuth = (WrappedComponent, ar, withNav) => (props) => {
     ) : (
       <WrappedComponent {...props} />
     );
+  }
+  if (decoded.role === 'admin' && ar === 'admin') {
+    console.log('in admin');
+    return <WrappedComponent {...props} />;
   }
   return <Redirect to="/" />;
 };

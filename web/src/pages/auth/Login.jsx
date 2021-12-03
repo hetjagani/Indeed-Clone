@@ -20,6 +20,7 @@ import {
   loginRequest, loginFailure, loginSuccess, compamny,
 } from '../../app/actions';
 import getEmployerByID from '../../api/employer/get';
+import getLoginDetails from '../../utils/getLoginDetails';
 
 const Login = () => {
   // eslint-disable-next-line no-unused-vars
@@ -51,6 +52,19 @@ const Login = () => {
   };
 
   useEffect(() => {
+    const decoded = getLoginDetails();
+    if (decoded) {
+      if (decoded.role === 'user') {
+        history.push('/');
+      } else if (decoded.role === 'employer') {
+        history.push('/employee/dashboard');
+      } else if (decoded.role === 'admin') {
+        history.push('/admin/reviews');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (passwordShouldShowError) {
       setPasswordErrorText('Please enter a valid password!');
     } else {
@@ -72,6 +86,7 @@ const Login = () => {
       return;
     }
     const payload = { email, password };
+
     login(payload)
       .then(async (response) => {
         dispatch(loginRequest());
@@ -96,9 +111,12 @@ const Login = () => {
           }
           await dispatch(compamny(employer.data.company[0]));
           history.push('/employee/dashboard');
+        } else {
+          history.push('/admin/reviews');
         }
       })
       .catch((err) => {
+        console.log(err);
         dispatch(loginFailure(err));
       });
   };
