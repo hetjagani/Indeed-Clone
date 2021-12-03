@@ -45,6 +45,8 @@ function EmployeeJobs() {
     getCompanyJobs(response.data.company[0]._id);
   };
 
+  console.log(jobs);
+
   useEffect(() => {
     if (!user.company._id) {
       getEmployerDetails();
@@ -65,7 +67,11 @@ function EmployeeJobs() {
       />
       <div
         style={{
-          backgroundColor: '#F3F2F1', height: '100%', display: 'flex', flexDirection: 'column', padding: '20px',
+          backgroundColor: '#F3F2F1',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '20px',
         }}
       >
         <Button
@@ -78,30 +84,30 @@ function EmployeeJobs() {
           }}
           label="Post a job"
         />
-        {jobs
-          ? jobs.length > 0
-            ? (
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '10px' }}>
-                <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
-                  Showing
-                  {' '}
-                  {jobs.length}
-                  {' '}
-                  results of
-                  {' '}
-                  {totalNumberOfJobs}
-                </p>
-                <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
-                  Page
-                  {' '}
-                  <span style={{ fontWeight: 'bold' }}>{currentPage}</span>
-                  {' '}
-                  of
-                  {' '}
-                  {totalPages}
-                </p>
-              </div>
-            ) : null : null}
+        {jobs ? (
+          jobs.length > 0 ? (
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '10px' }}>
+              <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+                Showing
+                {' '}
+                {jobs.length}
+                {' '}
+                results of
+                {' '}
+                {totalNumberOfJobs}
+              </p>
+              <p style={{ fontSize: '15px', fontWeight: 'lighter' }}>
+                Page
+                {' '}
+                <span style={{ fontWeight: 'bold' }}>{currentPage}</span>
+                {' '}
+                of
+                {' '}
+                {totalPages}
+              </p>
+            </div>
+          ) : null
+        ) : null}
         {jobs
           ? jobs.length > 0
             ? jobs.map((job) => (
@@ -111,26 +117,39 @@ function EmployeeJobs() {
                 sx={{ borderRadius: '12px', marginTop: '10px' }}
               >
                 <CardContent>
-                  <p
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: '16px',
-                      color: '#2557a7',
-                    }}
-                  >
-                    {job.title}
-                  </p>
-                  <p style={{ fontSize: '14px', marginTop: '-10px' }}>
-                    {job.type === 'internship'
-                      ? 'Internship'
-                      : job.type === 'full_time'
-                        ? 'Full Time'
-                        : 'Contract'}
-                    {' '}
-                    -
-                    {' '}
-                    {job.jobLocation === 'remote' ? 'Remote' : 'In Person'}
-                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <p
+                        style={{
+                          fontWeight: 'bold',
+                          fontSize: '16px',
+                          color: '#2557a7',
+                        }}
+                      >
+                        {job.title}
+                      </p>
+                      <p style={{ fontSize: '14px', marginTop: '-10px' }}>
+                        {job.type === 'internship'
+                          ? 'Internship'
+                          : job.type === 'full_time'
+                            ? 'Full Time'
+                            : 'Contract'}
+                        {' '}
+                        -
+                        {' '}
+                        {job.jobLocation === 'remote' ? 'Remote' : 'In Person'}
+                      </p>
+                    </div>
+                    <div
+                      style={{ display: 'flex', flexDirection: 'column', marginRight: '10px' }}
+                    >
+                      <span style={{ fontWeight: 'bold' }}>
+                        Total applicants:
+                        {' '}
+                        {job.applications && job.applications.length ? job.applications.length : 0}
+                      </span>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))
@@ -156,9 +175,7 @@ function EmployeeJobs() {
                 onClick={() => setCurrentPage(pageNo)}
                 style={{
                   cursor: 'pointer',
-                  backgroundColor: `${
-                    currentPage === pageNo ? '#595959' : '#E4E2E0'
-                  }`,
+                  backgroundColor: `${currentPage === pageNo ? '#595959' : '#E4E2E0'}`,
                   padding: '17px',
                   paddingLeft: '20px',
                   paddingRight: '20px',
@@ -172,9 +189,10 @@ function EmployeeJobs() {
               </p>
             ))}
           </div>
-        ) : <p style={{ marginLeft: '25px', marginTop: '20px' }}>No jobs posted yet...</p>
+        ) : (
+          <p style={{ marginLeft: '25px', marginTop: '20px' }}>No jobs posted yet...</p>
+        )
       ) : null}
-
     </>
   );
 }

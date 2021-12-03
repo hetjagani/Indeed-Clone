@@ -13,6 +13,11 @@ import { ReactComponent as SendSVG } from '../../assets/svg/send.svg';
 import MoneySVG from '../../components/svg/MoneySVG';
 
 function Applicants({ option }) {
+  const date1 = new Date(option.postedOn);
+  const date2 = new Date();
+  const diffTime = Math.abs(date2 - date1);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
   return (
     <div>
       <Card
@@ -109,7 +114,7 @@ function Applicants({ option }) {
               color="text.secondary"
               gutterBottom
             >
-              {option.postedOn}
+              {diffDays}
               {' '}
               days ago
             </Typography>

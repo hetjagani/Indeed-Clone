@@ -41,7 +41,7 @@ function appBarLabel(bruh, setShowComponent) {
             <AntTab label="Reviews" />
             <AntTab label="Jobs" />
             <AntTab label="Applicants" />
-            <AntTab label="Report" />
+            {/* <AntTab label="Report" /> */}
           </AntTabs>
         </>
       </div>

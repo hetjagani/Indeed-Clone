@@ -92,7 +92,7 @@ function ApplicantsDetails({ companyId, details, getJobs }) {
             <Card
               variant="outlined"
               className="fixed"
-              sx={{ borderRadius: '12px', marginTop: '1rem' }}
+              sx={{ borderRadius: '12px', marginTop: '40px' }}
             >
               <Paper elevation={3}>
                 <CardContent>
@@ -169,14 +169,14 @@ function ApplicantsDetails({ companyId, details, getJobs }) {
                     marginBottom: '20px',
                   }}
                 >
-                  <div style={{ display: 'flex', flexDirection: 'column', paddingTop: '1rem ' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
                     <span style={{ fontSize: '20px', fontWeight: '700' }}>Questions</span>
                     {Object.keys(option.answers).map((key) => (
                       <>
                         <span
                           style={{ fontSize: '16px', fontWeight: '700', marginTop: '0.5rem' }}
                         >
-                          Ques.
+                          Q.
                           {' '}
                           {key}
                         </span>
