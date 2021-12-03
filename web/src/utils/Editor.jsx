@@ -17,7 +17,7 @@ const Editor = ({ description, setDescription }) => {
         ejInstance.current = editor;
       },
       onChange: async () => {
-        const content = await editor.saver.save();
+        const content = await editor.save();
         // Put your logic here to save this data to your DB
         setDescription(content);
       },

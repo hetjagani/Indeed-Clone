@@ -128,6 +128,10 @@ function ApplicantsDetails({ details }) {
                       {option ? option.user.contactNo : ''}
                     </p>
                   </div>
+                  <div>
+                    <span>Current Status</span>
+                    <span>{option ? option.status : 'RECEIVED'}</span>
+                  </div>
                   <div
                     style={{
                       display: 'flex',
@@ -164,7 +168,6 @@ function ApplicantsDetails({ details }) {
                           <TextField
                             select
                             value={status}
-                            defaultValue={option ? option.status : status}
                             onChange={(e) => setStatus(e.target.value)}
                             SelectProps={{
                               native: true,
@@ -206,9 +209,31 @@ function ApplicantsDetails({ details }) {
                     marginBottom: '20px',
                   }}
                 >
+                  <div style={{ display: 'flex', flexDirection: 'column', paddingTop: '1rem ' }}>
+                    <span style={{ fontSize: '20px', fontWeight: '700' }}>Questions</span>
+                    {
+                  Object.keys(option.answers).map((key) => (
+                    <>
+                      <span style={{ fontSize: '16px', fontWeight: '700', marginTop: '0.5rem' }}>
+                        Ques.
+                        {' '}
+                        {key}
+                      </span>
+                      <span style={{ marginTop: '5px', marginBottom: '1rem' }}>
+                        ans.
+                        {' '}
+                        {option.answers[key]}
+                      </span>
+                    </>
+                  ))
+}
+                  </div>
                   <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <span>CoverLetter:</span>
-                    <a href={option ? option.coverLetters : ''}>
+                    <a
+                      href={option ? option.coverLetters : ''}
+                      target="blank"
+                    >
                       {option ? option.coverLetter : ''}
                     </a>
                   </div>
@@ -220,7 +245,7 @@ function ApplicantsDetails({ details }) {
                     }}
                   >
                     <span style={{ marginRight: '5px ' }}>Resume:</span>
-                    <a href={option ? option.resume : ''}>
+                    <a href={option ? option.resume : ''} target="blank">
                       {option ? option.resume : ''}
                     </a>
                   </div>
