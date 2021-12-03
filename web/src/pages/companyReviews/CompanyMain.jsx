@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import StarRatings from 'react-star-ratings';
 import { Route } from 'react-router';
@@ -49,11 +50,10 @@ function CompanyMain({ match }) {
 
     setSalaries(industrySalaryMap);
   };
-  console.log(reviews);
 
   const getCompanyReviews = async (sortBy) => {
     const limit = 10;
-    const response = await getReviewsOfCompany(match.params.id, sortBy, currentPage, limit);
+    const response = await getReviewsOfCompany(match.params.id, sortBy, currentPage, limit, false);
     if (!response) return;
     setReviews(response.data.nodes);
     setTotalNumberOfReviews(response.data.total);
@@ -82,7 +82,7 @@ function CompanyMain({ match }) {
       >
         <img
           className="company-image"
-          src="https://ubereats-media.s3.amazonaws.com/1619644672652.jpeg"
+          src={companyDetails.media ? companyDetails.media.length ? companyDetails.media[0].url : '' : ''}
           alt="sample"
         />
       </div>
@@ -102,7 +102,7 @@ function CompanyMain({ match }) {
         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <img
             className="company-logo"
-            src="https://ubereats-media.s3.amazonaws.com/amazon-logo-square.jpg"
+            src={companyDetails.logo ? companyDetails.logo.url : ''}
             alt="Logo"
           />
           <div style={{ marginLeft: '20px', marginTop: '30px' }}>
@@ -204,6 +204,8 @@ function CompanyMain({ match }) {
                 compId={match && match.params && match.params.id ? match.params.id : null}
                 companyName={companyDetails && companyDetails.name ? companyDetails.name : null}
                 getCompanyReviews={getCompanyReviews}
+                logo={companyDetails && companyDetails.logo && companyDetails.logo.url
+                  ? companyDetails.logo.url : null}
               />
             )}
           />

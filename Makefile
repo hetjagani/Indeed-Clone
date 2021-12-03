@@ -9,5 +9,8 @@ init:
 	npm install -C user
 	npm install -C web
 
+clean:
+	rm -rf ./**/node_modules
+
 run:
 	docker-compose up

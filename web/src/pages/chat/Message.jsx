@@ -38,7 +38,7 @@ function Message({ openChat }) {
   const getChatMessages = async () => {
     const params = {
       page: 1,
-      limit: 10,
+      limit: 100,
     };
     const response = await getMessages(openChat._id, params);
     if (!response) {

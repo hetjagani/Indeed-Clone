@@ -21,6 +21,7 @@ import './css/Login.css';
 import Input from '../../components/Input';
 import register from '../../api/auth/register';
 import Button from '../../components/Button';
+import getLoginDetails from '../../utils/getLoginDetails';
 
 const Register = () => {
   const history = useHistory();
@@ -70,6 +71,19 @@ const Register = () => {
       setEmailErrorText('');
     }
   }, [emailShouldShowError]);
+
+  useEffect(() => {
+    const decoded = getLoginDetails();
+    if (decoded) {
+      if (decoded.role === 'user') {
+        history.push('/');
+      } else if (decoded.role === 'employer') {
+        history.push('/employee/dashboard');
+      } else if (decoded.role === 'admin') {
+        history.push('/admin/reviews');
+      }
+    }
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();

@@ -29,7 +29,7 @@ const style = {
 };
 
 export default function AddReviewModal({
-  handleClose, isOpen, compId, companyName,
+  handleClose, isOpen, compId, companyName, logo,
 }) {
   const [overallRating, setOverallRating] = useState(0);
   const user = useSelector((state) => state.user);
@@ -113,7 +113,7 @@ export default function AddReviewModal({
             >
               <img
                 className="modal-company-logo"
-                src="https://ubereats-media.s3.amazonaws.com/amazon-logo-square.jpg"
+                src={logo}
                 alt="Logo"
               />
               <div

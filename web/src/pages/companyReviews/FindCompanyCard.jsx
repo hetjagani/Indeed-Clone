@@ -5,10 +5,10 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 import StarRatings from 'react-star-ratings';
+import companyLogo from '../../assets/img/companyLogo.jpg';
 
 function FindCompanyCard({ company }) {
   const history = useHistory();
-  console.log(company);
   return (
     <div style={{
       flex: '0 1 calc(33% - 1em)', display: 'flex', flexDirection: 'column', width: '100%', marginBottom: '-20px',
@@ -17,7 +17,7 @@ function FindCompanyCard({ company }) {
       <div style={{ display: 'flex', marginTop: '50px' }}>
         <img
           className="findcompany-logo"
-          src="https://ubereats-media.s3.amazonaws.com/amazon-logo-square.jpg"
+          src={company ? company.logo ? company.logo.url : companyLogo : companyLogo}
           alt="Logo"
         />
         <div style={{ marginLeft: '10px', display: 'flex', flexDirection: 'column' }}>

@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
+import { Favorite } from '@mui/icons-material';
 import { logout } from '../app/actions';
 
 import { AntTab, AntTabs } from './AntTabs';
@@ -58,11 +59,7 @@ const NavLeft = () => {
     <div>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ bgcolor: '#fff' }}>
-          <AntTabs
-            value={value}
-            onChange={handleChange}
-            aria-label="ant example"
-          >
+          <AntTabs value={value} onChange={handleChange} aria-label="ant example">
             <AntTab icon={<ChatIcon />} aria-label="phone" />
             <AntTab icon={<NotificationsIcon />} aria-label="favorite" />
             <AntTab icon={<PersonIcon />} aria-label="person" />
@@ -92,7 +89,7 @@ const NavLeft = () => {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 0,
             width: 350,
-            height: 180,
+            height: 220,
             '& .MuiMenuItem-root': {
               height: 42,
               mt: 1,
@@ -121,16 +118,27 @@ const NavLeft = () => {
           {' '}
           <p style={{ marginLeft: '15px' }}>Profile</p>
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => history.push('/users/reviews')}>
           <ReviewsIcon />
           {' '}
           <p style={{ marginLeft: '15px' }}>My reviews</p>
         </MenuItem>
+        <MenuItem onClick={() => history.push('/users/applications')}>
+          <Favorite />
+          {' '}
+          <p style={{ marginLeft: '15px' }}>My Jobs</p>
+        </MenuItem>
         <Divider />
         <p
-          onClick={() => { dispatch(logout()); history.push('/login'); }}
+          onClick={() => {
+            dispatch(logout());
+            history.push('/login');
+          }}
           style={{
-            textAlign: 'center', fontWeight: '700', color: '#2557a7', cursor: 'pointer',
+            textAlign: 'center',
+            fontWeight: '700',
+            color: '#2557a7',
+            cursor: 'pointer',
           }}
         >
           Sign out

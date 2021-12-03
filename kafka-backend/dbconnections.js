@@ -34,6 +34,7 @@ const getCompanyConnection = () => {
     appreciationScore: Number,
     employers: [mongoose.Types.ObjectId],
     media: [MediumSchema],
+    logo: MediumSchema,
   });
 
   const EmployerSchema = new mongoose.Schema({

@@ -10,6 +10,8 @@ import AddReviewModal from './AddReviewModal';
 import '../css/ReviewsMain.css';
 import RatingsCard from './RatingsCard';
 
+Array.range = (start, end) => Array.from({ length: end - start }, (v, k) => k + start);
+
 function ReviewsMain(props) {
   const [isOpen, setIsOpen] = useState(false);
   // const [reviewFilter, setReviewFilter] = useState(1);
@@ -26,6 +28,7 @@ function ReviewsMain(props) {
         isOpen={isOpen}
         compId={props && props.compId ? props.compId : null}
         companyName={props && props.companyName ? props.companyName : null}
+        logo={props && props.logo ? props.logo : null}
       />
       <div
         style={{
@@ -44,7 +47,7 @@ function ReviewsMain(props) {
             marginBottom: '0.5rem',
           }}
         >
-          Work happiness
+          Reviews
         </Typography>
         <Button
           onClick={handleOpen}

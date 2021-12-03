@@ -10,6 +10,7 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import toast from 'react-hot-toast';
 import getPhotos from '../../../api/media/getPhotos';
 import companyPhoto from '../../../api/media/companyPhoto';
 
@@ -40,7 +41,6 @@ async function postImages({ image, userId, compId }) {
   formData.append('userId', userId);
   formData.append('companyId', compId);
   formData.append('isFeatured', false);
-  console.log('efe', formData.values);
   const response = await companyPhoto(formData, userId);
   return response;
 }
@@ -55,7 +55,6 @@ function Companyphotos({ compId, companyName }) {
   useEffect(() => {
     async function getUploadedPhotos() {
       const response = await getPhotos(compId);
-      console.log(response);
       if (!response) {
         return;
       }
@@ -69,9 +68,13 @@ function Companyphotos({ compId, companyName }) {
     const fil = event.target.files[0];
     const result = await postImages({ image: fil, userId, compId });
     if (!result) {
+      toast.error('Error Uploading Photo');
       return;
     }
+    setOpen(false);
+    toast.success('Photo Uploaded');
   };
+
   return (
     <div style={{ width: '80%' }}>
       <div style={{ margin: '2rem' }}>
@@ -137,7 +140,7 @@ function Companyphotos({ compId, companyName }) {
                   <CardMedia
                     component="img"
                     height="160"
-                    image={option?.url}
+                    image={option ? option.url : ''}
                     alt="Paella dish"
                   />
                 </Card>
