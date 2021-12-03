@@ -10,7 +10,7 @@ const router = express.Router({ mergeParams: true });
  */
 
 const bodyValidators = () => [
-  body('status').exists().isString().isIn('PENDING', 'APPROVED', 'REJECTED'),
+  body('status').exists().isString().isIn('RECEIVED', 'UNDER_REVIEW', 'ACCEPTED', 'REJECTED'),
 ];
 
 /**
