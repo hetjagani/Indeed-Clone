@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
-const http = require('http');
 require('./config');
+const http = require('http');
+const { redisClient } = require('u-server-utils');
 const { initDB } = require('./db');
 
 initDB()
@@ -8,6 +9,7 @@ initDB()
     const { runMigration } = require('./model');
     return runMigration();
   })
+  .then(() => redisClient.connect())
   .then(() => {
     const app = require('./app');
     const port = process.env.PORT || '3000';

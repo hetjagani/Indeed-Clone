@@ -34,6 +34,16 @@ services:
     networks:
       - indeed-net
 
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis-data:/data
+    command: bash -c "redis-server --appendonly yes --requirepass indeedredispass"
+    networks:
+      - indeed-net
+
   #########################################################################
   #                               KAFKA                                   #
   #########################################################################
