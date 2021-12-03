@@ -6,11 +6,19 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { Radio, RadioGroup, FormControlLabel } from '@mui/material';
 import { useSelector } from 'react-redux';
 import Switch from '@mui/material/Switch';
-
+import { createReactEditorJS } from 'react-editor-js';
+import List from '@editorjs/list';
+import Header from '@editorjs/header';
 import JobSVG from '../../components/svg/JobSVG';
 import './css/Employeedetails.css';
 import postJob from '../../api/jobs/postJob';
-import Editor from '../../utils/Editor';
+
+const ReactEditorJS = createReactEditorJS();
+
+const EDITOR_JS_TOOLS = {
+  list: List,
+  header: Header,
+};
 
 const industries = [
   {
@@ -59,19 +67,6 @@ const industries = [
   },
 ];
 
-const DEFAULT_INITIAL_DATA = () => ({
-  time: new Date().getTime(),
-  blocks: [
-    {
-      type: 'header',
-      data: {
-        text: 'Enter job description',
-        level: 1,
-      },
-    },
-  ],
-});
-
 const Jobpost = ({ handleClose, getCompanyJobs }) => {
   const [title, setTitle] = useState('');
   const [industry, setIndustry] = useState('');
@@ -92,7 +87,6 @@ const Jobpost = ({ handleClose, getCompanyJobs }) => {
   });
   const [salary, setSalary] = useState(0);
   const [summary, setSummary] = useState('');
-  const [description, setDescription] = useState(DEFAULT_INITIAL_DATA);
   const [questions, setQuestions] = useState('');
 
   const user = useSelector((state) => state.user);
@@ -104,6 +98,15 @@ const Jobpost = ({ handleClose, getCompanyJobs }) => {
 
     return `${month}/${day}/${year}`;
   }
+
+  const editorJS = React.useRef(null);
+  const handleInitialize = React.useCallback((instance) => {
+    editorJS.current = instance;
+  }, []);
+  const handleSave = async () => {
+    const savedData = await editorJS.current.save();
+    return savedData;
+  };
 
   const saveJobDetails = async (e) => {
     e.preventDefault();
@@ -124,6 +127,7 @@ const Jobpost = ({ handleClose, getCompanyJobs }) => {
 
     const postedOn = getFormattedDate(new Date());
     const questionsArr = questions.split(',');
+    const descriptionObj = await handleSave();
 
     const body = {
       title,
@@ -134,7 +138,7 @@ const Jobpost = ({ handleClose, getCompanyJobs }) => {
       state: region,
       industry: { name: industry },
       postedOn,
-      description,
+      description: descriptionObj,
       address,
       isFeatured,
       type: tempType,
@@ -432,9 +436,9 @@ const Jobpost = ({ handleClose, getCompanyJobs }) => {
                 Job Description
                 <span style={{ paddingLeft: '5px', color: 'red' }}>*</span>
               </label>
-              <Editor
-                description={description}
-                setDescription={setDescription}
+              <ReactEditorJS
+                onInitialize={handleInitialize}
+                tools={EDITOR_JS_TOOLS}
               />
             </div>
             <div className="employeeform">

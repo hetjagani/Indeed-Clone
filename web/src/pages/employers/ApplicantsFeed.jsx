@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -49,7 +50,7 @@ function ApplicantsFeed() {
           : null}
       </div>
       <div style={{ width: '60%', marginRight: '1rem' }}>
-        <ApplicantsDetails details={selectedApplication} />
+        <ApplicantsDetails details={selectedApplication} companyId={user.company._id} getJobs={getJobs} />
       </div>
     </div>
   );
