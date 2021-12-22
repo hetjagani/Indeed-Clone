@@ -8,6 +8,10 @@ In this project a job board (portal) is developed similar to Indeed. This applic
 We have designed the application with microservice architecture and divided the whole backend application into the above shown seven services. These services have independent databases and chosen databases (MySql or MongoDB) based on the needs for that particular service. Caching server (Redis) is used for fast retrieval of data
 which is requested frequently. Also for scalability and reliability, Kafka is used for accessing databases. All database calls are done by a kafka-backend server which subscribes to various topics for data that is requested by other services. A docker-compose file is provided which builds containers for all services and run the whole application stack.
 
+## Demo Video
+[![Indeed Clone Demo](Cover.png)](https://www.youtube.com/watch?v=PFtoADovLRU)
+
+
 ## How to Run
 * There is sample config file (config.json) in each service folders which you should edit with proper values. (To run in develop mode no need to edit any file)
 * To run the servers and frontend (web) just run `docker-compose up`
